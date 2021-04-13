@@ -7,7 +7,7 @@ export declare var useinfo: {
  * 大数转常数
  * @param number 大数
  * @param decimals 精度(可选)
- * @returns
+ * @returns string
  */
 export declare function convertBigNumberToNormal(number: string, decimals?: number): string;
 /**
@@ -15,56 +15,56 @@ export declare function convertBigNumberToNormal(number: string, decimals?: numb
  * @param number 常数
  * @param decimals 精度(选填)
  * @param fix 截取(选填)
- * @returns
+ * @returns string
  */
 export declare function convertNormalToBigNumber(number: string, decimals?: number, fix?: number): string;
 /**
  * calculatePercentage
  * @param numerator x
  * @param denominator y
- * @returns
+ * @returns string
  */
 export declare function calculatePercentage(numerator: string, denominator: string): string;
 /**
  * multipliedBy
  * @param number1 x
  * @param number2 y
- * @returns
+ * @returns string
  */
 export declare function calculateMultiplied(number1: string, number2: string): string;
 /**
  * minus
  * @param number1 x
  * @param number2 y
- * @returns
+ * @returns string
  */
 export declare function minusBigNumber(number1: string, number2: string): string;
 /**
  * 加 x+y
  * @param number1 x
  * @param number2 y
- * @returns
+ * @returns string
  */
 export declare function add(number1: string, number2: string): string;
 /**
  * 减 x-y
  * @param number1 x
  * @param number2 y
- * @returns
+ * @returns string
  */
 export declare function sub(number1: string, number2: string): string;
 /**
  * 乘 x*y
  * @param number1 x
  * @param number2 y
- * @returns
+ * @returns string
  */
 export declare function mul(number1: string, number2: string): string;
 /**
  * 除  x/y
  * @param number1 x
  * @param number2 y
- * @returns
+ * @returns string
  */
 export declare function div(number1: string, number2: string): string;
 /**

@@ -11,7 +11,7 @@ export var useinfo = {
  * 大数转常数
  * @param number 大数
  * @param decimals 精度(可选)
- * @returns
+ * @returns string
  */
 export function convertBigNumberToNormal(number: string, decimals = 18) {
   let result = new BigNumber(number).dividedBy(
@@ -24,7 +24,7 @@ export function convertBigNumberToNormal(number: string, decimals = 18) {
  * @param number 常数
  * @param decimals 精度(选填)
  * @param fix 截取(选填)
- * @returns
+ * @returns string
  */
 export function convertNormalToBigNumber(
   number: string,
@@ -40,7 +40,7 @@ export function convertNormalToBigNumber(
  * calculatePercentage
  * @param numerator x
  * @param denominator y
- * @returns
+ * @returns string
  */
 export function calculatePercentage(numerator: string, denominator: string) {
   return new BigNumber(numerator)
@@ -51,7 +51,7 @@ export function calculatePercentage(numerator: string, denominator: string) {
  * multipliedBy
  * @param number1 x
  * @param number2 y
- * @returns
+ * @returns string
  */
 export function calculateMultiplied(number1: string, number2: string) {
   return new BigNumber(number1).multipliedBy(new BigNumber(number2)).toFixed(0);
@@ -60,7 +60,7 @@ export function calculateMultiplied(number1: string, number2: string) {
  * minus
  * @param number1 x
  * @param number2 y
- * @returns
+ * @returns string
  */
 export function minusBigNumber(number1: string, number2: string) {
   return new BigNumber(number1).minus(new BigNumber(number2)).toFixed(0);
@@ -69,7 +69,7 @@ export function minusBigNumber(number1: string, number2: string) {
  * 加 x+y
  * @param number1 x
  * @param number2 y
- * @returns
+ * @returns string
  */
 export function add(number1: string, number2: string) {
   return new BigNumber(number1).plus(new BigNumber(number2)).toFixed(10);
@@ -78,7 +78,7 @@ export function add(number1: string, number2: string) {
  * 减 x-y
  * @param number1 x
  * @param number2 y
- * @returns
+ * @returns string
  */
 export function sub(number1: string, number2: string) {
   return new BigNumber(number1).minus(new BigNumber(number2)).toFixed(10);
@@ -87,7 +87,7 @@ export function sub(number1: string, number2: string) {
  * 乘 x*y
  * @param number1 x
  * @param number2 y
- * @returns
+ * @returns string
  */
 export function mul(number1: string, number2: string) {
   return new BigNumber(number1).times(new BigNumber(number2)).toFixed(10);
@@ -96,7 +96,7 @@ export function mul(number1: string, number2: string) {
  * 除  x/y
  * @param number1 x
  * @param number2 y
- * @returns
+ * @returns string
  */
 export function div(number1: string, number2: string) {
   return new BigNumber(number1).div(new BigNumber(number2)).toFixed(10);
