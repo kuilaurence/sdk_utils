@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "es6",
+        "outDir": "dist",
+        "alwaysStrict": true,
+        "sourceMap": false,
+        "noImplicitAny": true,
+        "moduleResolution": "node",
+        "declaration": true,
+        "downlevelIteration": true,
+        "lib": [
+            "es2017",
+            "dom"
+        ]
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.js"
+    ],
+}
