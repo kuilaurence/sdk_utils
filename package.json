@@ -1,6 +1,6 @@
 {
   "name": "sdk-utils",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "main": "dist/index.js",
   "types": "dist/sdk-utils.d.ts",
   "description": "Provide Ethereum SDK initialization",
@@ -16,7 +16,7 @@
     "type": "git",
     "url": "https://github.com/kuilaurence/sdk_utils"
   },
-  "author": "",
+  "author": "kuilaurence",
   "license": "ISC",
   "devDependencies": {
     "ts-loader": "^8.1.0",
