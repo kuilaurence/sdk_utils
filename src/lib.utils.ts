@@ -1,0 +1,269 @@
+import Web3 from "web3";
+export var web3: Web3;
+import { ERC20 } from "./lib_abi";
+import { userInfo } from "./lib_const";
+import { BigNumber } from "bignumber.js";
+import { Contract } from "web3-eth-contract";
+
+/**
+ * 大数转常数
+ * @param number 大数
+ * @param decimals 精度(可选)
+ * @returns string
+ */
+export function convertBigNumberToNormal(number: string, decimals = 18) {
+  let result = new BigNumber(number).dividedBy(new BigNumber(Math.pow(10, decimals)));
+  return result.toFixed();
+}
+/**
+ * 常数转大数
+ * @param number 常数
+ * @param decimals 精度(选填)
+ * @param fix 截取(选填)
+ * @returns string
+ */
+export function convertNormalToBigNumber(number: string, decimals = 18, fix = 0) {
+  return new BigNumber(number).multipliedBy(new BigNumber(Math.pow(10, decimals))).minus(fix).toFixed(0);
+}
+/**
+ * calculatePercentage
+ * @param numerator x
+ * @param denominator y
+ * @returns string
+ */
+export function calculatePercentage(numerator: string, denominator: string) {
+  return new BigNumber(numerator)
+    .dividedBy(new BigNumber(denominator))
+    .toFixed();
+}
+/**
+ * multipliedBy
+ * @param number1 x
+ * @param number2 y
+ * @returns string
+ */
+export function calculateMultiplied(number1: string, number2: string) {
+  return new BigNumber(number1).multipliedBy(new BigNumber(number2)).toFixed(0);
+}
+/**
+ * minus
+ * @param number1 x
+ * @param number2 y
+ * @returns string
+ */
+export function minusBigNumber(number1: string, number2: string) {
+  return new BigNumber(number1).minus(new BigNumber(number2)).toFixed(0);
+}
+/**
+ * 加 x+y
+ * @param number1 x
+ * @param number2 y
+ * @returns string
+ */
+export function add(number1: string, number2: string) {
+  return new BigNumber(number1).plus(new BigNumber(number2)).toFixed(10);
+}
+/**
+ * 减 x-y
+ * @param number1 x
+ * @param number2 y
+ * @returns string
+ */
+export function sub(number1: string, number2: string) {
+  return new BigNumber(number1).minus(new BigNumber(number2)).toFixed(10);
+}
+/**
+ * 乘 x*y
+ * @param number1 x
+ * @param number2 y
+ * @returns string
+ */
+export function mul(number1: string, number2: string) {
+  return new BigNumber(number1).times(new BigNumber(number2)).toFixed(10);
+}
+/**
+ * 除  x/y
+ * @param number1 x
+ * @param number2 y
+ * @returns string
+ */
+export function div(number1: string, number2: string) {
+  return new BigNumber(number1).div(new BigNumber(number2)).toFixed(10);
+}
+/**
+ * deadline
+ * @param delay time
+ * @returns timestemp
+ */
+export function getDeadLine(delay: number) {
+  return Math.floor(new Date().getTime() / 1000 + 60 * delay);
+}
+
+interface DictObject {
+  [key: string]: string;
+}
+/**
+ * 通过value找key
+ * @param obj 对象
+ * @param value value
+ * @param compare 比较(可选)
+ * @returns key
+ */
+export function findToken(obj: DictObject, value: string, compare = (a: string, b: string) => a === b) {
+  return Object.keys(obj).find((k) => compare(obj[k], value));
+}
+/**
+ * 判断是否为以太坊地址
+ * @param token_address 地址
+ * @returns bool
+ */
+export async function isETHAddress(token_address: string) {
+  try {
+    var code = await web3.eth.getCode(token_address);
+    if (code === "0x") {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
+ * 查币的余额
+ * @param token_address 币地址
+ * @returns 余额 常数
+ */
+export async function getBalance(token_address: string) {
+  let tokenContract = new web3.eth.Contract(ERC20, token_address);
+  let balance = await tokenContract.methods.balanceOf(userInfo.account).call();
+  return convertBigNumberToNormal(balance, await getDecimal(token_address));
+}
+/**
+ * 转账
+ * @param token_address 币地址
+ * @param to_address 收款地址
+ * @param amount 数量 常数
+ * @param callback 回调
+ */
+export async function transfer(token_address: string, to_address: string, amount: string, callback: (code: number, hash: string) => void) {
+  let tokenContract = new web3.eth.Contract(ERC20, token_address);
+  let bigAmount = convertNormalToBigNumber(amount, await getDecimal(token_address));
+  executeContract(tokenContract, "transfer", 0, [to_address, bigAmount], callback);
+}
+/**
+ * 从**转账
+ * @param token_address 币的地址
+ * @param from_address 出账地址
+ * @param to_address 入账地址
+ * @param amount 数量 常数
+ * @param callback 回调
+ */
+export async function transferFrom(token_address: string, from_address: string, to_address: string, amount: string, callback: (code: number, hash: string) => void) {
+  let tokenContract = new web3.eth.Contract(ERC20, token_address);
+  let bigAmount = convertNormalToBigNumber(amount, await getDecimal(token_address));
+  executeContract(tokenContract, "transferFrom", 0, [from_address, to_address, bigAmount], callback);
+}
+
+export async function getDecimal(token_address: string) {
+  let tokenContract = new web3.eth.Contract(ERC20, token_address);
+  let decimal = await tokenContract.methods.decimals().call();
+  return decimal;
+}
+/**
+ * approve Token
+ * @param token_address 币地址
+ * @param destina_address 目标地址
+ * @param callback 回调
+ */
+export async function approveToken(token_address: string, destina_address: string, callback: (code: number, hash: string) => void) {
+  let tokenContract = new web3.eth.Contract(ERC20, token_address);
+  let bigAmount = convertNormalToBigNumber("500000000000", await getDecimal(token_address));
+  executeContract(tokenContract, "approve", 0, [destina_address, bigAmount], callback);
+}
+/**
+ * 获取授权额度
+ * @param token_address 
+ * @param destina_address 
+ * @returns 
+ */
+export async function getAllowance(token_address: string, destina_address: string) {
+  let tokenContract = new web3.eth.Contract(ERC20, token_address);
+  let allowance = await tokenContract.methods.allowance(userInfo.account, destina_address).call();
+  return convertBigNumberToNormal(allowance, await getDecimal(token_address));
+}
+/**
+ * 执行合约
+ * @param contract 合约实例
+ * @param methodName 方法
+ * @param value value
+ * @param params 参数
+ * @param callback 回调
+ */
+export function executeContract(contract: Contract, methodName: string, value: number, params: string[], callback: (code: number, hash: string) => void) {
+  contract.methods[methodName](...params)
+    .send({ from: userInfo.account, value: value })
+    .on("transactionHash", function (hash: string) {
+      callback(0, hash);
+    })
+    .on("confirmation", function (confirmationNumber: number, receipt: any) {
+      if (confirmationNumber === 1) {
+        callback(1, receipt.transactionHash);
+      }
+    })
+    .on("error", function (error: any, message: any) {
+      if (message && message.transactionHash) {
+        callback(3, message.transactionHash);
+      } else {
+        callback(2, error.message);
+      }
+    });
+}
+
+export async function connect(callback: (data: { account: string; chainID: number; message: string; }) => void) {
+  let resMsg = {
+    account: "",
+    chainID: 0,
+    message: "success",
+  };
+  //@ts-ignore
+  let _ethereum = window["ethereum"];
+  if (!_ethereum) return resMsg;
+  try {
+    let accounts = await _ethereum.enable();
+    web3 = new Web3(_ethereum);
+    userInfo.account = accounts[0];
+    userInfo.chainID = await web3.eth.getChainId();
+    resMsg.account = userInfo.account;
+    resMsg.chainID = userInfo.chainID;
+    _ethereum.on("accountsChanged", (accounts: string[]) => {
+      userInfo.account = accounts[0];
+      callback({
+        account: userInfo.account,
+        chainID: userInfo.chainID,
+        message: "success",
+      });
+    });
+    _ethereum.on("chainChanged", async () => {
+      userInfo.chainID = await web3.eth.getChainId();
+      callback({
+        account: userInfo.account,
+        chainID: userInfo.chainID,
+        message: "success",
+      });
+    });
+  } catch (e) {
+    resMsg.message = e.message;
+  }
+  return resMsg;
+}
+/**
+ * 退出
+ */
+export function logout() {
+  userInfo.account = "";
+  userInfo.chainID = 0;
+  userInfo.chain = "";
+  web3 = null;
+}

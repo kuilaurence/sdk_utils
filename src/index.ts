@@ -1,316 +1,391 @@
-import { ERC20 } from "./ERC20";
-import { BigNumber } from "bignumber.js";
-import Web3 from "web3";
+import { userInfo, tokenAddres, ContractAddress, approveTokens as _approveTokens } from "./lib_const";
+import { ERC20, ETQUERY, LPMINING, RECOMMEND, NODEMINING, INVITEREWARD, PLEDGEMINING, EXCHANGETOKEN } from "./lib_abi";
+import {
+  add, sub, mul, div, web3, findToken, getDecimal,
+  convertBigNumberToNormal, convertNormalToBigNumber, executeContract,
+  logout as _logout, connect as _connect, getBalance as _getBalance, getAllowance as _getAllowance,
+  approveToken as _approveToken, isETHAddress as _isETHAddress
+} from "./lib.utils";
 
-export var web3: any;
-export var useinfo = {
-  account: "",
-  chainID: "",
-};
-/**
- * 大数转常数
- * @param number 大数
- * @param decimals 精度(可选)
- * @returns string
- */
-export function convertBigNumberToNormal(number: string, decimals = 18) {
-  let result = new BigNumber(number).dividedBy(
-    new BigNumber(Math.pow(10, decimals))
-  );
-  return result.toFixed();
-}
-/**
- * 常数转大数
- * @param number 常数
- * @param decimals 精度(选填)
- * @param fix 截取(选填)
- * @returns string
- */
-export function convertNormalToBigNumber(
-  number: string,
-  decimals = 18,
-  fix = 0
-) {
-  return new BigNumber(number)
-    .multipliedBy(new BigNumber(Math.pow(10, decimals)))
-    .minus(fix)
-    .toFixed(0);
-}
-/**
- * calculatePercentage
- * @param numerator x
- * @param denominator y
- * @returns string
- */
-export function calculatePercentage(numerator: string, denominator: string) {
-  return new BigNumber(numerator)
-    .dividedBy(new BigNumber(denominator))
-    .toFixed();
-}
-/**
- * multipliedBy
- * @param number1 x
- * @param number2 y
- * @returns string
- */
-export function calculateMultiplied(number1: string, number2: string) {
-  return new BigNumber(number1).multipliedBy(new BigNumber(number2)).toFixed(0);
-}
-/**
- * minus
- * @param number1 x
- * @param number2 y
- * @returns string
- */
-export function minusBigNumber(number1: string, number2: string) {
-  return new BigNumber(number1).minus(new BigNumber(number2)).toFixed(0);
-}
-/**
- * 加 x+y
- * @param number1 x
- * @param number2 y
- * @returns string
- */
-export function add(number1: string, number2: string) {
-  return new BigNumber(number1).plus(new BigNumber(number2)).toFixed(10);
-}
-/**
- * 减 x-y
- * @param number1 x
- * @param number2 y
- * @returns string
- */
-export function sub(number1: string, number2: string) {
-  return new BigNumber(number1).minus(new BigNumber(number2)).toFixed(10);
-}
-/**
- * 乘 x*y
- * @param number1 x
- * @param number2 y
- * @returns string
- */
-export function mul(number1: string, number2: string) {
-  return new BigNumber(number1).times(new BigNumber(number2)).toFixed(10);
-}
-/**
- * 除  x/y
- * @param number1 x
- * @param number2 y
- * @returns string
- */
-export function div(number1: string, number2: string) {
-  return new BigNumber(number1).div(new BigNumber(number2)).toFixed(10);
-}
-/**
- * deadline
- * @param delay time
- * @returns timestemp
- */
-export function getDeadLine(delay: number) {
-  return Math.floor(new Date().getTime() / 1000 + 60 * delay);
-}
+export const logout = _logout;
+export const connect = _connect;
+export const getBalance = _getBalance;
+export const approveToken = _approveToken;
+export const isETHAddress = _isETHAddress;
+export const approveTokens = _approveTokens;
 
-interface DictObject {
-  [key: string]: string;
+export var tokenDic: {};
+export var rankList: { data: [] };
+/**
+ * 获取symbol
+ * @param token_address 
+ * @returns 
+ */
+export function getTokenSymbol(token_address: string) {
+  let symbol = findToken(tokenAddres[userInfo.chainID as keyof typeof ContractAddress as keyof typeof tokenAddres], token_address);
+  return symbol || "not know";
 }
 /**
- * 通过value找key
- * @param obj 对象
- * @param value value
- * @param compare 比较(可选)
- * @returns key
+ * 获取授权值   type  buy  //币的名字
+ * @param token_address 
+ * @param type 
+ * @returns 
  */
-export function findToken(
-  obj: DictObject,
-  value: string,
-  compare = (a: string, b: string) => a === b
-) {
-  return Object.keys(obj).find((k) => compare(obj[k], value));
+export async function getAllowance(token_address: string, type: string) {
+  let destina_address = "";
+  if (type === "USDT") {
+    destina_address = ContractAddress[userInfo.chainID as keyof typeof ContractAddress].exchangeToken;
+  } else if (type === "ETHST") {
+    destina_address = ContractAddress[userInfo.chainID as keyof typeof ContractAddress].pledgeMining;
+  } else {
+    destina_address = ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining;
+  }
+  return await _getAllowance(token_address, destina_address);
 }
 /**
- * 判断是否为以太坊地址
- * @param token_address 地址
- * @returns bool
+ * 是否绑定上级
+ * @returns 
  */
-export async function isETHAddress(token_address: string) {
-  try {
-    var code = await web3.eth.getCode(token_address);
-    if (code === "0x") {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (e) {
-    return false;
+export async function GetIntroducerBind() {
+  let recommendContract = new web3.eth.Contract(RECOMMEND, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].recommend);
+  let res = await recommendContract.methods.GetIntroducerBind(userInfo.account).call();
+  if (res) {
+    let address = await recommendContract.methods.GetIntroducer(userInfo.account).call();
+    return address;
+  } else {
+    return "";
   }
 }
 /**
- * 查币的余额
- * @param token_address 币地址
- * @returns 余额 常数
+ * 奖励页面
+ * @returns 
  */
-export async function getBalance(token_address: string) {
-  let tokenContract = new web3.eth.Contract(ERC20, token_address);
-  let balance = await tokenContract.methods.balanceOf(useinfo.account).call();
-  return convertBigNumberToNormal(balance, await getDecimal(token_address));
-}
-/**
- * 转账
- * @param token_address 币地址
- * @param to_address 收款地址
- * @param amount 数量 常数
- * @param callback 回调
- */
-export async function transfer(
-  token_address: string,
-  to_address: string,
-  amount: string,
-  callback: any
-) {
-  let tokenContract = new web3.eth.Contract(ERC20, token_address);
-  let bigAmount = convertNormalToBigNumber(
-    amount,
-    await getDecimal(token_address)
-  );
-  executeContract(
-    tokenContract,
-    "transfer",
-    0,
-    [to_address, bigAmount],
-    callback
-  );
-}
-/**
- * 从**转账
- * @param token_address 币的地址
- * @param from_address 出账地址
- * @param to_address 入账地址
- * @param amount 数量 常数
- * @param callback 回调
- */
-export async function transferFrom(
-  token_address: string,
-  from_address: string,
-  to_address: string,
-  amount: string,
-  callback: any
-) {
-  let tokenContract = new web3.eth.Contract(ERC20, token_address);
-  let bigAmount = convertNormalToBigNumber(
-    amount,
-    await getDecimal(token_address)
-  );
-  executeContract(
-    tokenContract,
-    "transferFrom",
-    0,
-    [from_address, to_address, bigAmount],
-    callback
-  );
-}
-
-export async function getDecimal(token_address: string) {
-  let tokenContract = new web3.eth.Contract(ERC20, token_address);
-  let decimal = await tokenContract.methods.decimals().call();
-  return decimal;
-}
-/**
- * approve Token
- * @param token_address 币地址
- * @param destina_address 目标地址
- * @param callback 回调
- */
-export async function approveToken(
-  token_address: string,
-  destina_address: string,
-  callback: any
-) {
-  let tokenContract = new web3.eth.Contract(ERC20, token_address);
-  let bigAmount = convertNormalToBigNumber(
-    "500000000000",
-    await getDecimal(token_address)
-  );
-  executeContract(
-    tokenContract,
-    "approve",
-    0,
-    [destina_address, bigAmount],
-    callback
-  );
-}
-/**
- * 执行合约
- * @param contract 合约
- * @param methodName 方法
- * @param value value
- * @param params 参数
- * @param callback 回调
- */
-export function executeContract(
-  contract: any,
-  methodName: string,
-  value: number,
-  params: any,
-  callback: any
-) {
-  contract.methods[methodName](...params)
-    .send({ from: useinfo.account, value: value })
-    .on("transactionHash", function (hash: string) {
-      callback(0, hash);
-    })
-    .on("confirmation", function (confirmationNumber: number, receipt: any) {
-      if (confirmationNumber === 1) {
-        callback(1, receipt.transactionHash);
-      }
-    })
-    .on("error", function (error: any, message: any) {
-      if (message && message.transactionHash) {
-        callback(3, message.transactionHash);
-      } else {
-        callback(2, error.message);
-      }
-    });
-}
-/**
- * 链接metamask
- * @param callback 切链换账号的回调
- * @returns 首次连接的返回
- */
-export async function connect(callback: any) {
-  let resMsg = {
-    account: "",
-    currentChainID: "",
-    message: "",
+export async function queryInvite() {
+  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].etQuery);
+  let inviteInfo = await etQueryContract.methods.queryInvite(userInfo.account).call();
+  return {
+    data: {
+      firstLevelCount: inviteInfo.firstLevelCount,
+      firstLevelAmount: convertBigNumberToNormal(inviteInfo.firstLevelAmount, 18),
+      secondLevelCount: inviteInfo.secondLevelCount,
+      secondLevelAmount: convertBigNumberToNormal(inviteInfo.secondLevelAmount, 18),
+      reward: convertBigNumberToNormal(inviteInfo.reward, 18),
+    },
   };
-  //@ts-ignore
-  let _ethereum = window["ethereum"];
-  if (!_ethereum) return resMsg;
-  try {
-    let accounts = await _ethereum.enable();
-    web3 = new Web3(_ethereum);
-    useinfo.account = accounts[0];
-    useinfo.chainID = await web3.eth.getChainId();
-    resMsg.message = "success";
-    resMsg.account = useinfo.account;
-    resMsg.currentChainID = useinfo.chainID;
-    _ethereum.on("accountsChanged", (accounts: any) => {
-      useinfo.account = accounts[0];
-      callback({
-        account: useinfo.account,
-        currentChainID: useinfo.chainID,
-        message: "success",
-      });
-    });
-    _ethereum.on("chainChanged", async () => {
-      useinfo.chainID = await web3.eth.getChainId();
-      callback({
-        account: useinfo.account,
-        currentChainID: useinfo.chainID,
-        message: "success",
-      });
-    });
-  } catch (e) {
-    resMsg.message = e.message;
+}
+/*
+ *totalContribution  贡献价值总数
+ *totalvalue         当前奖池总金额
+ *amount             自己的贡献值
+ *reward             自己的待领取收益
+ */
+export async function getNodeInfo() {
+  let nodeMiningContract = new web3.eth.Contract(NODEMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].nodeMining);
+  let contributionTotal = await nodeMiningContract.methods.Contribution_Total().call();
+  let user = await nodeMiningContract.methods.getUserInfo(userInfo.account).call();
+
+  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].etQuery);
+  let ETReward = await etQueryContract.methods.getNodeReward().call();
+  return {
+    data: {
+      totalvalue: convertBigNumberToNormal(ETReward, 18),
+      totalContribution: convertBigNumberToNormal(contributionTotal, 18),
+      amount: convertBigNumberToNormal(user.amount, 18),
+      reward: convertBigNumberToNormal(user.reward, 18),
+    },
+  };
+}
+/**
+ * farming页面信息
+ * @returns 
+ */
+export async function farmingInfo() {
+  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].etQuery);
+  let EthstPoolInfo = await etQueryContract.methods.queryEthstPool(userInfo.account, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].WETH, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].USDT).call();
+  let totalAmount = convertBigNumberToNormal(EthstPoolInfo.totalAmount, 18);
+  let ET_DailyOutput = convertBigNumberToNormal(EthstPoolInfo.ET_DailyOutput, 18);
+  let ETH_DailyOutput = convertBigNumberToNormal(EthstPoolInfo.ETH_DailyOutput, 18);
+  let etPrice = +convertBigNumberToNormal(EthstPoolInfo.ET_reserveA, 18) / +convertBigNumberToNormal(EthstPoolInfo.ET_reserveB, 18);
+  let ethPrice = +convertBigNumberToNormal(EthstPoolInfo.ETH_reserveA, 18) / +convertBigNumberToNormal(EthstPoolInfo.ETH_reserveB, 18);
+  let ethstPrice = + convertBigNumberToNormal(EthstPoolInfo.ETHST_reserveA, 18) / + convertBigNumberToNormal(EthstPoolInfo.ETHST_reserveB, 18);
+  let EthstPoolApy = calculateETApy(+ET_DailyOutput, etPrice, +ETH_DailyOutput, ethPrice, +totalAmount, ethstPrice);
+
+  let ETHSTUSDTPoolInfo = await etQueryContract.methods.queryLpPool(userInfo.account, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].ETHST, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].USDT).call();
+  let totalAmount0 = convertBigNumberToNormal(ETHSTUSDTPoolInfo.totalAmount, 18);
+  let lpTotal0 = convertBigNumberToNormal(ETHSTUSDTPoolInfo.lpTotal, 18);
+  let ET_DailyOutput0 = convertBigNumberToNormal(ETHSTUSDTPoolInfo.dailyOutput, 18);
+  let lp_reserveB0 = convertBigNumberToNormal(ETHSTUSDTPoolInfo.lp_reserveB, 18);
+  let etPrice0 = +convertBigNumberToNormal(ETHSTUSDTPoolInfo.ET_reserveA, 18) / +convertBigNumberToNormal(ETHSTUSDTPoolInfo.ET_reserveB, 18);
+  let ETHSTUSDTPoolApy = calculateLPApy(+ET_DailyOutput0, etPrice0, +lp_reserveB0, +totalAmount0, +lpTotal0);
+  let lpPrice0 = +convertBigNumberToNormal(ETHSTUSDTPoolInfo.lp_reserveA, 18) / + convertBigNumberToNormal(ETHSTUSDTPoolInfo.lp_reserveB, 18);
+
+  let ETUSDTPoolInfo = await etQueryContract.methods.queryLpPool(userInfo.account, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].ET, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].USDT).call();
+  let totalAmount1 = convertBigNumberToNormal(ETUSDTPoolInfo.totalAmount, 18);
+  let lpTotal1 = convertBigNumberToNormal(ETUSDTPoolInfo.lpTotal, 18);
+  let ET_DailyOutput1 = convertBigNumberToNormal(ETUSDTPoolInfo.dailyOutput, 18);
+  let lp_reserveB1 = convertBigNumberToNormal(ETUSDTPoolInfo.lp_reserveB, 18);
+  let etPrice1 = +convertBigNumberToNormal(ETUSDTPoolInfo.ET_reserveA, 18) / +convertBigNumberToNormal(ETUSDTPoolInfo.ET_reserveB, 18);
+  let ETUSDTPoolApy = calculateLPApy(+ET_DailyOutput1, etPrice1, +lp_reserveB1, +totalAmount1, +lpTotal1);
+  let lpPrice1 = +convertBigNumberToNormal(ETUSDTPoolInfo.lp_reserveA, 18) / +convertBigNumberToNormal(ETUSDTPoolInfo.lp_reserveB, 18);
+
+  return {
+    data: {
+      ETHPrice: ethPrice,
+      ETHSTLockAmount: convertBigNumberToNormal(EthstPoolInfo.totalAmount, 18),
+      ETHST: {
+        totalAmount: +convertBigNumberToNormal(EthstPoolInfo.totalAmount, 18) * ethstPrice,
+        userAmount: convertBigNumberToNormal(EthstPoolInfo.userAmount, 18),
+        ethIncome: convertBigNumberToNormal(EthstPoolInfo.ethIncome, 18),
+        ethTotalIncome: convertBigNumberToNormal(EthstPoolInfo.ethTotalIncome, 18),
+        etIncome: convertBigNumberToNormal(EthstPoolInfo.etIncome, 18),
+        etTotalIncome: convertBigNumberToNormal(EthstPoolInfo.etTotalIncome, 18),
+        apy: EthstPoolApy,
+      },
+      ETHSTUSDT: {
+        totalAmount: +convertBigNumberToNormal(ETHSTUSDTPoolInfo.totalAmount, 18) * lpPrice0,
+        userAmount: convertBigNumberToNormal(ETHSTUSDTPoolInfo.userAmount, 18),
+        etIncome: convertBigNumberToNormal(ETHSTUSDTPoolInfo.etIncome, 18),
+        etTotalIncome: convertBigNumberToNormal(ETHSTUSDTPoolInfo.etTotalIncome, 18),
+        apy: ETHSTUSDTPoolApy,
+      },
+      ETUSDT: {
+        totalAmount: +convertBigNumberToNormal(ETUSDTPoolInfo.totalAmount, 18) * lpPrice1,
+        userAmount: convertBigNumberToNormal(ETUSDTPoolInfo.userAmount, 18),
+        etIncome: convertBigNumberToNormal(ETUSDTPoolInfo.etIncome, 18),
+        etTotalIncome: convertBigNumberToNormal(ETUSDTPoolInfo.etTotalIncome, 18),
+        apy: ETUSDTPoolApy,
+      },
+    },
+  };
+}
+//et pool apy = ((ET单日产量 * 价格 * 365) + (ETH单日产量 * 价格 * 365)) /( totalAmount * ETHST价格)
+function calculateETApy(ETDailyOutPut: number, etPrice: number, ETHDailyOutPut: number, ethPrice: number, totalAmount: number, ethstPrice: number) {
+  return ((ETDailyOutPut * etPrice * 365 + ETHDailyOutPut * ethPrice * 365) / (totalAmount * ethstPrice));
+}
+
+//lp apy = (lp ET单日产量 * ET 价格 * 365) / ((lp_reserveB * 2 / lpTotal) * totalAmount)
+function calculateLPApy(ETDailyOutPut: number, etPrice: number, lp_reserveB: number, totalAmount: number, lpTotal: number) {
+  return ((ETDailyOutPut * etPrice * 365) / (((lp_reserveB * 2) / lpTotal) * totalAmount));
+}
+/**
+ * 获取信息
+ * @returns 
+ */
+export async function getCurrentRecord() {
+  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].etQuery);
+  let ETHSTTotal = await etQueryContract.methods.queryETHSTTotal().call();
+  return {
+    data: {
+      total: convertBigNumberToNormal(ETHSTTotal.total, 18),
+      sellTotal: convertBigNumberToNormal(ETHSTTotal.sellTotal, 18),
+      buyTotal: convertBigNumberToNormal(ETHSTTotal.buyTotal, 18),
+    },
+  };
+}
+/**
+ * 首页
+ * @returns 
+ */
+export async function homeData() {
+  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].etQuery);
+  let homeData = await etQueryContract.methods.queryHomeData(userInfo.account, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].ET, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].WETH, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].USDT).call();
+  return {
+    data: {
+      ETHSTprice: +convertBigNumberToNormal(homeData.ETHST_reserveA, 18) / + convertBigNumberToNormal(homeData.ETHST_reserveB, 18),
+      ETprice: +convertBigNumberToNormal(homeData.ET_reserveA, 18) / +convertBigNumberToNormal(homeData.ET_reserveB, 18),
+      network: {
+        ETHST_total: convertBigNumberToNormal(homeData.ETHST_total, 18),
+        ETHST_circulation: convertBigNumberToNormal(homeData.ETHST_circulation, 18),
+        ET_total: convertBigNumberToNormal(homeData.ET_total, 18),
+        ET_circulation: convertBigNumberToNormal(homeData.ET_circulation, 18),
+        ETH_release: convertBigNumberToNormal(homeData.ETH_release, 18),
+      },
+      my: {
+        ETHST_balance: convertBigNumberToNormal(homeData.ETHST_balance, 18),
+        ETHST_pledge: convertBigNumberToNormal(homeData.ETHST_pledge, 18),
+        ET_balance: convertBigNumberToNormal(homeData.ET_balance, 18),
+        ETH_user_release: convertBigNumberToNormal(homeData.ETH_user_release, 18),
+      },
+    },
+  };
+}
+/**
+ * 信息
+ * @returns 
+ */
+export async function homeData2() {
+  let _homedate = await homeData();
+  let _farmingInfo = await farmingInfo();
+  return {
+    data: {
+      ETHSTLockAmount: _farmingInfo.data.ETHSTLockAmount,
+      ETHST_total: _homedate.data.network.ETHST_total,
+      ETHPrice: _farmingInfo.data.ETHPrice,
+      ETprice: _homedate.data.ETprice,
+    },
+  };
+}
+/**
+ * 买ETHST
+ * @param _amount 
+ * @param husdEthstRatio 
+ * @param id 
+ * @param callback 
+ */
+export async function buy(_amount: string, husdEthstRatio: string, id: string, callback: (code: number, hash: string) => void) {
+  let exchangeTokenContract = new web3.eth.Contract(EXCHANGETOKEN, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].exchangeToken);
+  let amount = mul(_amount, husdEthstRatio);
+  let bigAmount = convertNormalToBigNumber(amount, await getDecimal(approveTokens.USDT));
+  executeContract(exchangeTokenContract, "buy", 0, [bigAmount, id], callback);
+}
+/**
+ * 提现
+ * @param address 
+ * @param callback 
+ */
+export function API_BindEx(address: string, callback: (code: number, hash: string) => void) {
+  let recommendContract = new web3.eth.Contract(RECOMMEND, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].recommend);
+  executeContract(recommendContract, "API_BindEx", 0, [address], callback);
+}
+/**
+ * 提取邀请奖励
+ * @param callback 
+ */
+export function withdrawBindReward(callback: (code: number, hash: string) => void) {
+  let InviteRewardContract = new web3.eth.Contract(INVITEREWARD, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].inviteReward);
+  executeContract(InviteRewardContract, "withdraw", 0, [], callback);
+}
+/**
+ * 提取节点奖励
+ * @param callback 
+ */
+export function withdrawNodeReward(callback: (code: number, hash: string) => void) {
+  let nodeMiningContract = new web3.eth.Contract(NODEMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].nodeMining);
+  executeContract(nodeMiningContract, "withdraw", 0, [], callback);
+}
+/**
+ * 质押ETHST
+ * @param type 
+ * @param amount 
+ * @param callback 
+ */
+export function stake(type: string, amount: string, callback: (code: number, hash: string) => void) {
+  let bigAmount = convertNormalToBigNumber(amount, 18);
+  if (type === "ETHST") {
+    let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].pledgeMining);
+    executeContract(pledgeMiningContract, "stakeEthSt", 0, [bigAmount], callback);
+  } else if (type === "ETHSTUSDT") {
+    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining);
+    executeContract(lpMiningContract, "stackLp", 0, ['0', bigAmount], callback);
+  } else {
+    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining);
+    executeContract(lpMiningContract, "stackLp", 0, ['1', bigAmount], callback);
   }
-  return resMsg;
+}
+/**
+ * 移除ETHST
+ * @param type 
+ * @param amount 
+ * @param callback 
+ */
+export function remove(type: string, amount: string, callback: (code: number, hash: string) => void) {
+  let bigAmount = convertNormalToBigNumber(amount, 18);
+  if (type === "ETHST") {
+    let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].pledgeMining);
+    executeContract(pledgeMiningContract, "removeEthSt", 0, [bigAmount], callback);
+  } else if (type === "ETHSTUSDT") {
+    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining);
+    executeContract(lpMiningContract, "removeLp", 0, ["0", bigAmount], callback);
+  } else {
+    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining);
+    executeContract(lpMiningContract, "removeLp", 0, ["1", bigAmount], callback);
+  }
+}
+/**
+ * 收取et
+ * @param type 
+ * @param callback 
+ */
+export function harvestET(type: string, callback: (code: number, hash: string) => void) {
+  if (type == "ETHST") {
+    let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].pledgeMining);
+    executeContract(pledgeMiningContract, "withdraw_ET", 0, [], callback);
+  } else if (type === "ETHSTUSDT") {
+    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining);
+    executeContract(lpMiningContract, "withdrawIncome", 0, ["0"], callback);
+  } else {
+    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining);
+    executeContract(lpMiningContract, "withdrawIncome", 0, ["1"], callback);
+  }
+}
+/**
+ * 提取eth
+ * @param callback 
+ */
+export function withdraw_ETH(callback: (code: number, hash: string) => void) {
+  let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].pledgeMining);
+  executeContract(pledgeMiningContract, "withdraw_ETH", 0, [], callback);
+}
+/**
+ * test
+ * @param callback 
+ */
+export async function test(callback: (code: number, hash: string) => void) {
+  let tokenContract = new web3.eth.Contract(ERC20, "0xae9269f27437f0fcbc232d39ec814844a51d6b8f");
+  let bigAmount = convertNormalToBigNumber("500000000000", await getDecimal("0xae9269f27437f0fcbc232d39ec814844a51d6b8f"));
+  executeContract(tokenContract, "approve", 0, ["0xA94507E3bd5e3Cd414b37456ba716A92F4877d6e", bigAmount], callback);
+}
+
+//----------------------------------------服务器信息-----------------------------------------------------------
+/**
+ * 拿全网算力
+ * @returns 
+ */
+export async function networkHashrateInfo() {
+  return fetch("https://api.ethst.io/api/v1/pool/v1/currency/stats?currency=ETH", { method: "get" }
+  ).then((response) => {
+    return response.json();
+  });
+}
+/**
+ * 拿贡献榜单
+ * @returns 
+ */
+export function getRankList() {
+  return rankList;
+}
+/**
+ * 拿贡献榜单预先
+ * @returns 
+ */
+export async function getRankListBefore() {
+  const query = `
+    {
+        nodeMiningStakes(orderBy: amount, orderDirection: desc, first: 20) {
+          id
+          amount
+        }
+      }
+    `;
+  return fetch("https://api.ethst.io/subgraphs/name/ethst/ethst_project", {
+    method: "post",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ query, }),
+  }).then((response) => response.json())
+    .then((data) => {
+      const nodeMiningStakes = data.data.nodeMiningStakes;
+      rankList = {
+        data: nodeMiningStakes.map((item: any) => {
+          return {
+            ...item,
+            amount: convertBigNumberToNormal(item.amount, 18),
+          };
+        }),
+      };
+    })
+    .catch(() => {
+      rankList = { data: [] };
+    });
 }
