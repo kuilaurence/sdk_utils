@@ -1,7 +1,7 @@
 import Web3 from "web3";
 export var web3: Web3;
 import { ERC20 } from "./lib_abi";
-import { userInfo } from "./lib_const";
+import { chainIdDict, userInfo } from "./lib_const";
 import { BigNumber } from "bignumber.js";
 import { Contract } from "web3-eth-contract";
 
@@ -221,10 +221,11 @@ export function executeContract(contract: Contract, methodName: string, value: n
     });
 }
 
-export async function connect(callback: (data: { account: string; chainID: number; message: string; }) => void) {
+export async function connect(callback: (data: { account: string; chainID: number; chain: string, message: string; }) => void) {
   let resMsg = {
     account: "",
     chainID: 0,
+    chain: "",
     message: "success",
   };
   //@ts-ignore
@@ -237,11 +238,13 @@ export async function connect(callback: (data: { account: string; chainID: numbe
     userInfo.chainID = await web3.eth.getChainId() as typeof userInfo.chainID;
     resMsg.account = userInfo.account;
     resMsg.chainID = userInfo.chainID;
+    userInfo.chain = chainIdDict[userInfo.chainID] as typeof userInfo.chain;
     _ethereum.on("accountsChanged", (accounts: string[]) => {
       userInfo.account = accounts[0];
       callback({
         account: userInfo.account,
         chainID: userInfo.chainID,
+        chain: chainIdDict[userInfo.chainID],
         message: "success",
       });
     });
@@ -250,6 +253,7 @@ export async function connect(callback: (data: { account: string; chainID: numbe
       callback({
         account: userInfo.account,
         chainID: userInfo.chainID,
+        chain: chainIdDict[userInfo.chainID],
         message: "success",
       });
     });
@@ -260,10 +264,16 @@ export async function connect(callback: (data: { account: string; chainID: numbe
 }
 /**
  * 退出
+ * @returns 
  */
 export function logout() {
   userInfo.account = "";
   userInfo.chainID = 97;
   userInfo.chain = "BSCTest";
   web3 = null;
+  return {
+    account: "",
+    chainID: 0,
+    chain: "",
+  }
 }

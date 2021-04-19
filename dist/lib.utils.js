@@ -396,6 +396,7 @@ function connect(callback) {
                     resMsg = {
                         account: "",
                         chainID: 0,
+                        chain: "",
                         message: "success",
                     };
                     _ethereum = window["ethereum"];
@@ -415,11 +416,13 @@ function connect(callback) {
                     _a.chainID = (_b.sent());
                     resMsg.account = lib_const_1.userInfo.account;
                     resMsg.chainID = lib_const_1.userInfo.chainID;
+                    lib_const_1.userInfo.chain = lib_const_1.chainIdDict[lib_const_1.userInfo.chainID];
                     _ethereum.on("accountsChanged", function (accounts) {
                         lib_const_1.userInfo.account = accounts[0];
                         callback({
                             account: lib_const_1.userInfo.account,
                             chainID: lib_const_1.userInfo.chainID,
+                            chain: lib_const_1.chainIdDict[lib_const_1.userInfo.chainID],
                             message: "success",
                         });
                     });
@@ -435,6 +438,7 @@ function connect(callback) {
                                     callback({
                                         account: lib_const_1.userInfo.account,
                                         chainID: lib_const_1.userInfo.chainID,
+                                        chain: lib_const_1.chainIdDict[lib_const_1.userInfo.chainID],
                                         message: "success",
                                     });
                                     return [2 /*return*/];
@@ -454,12 +458,18 @@ function connect(callback) {
 exports.connect = connect;
 /**
  * 退出
+ * @returns
  */
 function logout() {
     lib_const_1.userInfo.account = "";
     lib_const_1.userInfo.chainID = 97;
     lib_const_1.userInfo.chain = "BSCTest";
     exports.web3 = null;
+    return {
+        account: "",
+        chainID: 0,
+        chain: "",
+    };
 }
 exports.logout = logout;
 //# sourceMappingURL=lib.utils.js.map

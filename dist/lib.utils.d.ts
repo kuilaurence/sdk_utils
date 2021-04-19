@@ -138,14 +138,21 @@ export declare function executeContract(contract: Contract, methodName: string, 
 export declare function connect(callback: (data: {
     account: string;
     chainID: number;
+    chain: string;
     message: string;
 }) => void): Promise<{
     account: string;
     chainID: number;
+    chain: string;
     message: string;
 }>;
 /**
  * 退出
+ * @returns
  */
-export declare function logout(): void;
+export declare function logout(): {
+    account: string;
+    chainID: number;
+    chain: string;
+};
 export {};
