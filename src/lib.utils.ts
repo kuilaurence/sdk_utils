@@ -236,9 +236,10 @@ export async function connect(callback: (data: { account: string; chainID: numbe
     web3 = new Web3(_ethereum);
     userInfo.account = accounts[0];
     userInfo.chainID = await web3.eth.getChainId() as typeof userInfo.chainID;
+    userInfo.chain = chainIdDict[userInfo.chainID] as typeof userInfo.chain;
     resMsg.account = userInfo.account;
     resMsg.chainID = userInfo.chainID;
-    userInfo.chain = chainIdDict[userInfo.chainID] as typeof userInfo.chain;
+    resMsg.chain = userInfo.chain;
     _ethereum.on("accountsChanged", (accounts: string[]) => {
       userInfo.account = accounts[0];
       callback({

@@ -414,9 +414,10 @@ function connect(callback) {
                     return [4 /*yield*/, exports.web3.eth.getChainId()];
                 case 3:
                     _a.chainID = (_b.sent());
+                    lib_const_1.userInfo.chain = lib_const_1.chainIdDict[lib_const_1.userInfo.chainID];
                     resMsg.account = lib_const_1.userInfo.account;
                     resMsg.chainID = lib_const_1.userInfo.chainID;
-                    lib_const_1.userInfo.chain = lib_const_1.chainIdDict[lib_const_1.userInfo.chainID];
+                    resMsg.chain = lib_const_1.userInfo.chain;
                     _ethereum.on("accountsChanged", function (accounts) {
                         lib_const_1.userInfo.account = accounts[0];
                         callback({
