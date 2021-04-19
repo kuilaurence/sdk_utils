@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.approveTokens = exports.tokenAddres = exports.ContractAddress = exports.userInfo = exports.chainIdDict = void 0;
+exports.tokenAddres = exports.ContractAddress = exports.userInfo = exports.chainIdDict = void 0;
 exports.chainIdDict = {
     1: "Ethereum",
     3: "Ropsten",
@@ -63,14 +63,5 @@ exports.tokenAddres = {
         ETUSDT: "0x6da00728fe510cdc7176987D0d67ed1B7df9f802",
         ETHSTUSDT: "0x26e8Fc70db2A62F8c04689b6245B659aE940EBA2",
     },
-};
-//不必更新
-exports.approveTokens = {
-    USDT: "",
-    WETH: "",
-    ETHST: "",
-    ET: "",
-    ETUSDT: "",
-    ETHSTUSDT: "",
 };
 //# sourceMappingURL=lib_const.js.map

@@ -1,4 +1,4 @@
-import { userInfo, tokenAddres, ContractAddress, approveTokens as _approveTokens } from "./lib_const";
+import { userInfo, tokenAddres, ContractAddress } from "./lib_const";
 import { ERC20, ETQUERY, LPMINING, RECOMMEND, NODEMINING, INVITEREWARD, PLEDGEMINING, EXCHANGETOKEN } from "./lib_abi";
 import {
   add, sub, mul, div, web3, findToken, getDecimal,
@@ -12,7 +12,6 @@ export const connect = _connect;
 export const getBalance = _getBalance;
 export const approveToken = _approveToken;
 export const isETHAddress = _isETHAddress;
-export const approveTokens = _approveTokens;
 
 export var tokenDic: {};
 export var rankList: { data: [] };
@@ -41,6 +40,14 @@ export async function getAllowance(token_address: string, type: string) {
     destina_address = ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining;
   }
   return await _getAllowance(token_address, destina_address);
+}
+/**
+ * 获得approvetoken address
+ * @param token_symbol 
+ * @returns 
+ */
+export function getApproveTokens(token_symbol: string) {
+  return tokenAddres[userInfo.chainID as keyof typeof tokenAddres][token_symbol as keyof typeof tokenAddres[128]];
 }
 /**
  * 是否绑定上级
@@ -235,7 +242,7 @@ export async function homeData2() {
 export async function buy(_amount: string, husdEthstRatio: string, id: string, callback: (code: number, hash: string) => void) {
   let exchangeTokenContract = new web3.eth.Contract(EXCHANGETOKEN, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].exchangeToken);
   let amount = mul(_amount, husdEthstRatio);
-  let bigAmount = convertNormalToBigNumber(amount, await getDecimal(approveTokens.USDT));
+  let bigAmount = convertNormalToBigNumber(amount, await getDecimal(getApproveTokens('USDT')));
   executeContract(exchangeTokenContract, "buy", 0, [bigAmount, id], callback);
 }
 /**

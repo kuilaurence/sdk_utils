@@ -59,11 +59,3 @@ export declare const tokenAddres: {
         ETHSTUSDT: string;
     };
 };
-export declare const approveTokens: {
-    USDT: string;
-    WETH: string;
-    ETHST: string;
-    ET: string;
-    ETUSDT: string;
-    ETHSTUSDT: string;
-};

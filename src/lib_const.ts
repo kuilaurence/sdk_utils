@@ -64,13 +64,3 @@ export const tokenAddres = {
     ETHSTUSDT: "0x26e8Fc70db2A62F8c04689b6245B659aE940EBA2",
   },
 };
-
-//不必更新
-export const approveTokens = {
-  USDT: "",
-  WETH: "",
-  ETHST: "",
-  ET: "",
-  ETUSDT: "",
-  ETHSTUSDT: "",
-};

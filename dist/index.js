@@ -47,7 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRankListBefore = exports.getRankList = exports.networkHashrateInfo = exports.test = exports.withdraw_ETH = exports.harvestET = exports.remove = exports.stake = exports.withdrawNodeReward = exports.withdrawBindReward = exports.API_BindEx = exports.buy = exports.homeData2 = exports.homeData = exports.getCurrentRecord = exports.farmingInfo = exports.getNodeInfo = exports.queryInvite = exports.GetIntroducerBind = exports.getAllowance = exports.getTokenSymbol = exports.rankList = exports.tokenDic = exports.approveTokens = exports.isETHAddress = exports.approveToken = exports.getBalance = exports.connect = exports.logout = void 0;
+exports.getRankListBefore = exports.getRankList = exports.networkHashrateInfo = exports.test = exports.withdraw_ETH = exports.harvestET = exports.remove = exports.stake = exports.withdrawNodeReward = exports.withdrawBindReward = exports.API_BindEx = exports.buy = exports.homeData2 = exports.homeData = exports.getCurrentRecord = exports.farmingInfo = exports.getNodeInfo = exports.queryInvite = exports.GetIntroducerBind = exports.getApproveTokens = exports.getAllowance = exports.getTokenSymbol = exports.rankList = exports.tokenDic = exports.isETHAddress = exports.approveToken = exports.getBalance = exports.connect = exports.logout = void 0;
 var lib_const_1 = require("./lib_const");
 var lib_abi_1 = require("./lib_abi");
 var lib_utils_1 = require("./lib.utils");
@@ -56,7 +56,6 @@ exports.connect = lib_utils_1.connect;
 exports.getBalance = lib_utils_1.getBalance;
 exports.approveToken = lib_utils_1.approveToken;
 exports.isETHAddress = lib_utils_1.isETHAddress;
-exports.approveTokens = lib_const_1.approveTokens;
 /**
  * 获取symbol
  * @param token_address
@@ -96,6 +95,15 @@ function getAllowance(token_address, type) {
     });
 }
 exports.getAllowance = getAllowance;
+/**
+ * 获得approvetoken address
+ * @param token_symbol
+ * @returns
+ */
+function getApproveTokens(token_symbol) {
+    return lib_const_1.tokenAddres[lib_const_1.userInfo.chainID][token_symbol];
+}
+exports.getApproveTokens = getApproveTokens;
 /**
  * 是否绑定上级
  * @returns
@@ -377,7 +385,7 @@ function buy(_amount, husdEthstRatio, id, callback) {
                     amount = lib_utils_1.mul(_amount, husdEthstRatio);
                     _a = lib_utils_1.convertNormalToBigNumber;
                     _b = [amount];
-                    return [4 /*yield*/, lib_utils_1.getDecimal(exports.approveTokens.USDT)];
+                    return [4 /*yield*/, lib_utils_1.getDecimal(getApproveTokens('USDT'))];
                 case 1:
                     bigAmount = _a.apply(void 0, _b.concat([_c.sent()]));
                     lib_utils_1.executeContract(exchangeTokenContract, "buy", 0, [bigAmount, id], callback);

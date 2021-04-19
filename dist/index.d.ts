@@ -4,14 +4,6 @@ export declare const connect: typeof _connect;
 export declare const getBalance: typeof _getBalance;
 export declare const approveToken: typeof _approveToken;
 export declare const isETHAddress: typeof _isETHAddress;
-export declare const approveTokens: {
-    USDT: string;
-    WETH: string;
-    ETHST: string;
-    ET: string;
-    ETUSDT: string;
-    ETHSTUSDT: string;
-};
 export declare var tokenDic: {};
 export declare var rankList: {
     data: [];
@@ -29,6 +21,12 @@ export declare function getTokenSymbol(token_address: string): string;
  * @returns
  */
 export declare function getAllowance(token_address: string, type: string): Promise<string>;
+/**
+ * 获得approvetoken address
+ * @param token_symbol
+ * @returns
+ */
+export declare function getApproveTokens(token_symbol: string): string;
 /**
  * 是否绑定上级
  * @returns
