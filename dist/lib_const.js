@@ -13,8 +13,8 @@ exports.chainIdDict = {
 };
 exports.userInfo = {
     account: "",
-    chainID: 0,
-    chain: "",
+    chainID: 97,
+    chain: "BSCTest",
 };
 //每次部署需要配置,对应合约地址
 exports.ContractAddress = {

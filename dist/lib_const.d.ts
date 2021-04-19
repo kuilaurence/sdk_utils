@@ -10,8 +10,8 @@ export declare const chainIdDict: {
 };
 export declare const userInfo: {
     account: string;
-    chainID: number;
-    chain: string;
+    chainID: 97 | 128;
+    chain: "BSCTest" | "HECO";
 };
 export declare const ContractAddress: {
     97: {

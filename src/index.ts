@@ -21,7 +21,7 @@ export var rankList: { data: [] };
  * @returns 
  */
 export function getTokenSymbol(token_address: string) {
-  let symbol = findToken(tokenAddres[userInfo.chainID as keyof typeof tokenAddres], token_address);
+  let symbol = findToken(tokenAddres[userInfo.chainID], token_address);
   return symbol || "not know";
 }
 /**
@@ -33,11 +33,11 @@ export function getTokenSymbol(token_address: string) {
 export async function getAllowance(token_address: string, type: string) {
   let destina_address = "";
   if (type === "USDT") {
-    destina_address = ContractAddress[userInfo.chainID as keyof typeof ContractAddress].exchangeToken;
+    destina_address = ContractAddress[userInfo.chainID].exchangeToken;
   } else if (type === "ETHST") {
-    destina_address = ContractAddress[userInfo.chainID as keyof typeof ContractAddress].pledgeMining;
+    destina_address = ContractAddress[userInfo.chainID].pledgeMining;
   } else {
-    destina_address = ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining;
+    destina_address = ContractAddress[userInfo.chainID].lpMining;
   }
   return await _getAllowance(token_address, destina_address);
 }
@@ -47,14 +47,14 @@ export async function getAllowance(token_address: string, type: string) {
  * @returns 
  */
 export function getApproveTokens(token_symbol: string) {
-  return tokenAddres[userInfo.chainID as keyof typeof tokenAddres][token_symbol as keyof typeof tokenAddres[128]];
+  return tokenAddres[userInfo.chainID][token_symbol as keyof typeof tokenAddres[128]];
 }
 /**
  * 是否绑定上级
  * @returns 
  */
 export async function GetIntroducerBind() {
-  let recommendContract = new web3.eth.Contract(RECOMMEND, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].recommend);
+  let recommendContract = new web3.eth.Contract(RECOMMEND, ContractAddress[userInfo.chainID].recommend);
   let res = await recommendContract.methods.GetIntroducerBind(userInfo.account).call();
   if (res) {
     let address = await recommendContract.methods.GetIntroducer(userInfo.account).call();
@@ -68,7 +68,7 @@ export async function GetIntroducerBind() {
  * @returns 
  */
 export async function queryInvite() {
-  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].etQuery);
+  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID].etQuery);
   let inviteInfo = await etQueryContract.methods.queryInvite(userInfo.account).call();
   return {
     data: {
@@ -87,11 +87,11 @@ export async function queryInvite() {
  *reward             自己的待领取收益
  */
 export async function getNodeInfo() {
-  let nodeMiningContract = new web3.eth.Contract(NODEMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].nodeMining);
+  let nodeMiningContract = new web3.eth.Contract(NODEMINING, ContractAddress[userInfo.chainID].nodeMining);
   let contributionTotal = await nodeMiningContract.methods.Contribution_Total().call();
   let user = await nodeMiningContract.methods.getUserInfo(userInfo.account).call();
 
-  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].etQuery);
+  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID].etQuery);
   let ETReward = await etQueryContract.methods.getNodeReward().call();
   return {
     data: {
@@ -107,8 +107,8 @@ export async function getNodeInfo() {
  * @returns 
  */
 export async function farmingInfo() {
-  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].etQuery);
-  let EthstPoolInfo = await etQueryContract.methods.queryEthstPool(userInfo.account, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].WETH, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].USDT).call();
+  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID].etQuery);
+  let EthstPoolInfo = await etQueryContract.methods.queryEthstPool(userInfo.account, tokenAddres[userInfo.chainID].WETH, tokenAddres[userInfo.chainID].USDT).call();
   let totalAmount = convertBigNumberToNormal(EthstPoolInfo.totalAmount, 18);
   let ET_DailyOutput = convertBigNumberToNormal(EthstPoolInfo.ET_DailyOutput, 18);
   let ETH_DailyOutput = convertBigNumberToNormal(EthstPoolInfo.ETH_DailyOutput, 18);
@@ -117,7 +117,7 @@ export async function farmingInfo() {
   let ethstPrice = + convertBigNumberToNormal(EthstPoolInfo.ETHST_reserveA, 18) / + convertBigNumberToNormal(EthstPoolInfo.ETHST_reserveB, 18);
   let EthstPoolApy = calculateETApy(+ET_DailyOutput, etPrice, +ETH_DailyOutput, ethPrice, +totalAmount, ethstPrice);
 
-  let ETHSTUSDTPoolInfo = await etQueryContract.methods.queryLpPool(userInfo.account, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].ETHST, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].USDT).call();
+  let ETHSTUSDTPoolInfo = await etQueryContract.methods.queryLpPool(userInfo.account, tokenAddres[userInfo.chainID].ETHST, tokenAddres[userInfo.chainID].USDT).call();
   let totalAmount0 = convertBigNumberToNormal(ETHSTUSDTPoolInfo.totalAmount, 18);
   let lpTotal0 = convertBigNumberToNormal(ETHSTUSDTPoolInfo.lpTotal, 18);
   let ET_DailyOutput0 = convertBigNumberToNormal(ETHSTUSDTPoolInfo.dailyOutput, 18);
@@ -126,7 +126,7 @@ export async function farmingInfo() {
   let ETHSTUSDTPoolApy = calculateLPApy(+ET_DailyOutput0, etPrice0, +lp_reserveB0, +totalAmount0, +lpTotal0);
   let lpPrice0 = +convertBigNumberToNormal(ETHSTUSDTPoolInfo.lp_reserveA, 18) / + convertBigNumberToNormal(ETHSTUSDTPoolInfo.lp_reserveB, 18);
 
-  let ETUSDTPoolInfo = await etQueryContract.methods.queryLpPool(userInfo.account, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].ET, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].USDT).call();
+  let ETUSDTPoolInfo = await etQueryContract.methods.queryLpPool(userInfo.account, tokenAddres[userInfo.chainID].ET, tokenAddres[userInfo.chainID].USDT).call();
   let totalAmount1 = convertBigNumberToNormal(ETUSDTPoolInfo.totalAmount, 18);
   let lpTotal1 = convertBigNumberToNormal(ETUSDTPoolInfo.lpTotal, 18);
   let ET_DailyOutput1 = convertBigNumberToNormal(ETUSDTPoolInfo.dailyOutput, 18);
@@ -179,7 +179,7 @@ function calculateLPApy(ETDailyOutPut: number, etPrice: number, lp_reserveB: num
  * @returns 
  */
 export async function getCurrentRecord() {
-  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].etQuery);
+  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID].etQuery);
   let ETHSTTotal = await etQueryContract.methods.queryETHSTTotal().call();
   return {
     data: {
@@ -194,8 +194,8 @@ export async function getCurrentRecord() {
  * @returns 
  */
 export async function homeData() {
-  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].etQuery);
-  let homeData = await etQueryContract.methods.queryHomeData(userInfo.account, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].ET, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].WETH, tokenAddres[userInfo.chainID as keyof typeof ContractAddress].USDT).call();
+  let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID].etQuery);
+  let homeData = await etQueryContract.methods.queryHomeData(userInfo.account, tokenAddres[userInfo.chainID].ET, tokenAddres[userInfo.chainID].WETH, tokenAddres[userInfo.chainID].USDT).call();
   return {
     data: {
       ETHSTprice: +convertBigNumberToNormal(homeData.ETHST_reserveA, 18) / + convertBigNumberToNormal(homeData.ETHST_reserveB, 18),
@@ -240,7 +240,7 @@ export async function homeData2() {
  * @param callback 
  */
 export async function buy(_amount: string, husdEthstRatio: string, id: string, callback: (code: number, hash: string) => void) {
-  let exchangeTokenContract = new web3.eth.Contract(EXCHANGETOKEN, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].exchangeToken);
+  let exchangeTokenContract = new web3.eth.Contract(EXCHANGETOKEN, ContractAddress[userInfo.chainID].exchangeToken);
   let amount = mul(_amount, husdEthstRatio);
   let bigAmount = convertNormalToBigNumber(amount, await getDecimal(getApproveTokens('USDT')));
   executeContract(exchangeTokenContract, "buy", 0, [bigAmount, id], callback);
@@ -251,7 +251,7 @@ export async function buy(_amount: string, husdEthstRatio: string, id: string, c
  * @param callback 
  */
 export function API_BindEx(address: string, callback: (code: number, hash: string) => void) {
-  let recommendContract = new web3.eth.Contract(RECOMMEND, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].recommend);
+  let recommendContract = new web3.eth.Contract(RECOMMEND, ContractAddress[userInfo.chainID].recommend);
   executeContract(recommendContract, "API_BindEx", 0, [address], callback);
 }
 /**
@@ -259,7 +259,7 @@ export function API_BindEx(address: string, callback: (code: number, hash: strin
  * @param callback 
  */
 export function withdrawBindReward(callback: (code: number, hash: string) => void) {
-  let InviteRewardContract = new web3.eth.Contract(INVITEREWARD, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].inviteReward);
+  let InviteRewardContract = new web3.eth.Contract(INVITEREWARD, ContractAddress[userInfo.chainID].inviteReward);
   executeContract(InviteRewardContract, "withdraw", 0, [], callback);
 }
 /**
@@ -267,7 +267,7 @@ export function withdrawBindReward(callback: (code: number, hash: string) => voi
  * @param callback 
  */
 export function withdrawNodeReward(callback: (code: number, hash: string) => void) {
-  let nodeMiningContract = new web3.eth.Contract(NODEMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].nodeMining);
+  let nodeMiningContract = new web3.eth.Contract(NODEMINING, ContractAddress[userInfo.chainID].nodeMining);
   executeContract(nodeMiningContract, "withdraw", 0, [], callback);
 }
 /**
@@ -279,13 +279,13 @@ export function withdrawNodeReward(callback: (code: number, hash: string) => voi
 export function stake(type: string, amount: string, callback: (code: number, hash: string) => void) {
   let bigAmount = convertNormalToBigNumber(amount, 18);
   if (type === "ETHST") {
-    let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].pledgeMining);
+    let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID].pledgeMining);
     executeContract(pledgeMiningContract, "stakeEthSt", 0, [bigAmount], callback);
   } else if (type === "ETHSTUSDT") {
-    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining);
+    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID].lpMining);
     executeContract(lpMiningContract, "stackLp", 0, ['0', bigAmount], callback);
   } else {
-    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining);
+    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID].lpMining);
     executeContract(lpMiningContract, "stackLp", 0, ['1', bigAmount], callback);
   }
 }
@@ -298,13 +298,13 @@ export function stake(type: string, amount: string, callback: (code: number, has
 export function remove(type: string, amount: string, callback: (code: number, hash: string) => void) {
   let bigAmount = convertNormalToBigNumber(amount, 18);
   if (type === "ETHST") {
-    let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].pledgeMining);
+    let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID].pledgeMining);
     executeContract(pledgeMiningContract, "removeEthSt", 0, [bigAmount], callback);
   } else if (type === "ETHSTUSDT") {
-    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining);
+    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID].lpMining);
     executeContract(lpMiningContract, "removeLp", 0, ["0", bigAmount], callback);
   } else {
-    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining);
+    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID].lpMining);
     executeContract(lpMiningContract, "removeLp", 0, ["1", bigAmount], callback);
   }
 }
@@ -315,13 +315,13 @@ export function remove(type: string, amount: string, callback: (code: number, ha
  */
 export function harvestET(type: string, callback: (code: number, hash: string) => void) {
   if (type == "ETHST") {
-    let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].pledgeMining);
+    let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID].pledgeMining);
     executeContract(pledgeMiningContract, "withdraw_ET", 0, [], callback);
   } else if (type === "ETHSTUSDT") {
-    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining);
+    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID].lpMining);
     executeContract(lpMiningContract, "withdrawIncome", 0, ["0"], callback);
   } else {
-    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].lpMining);
+    let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID].lpMining);
     executeContract(lpMiningContract, "withdrawIncome", 0, ["1"], callback);
   }
 }
@@ -330,7 +330,7 @@ export function harvestET(type: string, callback: (code: number, hash: string) =
  * @param callback 
  */
 export function withdraw_ETH(callback: (code: number, hash: string) => void) {
-  let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID as keyof typeof ContractAddress].pledgeMining);
+  let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID].pledgeMining);
   executeContract(pledgeMiningContract, "withdraw_ETH", 0, [], callback);
 }
 /**

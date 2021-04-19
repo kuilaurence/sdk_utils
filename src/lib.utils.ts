@@ -234,7 +234,7 @@ export async function connect(callback: (data: { account: string; chainID: numbe
     let accounts = await _ethereum.enable();
     web3 = new Web3(_ethereum);
     userInfo.account = accounts[0];
-    userInfo.chainID = await web3.eth.getChainId();
+    userInfo.chainID = await web3.eth.getChainId() as typeof userInfo.chainID;
     resMsg.account = userInfo.account;
     resMsg.chainID = userInfo.chainID;
     _ethereum.on("accountsChanged", (accounts: string[]) => {
@@ -246,7 +246,7 @@ export async function connect(callback: (data: { account: string; chainID: numbe
       });
     });
     _ethereum.on("chainChanged", async () => {
-      userInfo.chainID = await web3.eth.getChainId();
+      userInfo.chainID = await web3.eth.getChainId() as typeof userInfo.chainID;
       callback({
         account: userInfo.account,
         chainID: userInfo.chainID,
@@ -263,7 +263,7 @@ export async function connect(callback: (data: { account: string; chainID: numbe
  */
 export function logout() {
   userInfo.account = "";
-  userInfo.chainID = 0;
-  userInfo.chain = "";
+  userInfo.chainID = 97;
+  userInfo.chain = "BSCTest";
   web3 = null;
 }

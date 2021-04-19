@@ -412,7 +412,7 @@ function connect(callback) {
                     _a = lib_const_1.userInfo;
                     return [4 /*yield*/, exports.web3.eth.getChainId()];
                 case 3:
-                    _a.chainID = _b.sent();
+                    _a.chainID = (_b.sent());
                     resMsg.account = lib_const_1.userInfo.account;
                     resMsg.chainID = lib_const_1.userInfo.chainID;
                     _ethereum.on("accountsChanged", function (accounts) {
@@ -431,7 +431,7 @@ function connect(callback) {
                                     _a = lib_const_1.userInfo;
                                     return [4 /*yield*/, exports.web3.eth.getChainId()];
                                 case 1:
-                                    _a.chainID = _b.sent();
+                                    _a.chainID = (_b.sent());
                                     callback({
                                         account: lib_const_1.userInfo.account,
                                         chainID: lib_const_1.userInfo.chainID,
@@ -457,8 +457,8 @@ exports.connect = connect;
  */
 function logout() {
     lib_const_1.userInfo.account = "";
-    lib_const_1.userInfo.chainID = 0;
-    lib_const_1.userInfo.chain = "";
+    lib_const_1.userInfo.chainID = 97;
+    lib_const_1.userInfo.chain = "BSCTest";
     exports.web3 = null;
 }
 exports.logout = logout;
