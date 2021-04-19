@@ -21,7 +21,7 @@ export var rankList: { data: [] };
  * @returns 
  */
 export function getTokenSymbol(token_address: string) {
-  let symbol = findToken(tokenAddres[userInfo.chainID as keyof typeof ContractAddress as keyof typeof tokenAddres], token_address);
+  let symbol = findToken(tokenAddres[userInfo.chainID as keyof typeof tokenAddres], token_address);
   return symbol || "not know";
 }
 /**
