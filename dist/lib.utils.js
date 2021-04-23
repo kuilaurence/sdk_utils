@@ -60,11 +60,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logout = exports.connect = exports.executeContract = exports.getAllowance = exports.approveToken = exports.getDecimal = exports.transferFrom = exports.transfer = exports.getBalance = exports.isETHAddress = exports.findToken = exports.getDeadLine = exports.div = exports.mul = exports.sub = exports.add = exports.minusBigNumber = exports.calculateMultiplied = exports.calculatePercentage = exports.convertNormalToBigNumber = exports.convertBigNumberToNormal = exports.web3 = void 0;
+exports.cutZero = exports.logout = exports.connect = exports.executeContract = exports.getAllowance = exports.approveToken = exports.getDecimal = exports.transferFrom = exports.transfer = exports.getBalance = exports.isETHAddress = exports.findToken = exports.getDeadLine = exports.div = exports.mul = exports.sub = exports.add = exports.minusBigNumber = exports.calculateMultiplied = exports.calculatePercentage = exports.convertNormalToBigNumber = exports.convertBigNumberToNormal = exports.web3 = void 0;
 var web3_1 = __importDefault(require("web3"));
 var lib_abi_1 = require("./lib_abi");
 var bignumber_js_1 = require("bignumber.js");
 var lib_const_1 = require("./lib_const");
+var web3_provider_1 = __importDefault(require("@walletconnect/web3-provider"));
 bignumber_js_1.BigNumber.config({ ROUNDING_MODE: 1 }); //下取整
 bignumber_js_1.BigNumber.config({ EXPONENTIAL_AT: 1e+9 }); //消除科学计数法
 /**
@@ -388,12 +389,24 @@ function executeContract(contract, methodName, value, params, callback) {
     });
 }
 exports.executeContract = executeContract;
-function connect(callback) {
+var provider = new web3_provider_1.default({
+    rpc: {
+        1: "https://mainnet.infura.io/v3/undefined",
+        56: 'https://bsc-dataseed4.defibit.io:443',
+    },
+});
+/**
+ * 链接钱包
+ * @param walletName 钱包的名字小写
+ * @param callback
+ * @returns
+ */
+function connect(walletName, callback) {
     return __awaiter(this, void 0, void 0, function () {
-        var resMsg, _ethereum, accounts, _a, e_2;
+        var resMsg, _a, _ethereum, accounts, _b, e_2;
         var _this = this;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
                     resMsg = {
                         account: "",
@@ -401,21 +414,78 @@ function connect(callback) {
                         chain: "",
                         message: "success",
                     };
-                    _ethereum = window["ethereum"];
-                    if (!_ethereum)
-                        return [2 /*return*/, resMsg];
-                    _b.label = 1;
+                    _c.label = 1;
                 case 1:
-                    _b.trys.push([1, 4, , 5]);
-                    return [4 /*yield*/, _ethereum.enable()];
+                    _c.trys.push([1, 8, , 9]);
+                    if (!(walletName === "walletconnect")) return [3 /*break*/, 4];
+                    return [4 /*yield*/, provider.enable()];
                 case 2:
-                    accounts = _b.sent();
-                    exports.web3 = new web3_1.default(_ethereum);
-                    lib_const_1.userInfo.account = accounts[0];
+                    _c.sent();
+                    //@ts-ignore
+                    exports.web3 = new web3_1.default(provider);
+                    lib_const_1.userInfo.account = provider.accounts[0];
                     _a = lib_const_1.userInfo;
                     return [4 /*yield*/, exports.web3.eth.getChainId()];
                 case 3:
-                    _a.chainID = (_b.sent());
+                    _a.chainID = (_c.sent());
+                    resMsg.account = lib_const_1.userInfo.account;
+                    resMsg.chain = lib_const_1.chainIdDict[lib_const_1.userInfo.chainID];
+                    resMsg.message = "success";
+                    provider.on("accountsChanged", function (accounts) {
+                        lib_const_1.userInfo.account = accounts[0];
+                        callback({
+                            account: lib_const_1.userInfo.account,
+                            chainID: lib_const_1.userInfo.chainID,
+                            chain: lib_const_1.chainIdDict[lib_const_1.userInfo.chainID],
+                            message: "accountsChanged",
+                        });
+                    });
+                    provider.on("chainChanged", function (chainId) { return __awaiter(_this, void 0, void 0, function () {
+                        var _a;
+                        return __generator(this, function (_b) {
+                            switch (_b.label) {
+                                case 0:
+                                    _a = lib_const_1.userInfo;
+                                    return [4 /*yield*/, exports.web3.eth.getChainId()];
+                                case 1:
+                                    _a.chainID = (_b.sent());
+                                    callback({
+                                        account: lib_const_1.userInfo.account,
+                                        chainID: lib_const_1.userInfo.chainID,
+                                        chain: lib_const_1.chainIdDict[lib_const_1.userInfo.chainID],
+                                        message: "chainChanged",
+                                    });
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                    provider.on("disconnect", function (code, reason) {
+                        if (code) {
+                            lib_const_1.userInfo.account = "";
+                            lib_const_1.userInfo.chainID = 97;
+                            lib_const_1.userInfo.chain = "BSCTest";
+                            callback({
+                                account: "",
+                                chainID: 97,
+                                chain: "",
+                                message: "disconnect",
+                            });
+                        }
+                    });
+                    return [3 /*break*/, 7];
+                case 4:
+                    _ethereum = window["ethereum"];
+                    if (!_ethereum)
+                        return [2 /*return*/, resMsg];
+                    return [4 /*yield*/, _ethereum.enable()];
+                case 5:
+                    accounts = _c.sent();
+                    exports.web3 = new web3_1.default(_ethereum);
+                    lib_const_1.userInfo.account = accounts[0];
+                    _b = lib_const_1.userInfo;
+                    return [4 /*yield*/, exports.web3.eth.getChainId()];
+                case 6:
+                    _b.chainID = (_c.sent());
                     lib_const_1.userInfo.chain = lib_const_1.chainIdDict[lib_const_1.userInfo.chainID];
                     resMsg.account = lib_const_1.userInfo.account;
                     resMsg.chainID = lib_const_1.userInfo.chainID;
@@ -426,7 +496,7 @@ function connect(callback) {
                             account: lib_const_1.userInfo.account,
                             chainID: lib_const_1.userInfo.chainID,
                             chain: lib_const_1.chainIdDict[lib_const_1.userInfo.chainID],
-                            message: "success",
+                            message: "accountsChanged",
                         });
                     });
                     _ethereum.on("chainChanged", function () { return __awaiter(_this, void 0, void 0, function () {
@@ -442,18 +512,19 @@ function connect(callback) {
                                         account: lib_const_1.userInfo.account,
                                         chainID: lib_const_1.userInfo.chainID,
                                         chain: lib_const_1.chainIdDict[lib_const_1.userInfo.chainID],
-                                        message: "success",
+                                        message: "chainChanged",
                                     });
                                     return [2 /*return*/];
                             }
                         });
                     }); });
-                    return [3 /*break*/, 5];
-                case 4:
-                    e_2 = _b.sent();
+                    _c.label = 7;
+                case 7: return [3 /*break*/, 9];
+                case 8:
+                    e_2 = _c.sent();
                     resMsg.message = e_2.message;
-                    return [3 /*break*/, 5];
-                case 5: return [2 /*return*/, resMsg];
+                    return [3 /*break*/, 9];
+                case 9: return [2 /*return*/, resMsg];
             }
         });
     });
@@ -467,12 +538,32 @@ function logout() {
     lib_const_1.userInfo.account = "";
     lib_const_1.userInfo.chainID = 97;
     lib_const_1.userInfo.chain = "BSCTest";
-    exports.web3 = null;
+    provider.disconnect();
     return {
         account: "",
-        chainID: 0,
+        chainID: 97,
         chain: "",
+        message: "logout",
     };
 }
 exports.logout = logout;
+/**
+ * 删除数字末尾多余的0
+ * @param str
+ * @returns 字符串型的数字
+ */
+function cutZero(str) {
+    if (!Boolean(str))
+        return '0';
+    if (!str.includes("."))
+        return str;
+    while (str.slice(-1) === "0") {
+        str = str.slice(0, -1);
+    }
+    if (str.endsWith(".")) {
+        str = str.slice(0, -1);
+    }
+    return str;
+}
+exports.cutZero = cutZero;
 //# sourceMappingURL=lib.utils.js.map

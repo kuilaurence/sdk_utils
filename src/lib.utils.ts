@@ -4,6 +4,7 @@ import { ERC20 } from "./lib_abi";
 import { BigNumber } from "bignumber.js";
 import { Contract } from "web3-eth-contract";
 import { chainIdDict, userInfo } from "./lib_const";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 BigNumber.config({ ROUNDING_MODE: 1 });//下取整
 BigNumber.config({ EXPONENTIAL_AT: 1e+9 })//消除科学计数法
@@ -223,43 +224,97 @@ export function executeContract(contract: Contract, methodName: string, value: n
     });
 }
 
-export async function connect(callback: (data: { account: string; chainID: number; chain: string, message: string; }) => void) {
+const provider = new WalletConnectProvider({
+  rpc: {
+    1: "https://mainnet.infura.io/v3/undefined",
+    56: 'https://bsc-dataseed4.defibit.io:443',
+  },
+});
+/**
+ * 链接钱包
+ * @param walletName 钱包的名字小写
+ * @param callback 
+ * @returns 
+ */
+export async function connect(walletName: "walletconnect" | "metamask" | "huobiwallet" | "mathwallet" | "tokenpocket", callback: (data: { account: string; chainID: number; chain: string, message: string; }) => void) {
   let resMsg = {
     account: "",
     chainID: 0,
     chain: "",
     message: "success",
   };
-  //@ts-ignore
-  let _ethereum = window["ethereum"];
-  if (!_ethereum) return resMsg;
   try {
-    let accounts = await _ethereum.enable();
-    web3 = new Web3(_ethereum);
-    userInfo.account = accounts[0];
-    userInfo.chainID = await web3.eth.getChainId() as typeof userInfo.chainID;
-    userInfo.chain = chainIdDict[userInfo.chainID] as typeof userInfo.chain;
-    resMsg.account = userInfo.account;
-    resMsg.chainID = userInfo.chainID;
-    resMsg.chain = userInfo.chain;
-    _ethereum.on("accountsChanged", (accounts: string[]) => {
-      userInfo.account = accounts[0];
-      callback({
-        account: userInfo.account,
-        chainID: userInfo.chainID,
-        chain: chainIdDict[userInfo.chainID],
-        message: "success",
-      });
-    });
-    _ethereum.on("chainChanged", async () => {
+    if (walletName === "walletconnect") {
+      await provider.enable();
+      //@ts-ignore
+      web3 = new Web3(provider);
+      userInfo.account = provider.accounts[0];
       userInfo.chainID = await web3.eth.getChainId() as typeof userInfo.chainID;
-      callback({
-        account: userInfo.account,
-        chainID: userInfo.chainID,
-        chain: chainIdDict[userInfo.chainID],
-        message: "success",
+      resMsg.account = userInfo.account;
+      resMsg.chain = chainIdDict[userInfo.chainID];
+      resMsg.message = "success";
+      provider.on("accountsChanged", (accounts: string[]) => {
+        userInfo.account = accounts[0];
+        callback({
+          account: userInfo.account,
+          chainID: userInfo.chainID,
+          chain: chainIdDict[userInfo.chainID],
+          message: "accountsChanged",
+        });
       });
-    });
+      provider.on("chainChanged", async (chainId: number) => {
+        userInfo.chainID = await web3.eth.getChainId() as typeof userInfo.chainID;
+        callback({
+          account: userInfo.account,
+          chainID: userInfo.chainID,
+          chain: chainIdDict[userInfo.chainID],
+          message: "chainChanged",
+        });
+      });
+      provider.on("disconnect", (code: number, reason: string) => {
+        if (code) {
+          userInfo.account = "";
+          userInfo.chainID = 97;
+          userInfo.chain = "BSCTest";
+          callback({
+            account: "",
+            chainID: 97,
+            chain: "",
+            message: "disconnect",
+          })
+        }
+      })
+    } else {
+      //@ts-ignore
+      let _ethereum = window["ethereum"];
+      if (!_ethereum) return resMsg;
+      let accounts = await _ethereum.enable();
+      web3 = new Web3(_ethereum);
+      userInfo.account = accounts[0];
+      userInfo.chainID = await web3.eth.getChainId() as typeof userInfo.chainID;
+      userInfo.chain = chainIdDict[userInfo.chainID] as typeof userInfo.chain;
+      resMsg.account = userInfo.account;
+      resMsg.chainID = userInfo.chainID;
+      resMsg.chain = userInfo.chain;
+      _ethereum.on("accountsChanged", (accounts: string[]) => {
+        userInfo.account = accounts[0];
+        callback({
+          account: userInfo.account,
+          chainID: userInfo.chainID,
+          chain: chainIdDict[userInfo.chainID],
+          message: "accountsChanged",
+        });
+      });
+      _ethereum.on("chainChanged", async () => {
+        userInfo.chainID = await web3.eth.getChainId() as typeof userInfo.chainID;
+        callback({
+          account: userInfo.account,
+          chainID: userInfo.chainID,
+          chain: chainIdDict[userInfo.chainID],
+          message: "chainChanged",
+        });
+      });
+    }
   } catch (e) {
     resMsg.message = e.message;
   }
@@ -273,10 +328,27 @@ export function logout() {
   userInfo.account = "";
   userInfo.chainID = 97;
   userInfo.chain = "BSCTest";
-  web3 = null;
+  provider.disconnect();
   return {
     account: "",
-    chainID: 0,
+    chainID: 97,
     chain: "",
+    message: "logout",
   }
+}
+/**
+ * 删除数字末尾多余的0
+ * @param str 
+ * @returns 字符串型的数字
+ */
+export function cutZero(str: string) {
+  if (!Boolean(str)) return '0';
+  if (!str.includes(".")) return str
+  while (str.slice(-1) === "0") {
+    str = str.slice(0, -1)
+  }
+  if (str.endsWith(".")) {
+    str = str.slice(0, -1)
+  }
+  return str
 }

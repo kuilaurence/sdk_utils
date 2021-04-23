@@ -135,7 +135,13 @@ export declare function getAllowance(token_address: string, destina_address: str
  * @param callback 回调
  */
 export declare function executeContract(contract: Contract, methodName: string, value: number, params: string[], callback: (code: number, hash: string) => void): void;
-export declare function connect(callback: (data: {
+/**
+ * 链接钱包
+ * @param walletName 钱包的名字小写
+ * @param callback
+ * @returns
+ */
+export declare function connect(walletName: "walletconnect" | "metamask" | "huobiwallet" | "mathwallet" | "tokenpocket", callback: (data: {
     account: string;
     chainID: number;
     chain: string;
@@ -154,5 +160,12 @@ export declare function logout(): {
     account: string;
     chainID: number;
     chain: string;
+    message: string;
 };
+/**
+ * 删除数字末尾多余的0
+ * @param str
+ * @returns 字符串型的数字
+ */
+export declare function cutZero(str: string): string;
 export {};
