@@ -389,6 +389,7 @@ function executeContract(contract, methodName, value, params, callback) {
     });
 }
 exports.executeContract = executeContract;
+var walletDisconnectTimer;
 var provider = new web3_provider_1.default({
     rpc: {
         1: "https://mainnet.infura.io/v3/undefined",
@@ -460,17 +461,22 @@ function connect(walletName, callback) {
                         });
                     }); });
                     provider.on("disconnect", function (code, reason) {
-                        if (code) {
-                            lib_const_1.userInfo.account = "";
-                            lib_const_1.userInfo.chainID = 97;
-                            lib_const_1.userInfo.chain = "BSCTest";
-                            callback({
-                                account: "",
-                                chainID: 97,
-                                chain: "",
-                                message: "disconnect",
-                            });
-                        }
+                        if (walletDisconnectTimer !== null)
+                            clearTimeout(walletDisconnectTimer);
+                        walletDisconnectTimer = setTimeout(function () {
+                            walletDisconnectTimer = null;
+                            if (code) {
+                                lib_const_1.userInfo.account = "";
+                                lib_const_1.userInfo.chainID = 97;
+                                lib_const_1.userInfo.chain = "BSCTest";
+                                callback({
+                                    account: "",
+                                    chainID: 97,
+                                    chain: "",
+                                    message: "disconnect",
+                                });
+                            }
+                        }, 300);
                     });
                     return [3 /*break*/, 7];
                 case 4:

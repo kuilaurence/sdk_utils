@@ -224,6 +224,8 @@ export function executeContract(contract: Contract, methodName: string, value: n
     });
 }
 
+let walletDisconnectTimer: any;
+
 const provider = new WalletConnectProvider({
   rpc: {
     1: "https://mainnet.infura.io/v3/undefined",
@@ -272,17 +274,22 @@ export async function connect(walletName: "walletconnect" | "metamask" | "huobiw
         });
       });
       provider.on("disconnect", (code: number, reason: string) => {
-        if (code) {
-          userInfo.account = "";
-          userInfo.chainID = 97;
-          userInfo.chain = "BSCTest";
-          callback({
-            account: "",
-            chainID: 97,
-            chain: "",
-            message: "disconnect",
-          })
-        }
+        if (walletDisconnectTimer !== null) clearTimeout(walletDisconnectTimer)
+        walletDisconnectTimer = setTimeout(() => {
+          walletDisconnectTimer = null;
+          if (code) {
+            userInfo.account = "";
+            userInfo.chainID = 97;
+            userInfo.chain = "BSCTest";
+            callback({
+              account: "",
+              chainID: 97,
+              chain: "",
+              message: "disconnect",
+            })
+          }
+        }, 300);
+
       })
     } else {
       //@ts-ignore
