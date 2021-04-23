@@ -289,7 +289,6 @@ export async function connect(walletName: "walletconnect" | "metamask" | "huobiw
             })
           }
         }, 300);
-
       })
     } else {
       //@ts-ignore
