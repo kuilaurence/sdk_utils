@@ -1,10 +1,12 @@
 import Web3 from "web3";
 export var web3: Web3;
 import { ERC20 } from "./lib_abi";
-import { chainIdDict, userInfo } from "./lib_const";
 import { BigNumber } from "bignumber.js";
 import { Contract } from "web3-eth-contract";
+import { chainIdDict, userInfo } from "./lib_const";
 
+BigNumber.config({ ROUNDING_MODE: 1 });//下取整
+BigNumber.config({ EXPONENTIAL_AT: 1e+9 })//消除科学计数法
 /**
  * 大数转常数
  * @param number 大数
@@ -13,7 +15,7 @@ import { Contract } from "web3-eth-contract";
  */
 export function convertBigNumberToNormal(number: string, decimals = 18) {
   let result = new BigNumber(number).dividedBy(new BigNumber(Math.pow(10, decimals)));
-  return result.toFixed();
+  return result.toFixed(10);
 }
 /**
  * 常数转大数

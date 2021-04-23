@@ -63,8 +63,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.logout = exports.connect = exports.executeContract = exports.getAllowance = exports.approveToken = exports.getDecimal = exports.transferFrom = exports.transfer = exports.getBalance = exports.isETHAddress = exports.findToken = exports.getDeadLine = exports.div = exports.mul = exports.sub = exports.add = exports.minusBigNumber = exports.calculateMultiplied = exports.calculatePercentage = exports.convertNormalToBigNumber = exports.convertBigNumberToNormal = exports.web3 = void 0;
 var web3_1 = __importDefault(require("web3"));
 var lib_abi_1 = require("./lib_abi");
-var lib_const_1 = require("./lib_const");
 var bignumber_js_1 = require("bignumber.js");
+var lib_const_1 = require("./lib_const");
+bignumber_js_1.BigNumber.config({ ROUNDING_MODE: 1 }); //下取整
+bignumber_js_1.BigNumber.config({ EXPONENTIAL_AT: 1e+9 }); //消除科学计数法
 /**
  * 大数转常数
  * @param number 大数
@@ -74,7 +76,7 @@ var bignumber_js_1 = require("bignumber.js");
 function convertBigNumberToNormal(number, decimals) {
     if (decimals === void 0) { decimals = 18; }
     var result = new bignumber_js_1.BigNumber(number).dividedBy(new bignumber_js_1.BigNumber(Math.pow(10, decimals)));
-    return result.toFixed();
+    return result.toFixed(10);
 }
 exports.convertBigNumberToNormal = convertBigNumberToNormal;
 /**
