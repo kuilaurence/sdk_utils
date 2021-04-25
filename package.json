@@ -1,6 +1,6 @@
 {
   "name": "sdk-utils",
-  "version": "1.0.37",
+  "version": "1.0.38",
   "main": "dist/index.js",
   "types": "dist/sdk-utils.d.ts",
   "description": "Provide Ethereum SDK initialization",
@@ -26,5 +26,6 @@
     "@walletconnect/web3-provider": "^1.4.1",
     "bignumber.js": "^9.0.1",
     "web3": "^1.3.5"
-  }
+  },
+  "bugs": "https://github.com/kuilaurence/sdk_utils/issues"
 }
