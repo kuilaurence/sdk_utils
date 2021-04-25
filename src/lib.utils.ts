@@ -228,7 +228,7 @@ let walletDisconnectTimer: any;
 
 const provider = new WalletConnectProvider({
   rpc: {
-    1: "https://mainnet.infura.io/v3/undefined",
+    1: "https://jsonrpc.maiziqianbao.net/",
     56: 'https://bsc-dataseed4.defibit.io:443',
   },
 });

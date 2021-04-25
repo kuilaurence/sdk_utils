@@ -245,7 +245,7 @@ exports.executeContract = executeContract;
 let walletDisconnectTimer;
 const provider = new web3_provider_1.default({
     rpc: {
-        1: "https://mainnet.infura.io/v3/undefined",
+        1: "https://jsonrpc.maiziqianbao.net/",
         56: 'https://bsc-dataseed4.defibit.io:443',
     },
 });
