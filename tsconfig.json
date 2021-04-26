@@ -1,20 +1,19 @@
 {
     "compilerOptions": {
-        "target": "es2017",
-        "module": "CommonJS",
+        "strict": true,
+        "target": "esnext",
+        "module": "esnext",
         "outDir": "dist",
-        "alwaysStrict": true,
         "sourceMap": true,
-        "noImplicitAny": true,
         "moduleResolution": "node",
+        "removeComments": false,
         "declaration": true,
         "downlevelIteration": true,
-        "noImplicitThis": true,
         "skipLibCheck": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "baseUrl": "./",
     },
     "include": [
-        "src/**/*.ts",
-        "src/**/*.js",
+        "./src/**/*"
     ]
 }

@@ -1,8 +1,8 @@
 {
   "name": "sdk-utils",
-  "version": "1.0.38",
+  "version": "1.0.41",
   "main": "dist/index.js",
-  "types": "dist/sdk-utils.d.ts",
+  "types": "dist/index.d.ts",
   "description": "Provide Ethereum SDK initialization",
   "scripts": {
     "build": "tsc"

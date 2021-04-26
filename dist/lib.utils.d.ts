@@ -81,7 +81,7 @@ interface DictObject {
  * @param compare 比较(可选)
  * @returns key
  */
-export declare function findToken(obj: DictObject, value: string, compare?: (a: string, b: string) => boolean): string;
+export declare function findToken(obj: DictObject, value: string, compare?: (a: string, b: string) => boolean): string | undefined;
 /**
  * 判断是否为以太坊地址
  * @param token_address 地址

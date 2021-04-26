@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.tokenAddres = exports.ContractAddress = exports.userInfo = exports.chainIdDict = void 0;
-exports.chainIdDict = {
+export const chainIdDict = {
     1: "Ethereum",
     3: "Ropsten",
     4: "Rinkeby",
@@ -11,13 +8,13 @@ exports.chainIdDict = {
     97: "BSCTest",
     128: "HECO",
 };
-exports.userInfo = {
+export const userInfo = {
     account: "",
     chainID: 97,
     chain: "BSCTest",
 };
 //每次部署需要配置,对应合约地址
-exports.ContractAddress = {
+export const ContractAddress = {
     97: {
         mdexFactoryContract: "0x0C69B5eBcC55CDeDe930607CC8c85DBC3cC60399",
         mdexRouterContract: "0x5334adA1e86bd323370eAc71702D20d8bA4ef3a5",
@@ -46,7 +43,7 @@ exports.ContractAddress = {
     },
 };
 //每次部署需要配置,普通币的地址
-exports.tokenAddres = {
+export const tokenAddres = {
     97: {
         USDT: "0x87536A0e7f0867f0D92FFc48bDC2164d48Cd45C5",
         WETH: "0xD57E4cf9654c8aBBe9e5cE6dEE0A0Cb7F79C8a94",
