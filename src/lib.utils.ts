@@ -102,6 +102,8 @@ export function getDeadLine(delay: number) {
   return Math.floor(new Date().getTime() / 1000 + 60 * delay);
 }
 
+export const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
 interface DictObject {
   [key: string]: string;
 }
@@ -347,7 +349,7 @@ export function logout() {
  * @param str 
  * @returns 字符串型的数字
  */
-export function cutZero(str: string) {
+export function toPrecision(str: string) {
   if (!Boolean(str)) return '0';
   if (!str.includes(".")) return str
   while (str.slice(-1) === "0") {

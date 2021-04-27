@@ -99,6 +99,7 @@ export function div(number1, number2) {
 export function getDeadLine(delay) {
     return Math.floor(new Date().getTime() / 1000 + 60 * delay);
 }
+export const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 /**
  * 通过value找key
  * @param obj 对象
@@ -344,7 +345,7 @@ export function logout() {
  * @param str
  * @returns 字符串型的数字
  */
-export function cutZero(str) {
+export function toPrecision(str) {
     if (!Boolean(str))
         return '0';
     if (!str.includes("."))

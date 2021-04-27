@@ -1,6 +1,7 @@
 import { userInfo, tokenAddres, ContractAddress } from "./lib_const";
 import { ERC20, ETQUERY, LPMINING, RECOMMEND, NODEMINING, INVITEREWARD, PLEDGEMINING, EXCHANGETOKEN } from "./lib_abi";
-import { mul, web3, findToken, getDecimal, convertBigNumberToNormal, convertNormalToBigNumber, executeContract, logout as _logout, connect as _connect, getBalance as _getBalance, getAllowance as _getAllowance, approveToken as _approveToken, isETHAddress as _isETHAddress } from "./lib.utils";
+import { mul, web3, findToken, getDecimal, sleep as _sleep, convertBigNumberToNormal, convertNormalToBigNumber, executeContract, logout as _logout, connect as _connect, getBalance as _getBalance, getAllowance as _getAllowance, approveToken as _approveToken, isETHAddress as _isETHAddress } from "./lib.utils";
+export const sleep = _sleep;
 export const logout = _logout;
 export const connect = _connect;
 export const getBalance = _getBalance;

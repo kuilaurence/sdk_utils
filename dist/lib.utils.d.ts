@@ -71,6 +71,7 @@ export declare function div(number1: string, number2: string): string;
  * @returns timestemp
  */
 export declare function getDeadLine(delay: number): number;
+export declare const sleep: (ms: number) => Promise<unknown>;
 interface DictObject {
     [key: string]: string;
 }
@@ -167,5 +168,5 @@ export declare function logout(): {
  * @param str
  * @returns 字符串型的数字
  */
-export declare function cutZero(str: string): string;
+export declare function toPrecision(str: string): string;
 export {};

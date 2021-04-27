@@ -1,4 +1,5 @@
 import { logout as _logout, connect as _connect, getBalance as _getBalance, approveToken as _approveToken, isETHAddress as _isETHAddress } from "./lib.utils";
+export declare const sleep: (ms: number) => Promise<unknown>;
 export declare const logout: typeof _logout;
 export declare const connect: typeof _connect;
 export declare const getBalance: typeof _getBalance;
