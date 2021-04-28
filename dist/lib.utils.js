@@ -285,7 +285,7 @@ export async function connect(walletName, callback) {
                         userInfo.chain = "Ethereum";
                         callback({
                             account: "",
-                            chainID: 97,
+                            chainID: 1,
                             chain: "",
                             message: "disconnect",
                         });
