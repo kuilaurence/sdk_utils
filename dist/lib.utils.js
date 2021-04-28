@@ -155,8 +155,8 @@ export async function connect(walletName, callback) {
                     walletDisconnectTimer = null;
                     if (code) {
                         userInfo.account = "";
-                        userInfo.chainID = 97;
-                        userInfo.chain = "BSCTest";
+                        userInfo.chainID = 1;
+                        userInfo.chain = "Ethereum";
                         callback({
                             account: "",
                             chainID: 97,
@@ -206,12 +206,12 @@ export async function connect(walletName, callback) {
 }
 export function logout() {
     userInfo.account = "";
-    userInfo.chainID = 97;
-    userInfo.chain = "BSCTest";
+    userInfo.chainID = 1;
+    userInfo.chain = "Ethereum";
     provider.disconnect();
     return {
         account: "",
-        chainID: 97,
+        chainID: 1,
         chain: "",
         message: "logout",
     };

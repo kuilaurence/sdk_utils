@@ -10,10 +10,23 @@ export declare const chainIdDict: {
 };
 export declare const userInfo: {
     account: string;
-    chainID: 97 | 128;
-    chain: "BSCTest" | "HECO";
+    chainID: 1 | 97 | 128;
+    chain: "Ethereum" | "BSCTest" | "HECO";
 };
 export declare const ContractAddress: {
+    1: {
+        mdexFactoryContract: string;
+        mdexRouterContract: string;
+        mdexPoolContract: string;
+        recommend: string;
+        lpMining: string;
+        exchangeToken: string;
+        pledgeMining: string;
+        teamMining: string;
+        inviteReward: string;
+        nodeMining: string;
+        etQuery: string;
+    };
     97: {
         mdexFactoryContract: string;
         mdexRouterContract: string;
@@ -42,6 +55,14 @@ export declare const ContractAddress: {
     };
 };
 export declare const tokenAddres: {
+    1: {
+        USDT: string;
+        WETH: string;
+        ETHST: string;
+        ET: string;
+        ETUSDT: string;
+        ETHSTUSDT: string;
+    };
     97: {
         USDT: string;
         WETH: string;

@@ -9,14 +9,27 @@ export const chainIdDict = {
   128: "HECO",
 };
 
-export const userInfo: { account: string, chainID: 97 | 128, chain: "BSCTest" | "HECO" } = {
+export const userInfo: { account: string, chainID: 1 | 97 | 128, chain: "Ethereum" | "BSCTest" | "HECO" } = {
   account: "",
-  chainID: 97,
-  chain: "BSCTest",
+  chainID: 1,
+  chain: "Ethereum",
 };
 
 //每次部署需要配置,对应合约地址
 export const ContractAddress = {
+  1: {
+    mdexFactoryContract: "0x0C69B5eBcC55CDeDe930607CC8c85DBC3cC60399",
+    mdexRouterContract: "0x5334adA1e86bd323370eAc71702D20d8bA4ef3a5",
+    mdexPoolContract: "0xad8a3029743c71d1Ea487BFE51D9ccDB7B4c032d",
+    recommend: "0xcA30AEeF1F37904576F56440A88C1755878f631b",
+    lpMining: "0xD796B382AC236d410E1809aC1D45E044Ad19760f",
+    exchangeToken: "0x8015b3DEaa91581246BDb27b6fAB3f89ad1114bF",
+    pledgeMining: "0x111847C9410feF5A66aDD413414fB5130A5A8720",
+    teamMining: "0xBe98dD4B4C76dd24802Fcb70Df6b5A748F0b3C62",
+    inviteReward: "0xb86F776d2d6A548397fE05b1D6B126C098890cFF",
+    nodeMining: "0x8c438620abA8E5759e7128F030881ccc6050A8CA",
+    etQuery: "0xB7cE8aB9eA4017B5e299C35491a69D5e34bd1777",
+  },
   97: {
     mdexFactoryContract: "0x0C69B5eBcC55CDeDe930607CC8c85DBC3cC60399",
     mdexRouterContract: "0x5334adA1e86bd323370eAc71702D20d8bA4ef3a5",
@@ -47,6 +60,14 @@ export const ContractAddress = {
 
 //每次部署需要配置,普通币的地址
 export const tokenAddres = {
+  1: {
+    USDT: "0x87536A0e7f0867f0D92FFc48bDC2164d48Cd45C5",
+    WETH: "0xD57E4cf9654c8aBBe9e5cE6dEE0A0Cb7F79C8a94",
+    ETHST: "0x9e00Ff6cC8a89FD0Ec30DCB38aBDD1Bea5A1ac78",
+    ET: "0x91700568091DE9ff42de68500624c3CFd5F18B19",
+    ETUSDT: "0xAa4f059060314F88d82596E02a5eF4fEb78928c9",
+    ETHSTUSDT: "0xFCb36424f74E18422507e7CA1b7e3109BcB8d3d7",
+  },
   97: {
     USDT: "0x87536A0e7f0867f0D92FFc48bDC2164d48Cd45C5",
     WETH: "0xD57E4cf9654c8aBBe9e5cE6dEE0A0Cb7F79C8a94",
