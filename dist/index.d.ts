@@ -10,10 +10,34 @@ export declare const isETHAddress: typeof _isETHAddress;
 export declare var rankList: {
     data: [];
 };
+/**
+ * 获取symbol
+ * @param token_address
+ * @returns
+ */
 export declare function getTokenSymbol(token_address: string): string;
+/**
+ * 获取授权值   type  buy  //币的名字
+ * @param token_address
+ * @param type
+ * @returns
+ */
 export declare function getAllowance(token_address: string, type: string): Promise<string>;
+/**
+ * 获得approvetoken address
+ * @param token_symbol
+ * @returns
+ */
 export declare function getApproveTokens(token_symbol: string): string;
+/**
+ * 是否绑定上级
+ * @returns
+ */
 export declare function GetIntroducerBind(): Promise<any>;
+/**
+ * 奖励页面
+ * @returns
+ */
 export declare function queryInvite(): Promise<{
     data: {
         firstLevelCount: any;
@@ -31,6 +55,10 @@ export declare function getNodeInfo(): Promise<{
         reward: string;
     };
 }>;
+/**
+ * farming页面信息
+ * @returns
+ */
 export declare function farmingInfo(): Promise<{
     data: {
         ETHPrice: number;
@@ -60,6 +88,10 @@ export declare function farmingInfo(): Promise<{
         };
     };
 }>;
+/**
+ * 获取信息
+ * @returns
+ */
 export declare function getCurrentRecord(): Promise<{
     data: {
         total: string;
@@ -67,6 +99,10 @@ export declare function getCurrentRecord(): Promise<{
         buyTotal: string;
     };
 }>;
+/**
+ * 首页
+ * @returns
+ */
 export declare function homeData(): Promise<{
     data: {
         ETHSTprice: number;
@@ -86,6 +122,10 @@ export declare function homeData(): Promise<{
         };
     };
 }>;
+/**
+ * 信息
+ * @returns
+ */
 export declare function homeData2(): Promise<{
     data: {
         ETHSTLockAmount: string;
@@ -94,17 +134,74 @@ export declare function homeData2(): Promise<{
         ETprice: number;
     };
 }>;
+/**
+ * 买ETHST
+ * @param _amount
+ * @param husdEthstRatio
+ * @param id
+ * @param callback
+ */
 export declare function buy(_amount: string, husdEthstRatio: string, id: string, callback: (code: number, hash: string) => void): Promise<void>;
+/**
+ * 提现
+ * @param address
+ * @param callback
+ */
 export declare function API_BindEx(address: string, callback: (code: number, hash: string) => void): void;
+/**
+ * 提取邀请奖励
+ * @param callback
+ */
 export declare function withdrawBindReward(callback: (code: number, hash: string) => void): void;
+/**
+ * 提取节点奖励
+ * @param callback
+ */
 export declare function withdrawNodeReward(callback: (code: number, hash: string) => void): void;
+/**
+ * 质押ETHST
+ * @param type
+ * @param amount
+ * @param callback
+ */
 export declare function stake(type: string, amount: string, callback: (code: number, hash: string) => void): void;
+/**
+ * 移除ETHST
+ * @param type
+ * @param amount
+ * @param callback
+ */
 export declare function remove(type: string, amount: string, callback: (code: number, hash: string) => void): void;
+/**
+ * 收取et
+ * @param type
+ * @param callback
+ */
 export declare function harvestET(type: string, callback: (code: number, hash: string) => void): void;
+/**
+ * 提取eth
+ * @param callback
+ */
 export declare function withdraw_ETH(callback: (code: number, hash: string) => void): void;
+/**
+ * test
+ * @param callback
+ */
 export declare function test(callback: (code: number, hash: string) => void): Promise<void>;
+/**
+ * 拿全网算力
+ * @returns
+ */
 export declare function networkHashrateInfo(): Promise<any>;
+/**
+ * 拿贡献榜单
+ * @returns
+ */
 export declare function getRankList(): {
     data: [];
 };
+/**
+ * 拿贡献榜单预先
+ * @returns
+ */
 export declare function getRankListBefore(): Promise<void>;

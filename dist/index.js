@@ -10,10 +10,21 @@ export const toPrecision = _toPrecision;
 export const approveToken = _approveToken;
 export const isETHAddress = _isETHAddress;
 export var rankList;
+/**
+ * 获取symbol
+ * @param token_address
+ * @returns
+ */
 export function getTokenSymbol(token_address) {
     let symbol = findToken(tokenAddres[userInfo.chainID], token_address);
     return symbol || "not know";
 }
+/**
+ * 获取授权值   type  buy  //币的名字
+ * @param token_address
+ * @param type
+ * @returns
+ */
 export async function getAllowance(token_address, type) {
     let destina_address = "";
     if (type === "USDT") {
@@ -27,9 +38,18 @@ export async function getAllowance(token_address, type) {
     }
     return await _getAllowance(token_address, destina_address);
 }
+/**
+ * 获得approvetoken address
+ * @param token_symbol
+ * @returns
+ */
 export function getApproveTokens(token_symbol) {
     return tokenAddres[userInfo.chainID][token_symbol];
 }
+/**
+ * 是否绑定上级
+ * @returns
+ */
 export async function GetIntroducerBind() {
     let recommendContract = new web3.eth.Contract(RECOMMEND, ContractAddress[userInfo.chainID].recommend);
     let res = await recommendContract.methods.GetIntroducerBind(userInfo.account).call();
@@ -41,6 +61,10 @@ export async function GetIntroducerBind() {
         return "";
     }
 }
+/**
+ * 奖励页面
+ * @returns
+ */
 export async function queryInvite() {
     let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID].etQuery);
     let inviteInfo = await etQueryContract.methods.queryInvite(userInfo.account).call();
@@ -54,6 +78,12 @@ export async function queryInvite() {
         },
     };
 }
+/*
+ *totalContribution  贡献价值总数
+ *totalvalue         当前奖池总金额
+ *amount             自己的贡献值
+ *reward             自己的待领取收益
+ */
 export async function getNodeInfo() {
     let nodeMiningContract = new web3.eth.Contract(NODEMINING, ContractAddress[userInfo.chainID].nodeMining);
     let contributionTotal = await nodeMiningContract.methods.Contribution_Total().call();
@@ -69,6 +99,10 @@ export async function getNodeInfo() {
         },
     };
 }
+/**
+ * farming页面信息
+ * @returns
+ */
 export async function farmingInfo() {
     let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID].etQuery);
     let EthstPoolInfo = await etQueryContract.methods.queryEthstPool(userInfo.account, tokenAddres[userInfo.chainID].WETH, tokenAddres[userInfo.chainID].USDT).call();
@@ -125,12 +159,18 @@ export async function farmingInfo() {
         },
     };
 }
+//et pool apy = ((ET单日产量 * 价格 * 365) + (ETH单日产量 * 价格 * 365)) /( totalAmount * ETHST价格)
 function calculateETApy(ETDailyOutPut, etPrice, ETHDailyOutPut, ethPrice, totalAmount, ethstPrice) {
     return ((ETDailyOutPut * etPrice * 365 + ETHDailyOutPut * ethPrice * 365) / (totalAmount * ethstPrice));
 }
+//lp apy = (lp ET单日产量 * ET 价格 * 365) / ((lp_reserveB * 2 / lpTotal) * totalAmount)
 function calculateLPApy(ETDailyOutPut, etPrice, lp_reserveB, totalAmount, lpTotal) {
     return ((ETDailyOutPut * etPrice * 365) / (((lp_reserveB * 2) / lpTotal) * totalAmount));
 }
+/**
+ * 获取信息
+ * @returns
+ */
 export async function getCurrentRecord() {
     let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID].etQuery);
     let ETHSTTotal = await etQueryContract.methods.queryETHSTTotal().call();
@@ -142,6 +182,10 @@ export async function getCurrentRecord() {
         },
     };
 }
+/**
+ * 首页
+ * @returns
+ */
 export async function homeData() {
     let etQueryContract = new web3.eth.Contract(ETQUERY, ContractAddress[userInfo.chainID].etQuery);
     let homeData = await etQueryContract.methods.queryHomeData(userInfo.account, tokenAddres[userInfo.chainID].ET, tokenAddres[userInfo.chainID].WETH, tokenAddres[userInfo.chainID].USDT).call();
@@ -165,6 +209,10 @@ export async function homeData() {
         },
     };
 }
+/**
+ * 信息
+ * @returns
+ */
 export async function homeData2() {
     let _homedate = await homeData();
     let _farmingInfo = await farmingInfo();
@@ -177,24 +225,50 @@ export async function homeData2() {
         },
     };
 }
+/**
+ * 买ETHST
+ * @param _amount
+ * @param husdEthstRatio
+ * @param id
+ * @param callback
+ */
 export async function buy(_amount, husdEthstRatio, id, callback) {
     let exchangeTokenContract = new web3.eth.Contract(EXCHANGETOKEN, ContractAddress[userInfo.chainID].exchangeToken);
     let amount = mul(_amount, husdEthstRatio);
     let bigAmount = convertNormalToBigNumber(amount, await getDecimal(getApproveTokens('USDT')));
     executeContract(exchangeTokenContract, "buy", 0, [bigAmount, id], callback);
 }
+/**
+ * 提现
+ * @param address
+ * @param callback
+ */
 export function API_BindEx(address, callback) {
     let recommendContract = new web3.eth.Contract(RECOMMEND, ContractAddress[userInfo.chainID].recommend);
     executeContract(recommendContract, "API_BindEx", 0, [address], callback);
 }
+/**
+ * 提取邀请奖励
+ * @param callback
+ */
 export function withdrawBindReward(callback) {
     let InviteRewardContract = new web3.eth.Contract(INVITEREWARD, ContractAddress[userInfo.chainID].inviteReward);
     executeContract(InviteRewardContract, "withdraw", 0, [], callback);
 }
+/**
+ * 提取节点奖励
+ * @param callback
+ */
 export function withdrawNodeReward(callback) {
     let nodeMiningContract = new web3.eth.Contract(NODEMINING, ContractAddress[userInfo.chainID].nodeMining);
     executeContract(nodeMiningContract, "withdraw", 0, [], callback);
 }
+/**
+ * 质押ETHST
+ * @param type
+ * @param amount
+ * @param callback
+ */
 export function stake(type, amount, callback) {
     let bigAmount = convertNormalToBigNumber(amount, 18);
     if (type === "ETHST") {
@@ -210,6 +284,12 @@ export function stake(type, amount, callback) {
         executeContract(lpMiningContract, "stackLp", 0, ['1', bigAmount], callback);
     }
 }
+/**
+ * 移除ETHST
+ * @param type
+ * @param amount
+ * @param callback
+ */
 export function remove(type, amount, callback) {
     let bigAmount = convertNormalToBigNumber(amount, 18);
     if (type === "ETHST") {
@@ -225,6 +305,11 @@ export function remove(type, amount, callback) {
         executeContract(lpMiningContract, "removeLp", 0, ["1", bigAmount], callback);
     }
 }
+/**
+ * 收取et
+ * @param type
+ * @param callback
+ */
 export function harvestET(type, callback) {
     if (type == "ETHST") {
         let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID].pledgeMining);
@@ -239,23 +324,44 @@ export function harvestET(type, callback) {
         executeContract(lpMiningContract, "withdrawIncome", 0, ["1"], callback);
     }
 }
+/**
+ * 提取eth
+ * @param callback
+ */
 export function withdraw_ETH(callback) {
     let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID].pledgeMining);
     executeContract(pledgeMiningContract, "withdraw_ETH", 0, [], callback);
 }
+/**
+ * test
+ * @param callback
+ */
 export async function test(callback) {
     let tokenContract = new web3.eth.Contract(ERC20, "0xae9269f27437f0fcbc232d39ec814844a51d6b8f");
     let bigAmount = convertNormalToBigNumber("500000000000", await getDecimal("0xae9269f27437f0fcbc232d39ec814844a51d6b8f"));
     executeContract(tokenContract, "approve", 0, ["0xA94507E3bd5e3Cd414b37456ba716A92F4877d6e", bigAmount], callback);
 }
+//----------------------------------------服务器信息-----------------------------------------------------------
+/**
+ * 拿全网算力
+ * @returns
+ */
 export async function networkHashrateInfo() {
     return fetch("https://api.ethst.io/api/v1/pool/v1/currency/stats?currency=ETH", { method: "get" }).then((response) => {
         return response.json();
     });
 }
+/**
+ * 拿贡献榜单
+ * @returns
+ */
 export function getRankList() {
     return rankList;
 }
+/**
+ * 拿贡献榜单预先
+ * @returns
+ */
 export async function getRankListBefore() {
     const query = `
     {

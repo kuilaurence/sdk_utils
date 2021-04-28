@@ -6,7 +6,7 @@
         "outDir": "dist",
         "sourceMap": true,
         "moduleResolution": "node",
-        "removeComments": true,
+        "removeComments": false,
         "declaration": true,
         "downlevelIteration": true,
         "skipLibCheck": true,
