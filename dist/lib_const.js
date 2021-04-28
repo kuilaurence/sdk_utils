@@ -13,7 +13,6 @@ export const userInfo = {
     chainID: 97,
     chain: "BSCTest",
 };
-//每次部署需要配置,对应合约地址
 export const ContractAddress = {
     97: {
         mdexFactoryContract: "0x0C69B5eBcC55CDeDe930607CC8c85DBC3cC60399",
@@ -42,7 +41,6 @@ export const ContractAddress = {
         etQuery: "0x20292b2D33A5632a44b3D00FeB30d687E112192F",
     },
 };
-//每次部署需要配置,普通币的地址
 export const tokenAddres = {
     97: {
         USDT: "0x87536A0e7f0867f0D92FFc48bDC2164d48Cd45C5",

@@ -16,6 +16,7 @@ export const isETHAddress = _isETHAddress;
 
 export var tokenDic: {};
 export var rankList: { data: [] };
+export var trace = true;
 /**
  * 获取symbol
  * @param token_address 

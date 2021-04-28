@@ -6,8 +6,8 @@ import { Contract } from "web3-eth-contract";
 import { chainIdDict, userInfo } from "./lib_const";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
-BigNumber.config({ ROUNDING_MODE: 1 });//下取整
-BigNumber.config({ EXPONENTIAL_AT: 1e+9 })//消除科学计数法
+BigNumber.config({ ROUNDING_MODE: 1 });
+BigNumber.config({ EXPONENTIAL_AT: 1e+9 })
 /**
  * 大数转常数
  * @param number 大数
