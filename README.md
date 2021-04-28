@@ -1,7 +1,7 @@
 # sdk_utils
 Provide Ethereum SDK initialization
 
-## init sdk
+# init sdk
 ```
 npm i sdk-utils
 ```
