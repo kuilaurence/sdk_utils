@@ -6,6 +6,9 @@ import { Contract } from "web3-eth-contract";
 import { chainIdDict, userInfo } from "./lib_const";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
+//全局log
+let isTrace = true;
+
 BigNumber.config({ ROUNDING_MODE: 1 });
 BigNumber.config({ EXPONENTIAL_AT: 1e+9 })
 /**
@@ -134,7 +137,6 @@ export async function isETHAddress(token_address: string) {
     return false;
   }
 }
-
 /**
  * 查币的余额
  * @param token_address 币地址
@@ -360,4 +362,26 @@ export function toPrecision(str: string) {
     str = str.slice(0, -1)
   }
   return str
+}
+
+export class Trace {
+  public constructor() {
+  }
+  /**
+   *设置log的开关
+   * @param b bool
+   */
+  public static setTraceBoolean(b: boolean) {
+    isTrace = b;
+  }
+  /**
+   * log的内容
+   * @param message log提示
+   * @param optionalParams log内容
+   */
+  public static trace(message?: string, ...optionalParams: any[]) {
+    if (isTrace) {
+      console.log(message, ...optionalParams);
+    }
+  }
 }

@@ -1,22 +1,20 @@
 import { userInfo, tokenAddres, ContractAddress } from "./lib_const";
 import { ERC20, ETQUERY, LPMINING, RECOMMEND, NODEMINING, INVITEREWARD, PLEDGEMINING, EXCHANGETOKEN } from "./lib_abi";
 import {
-  add, sub, mul, div, web3, findToken, getDecimal, sleep as _sleep,
-  convertBigNumberToNormal, convertNormalToBigNumber, executeContract,
-  logout as _logout, connect as _connect, getBalance as _getBalance, getAllowance as _getAllowance,
-  approveToken as _approveToken, isETHAddress as _isETHAddress
+  add, sub, mul, div, web3, Trace, findToken, getDecimal, convertBigNumberToNormal, convertNormalToBigNumber, executeContract, toPrecision as _toPrecision,
+  logout as _logout, sleep as _sleep, connect as _connect, getBalance as _getBalance, getAllowance as _getAllowance, approveToken as _approveToken, isETHAddress as _isETHAddress
 } from "./lib.utils";
 
+export const T = Trace;
 export const sleep = _sleep;
 export const logout = _logout;
 export const connect = _connect;
 export const getBalance = _getBalance;
+export const toPrecision = _toPrecision
 export const approveToken = _approveToken;
 export const isETHAddress = _isETHAddress;
 
-export var tokenDic: {};
 export var rankList: { data: [] };
-export var trace = true;
 /**
  * 获取symbol
  * @param token_address 

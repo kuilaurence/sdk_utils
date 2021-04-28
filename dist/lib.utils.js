@@ -4,6 +4,7 @@ import { ERC20 } from "./lib_abi";
 import { BigNumber } from "bignumber.js";
 import { chainIdDict, userInfo } from "./lib_const";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+let isTrace = true;
 BigNumber.config({ ROUNDING_MODE: 1 });
 BigNumber.config({ EXPONENTIAL_AT: 1e+9 });
 export function convertBigNumberToNormal(number, decimals = 18) {
@@ -225,5 +226,17 @@ export function toPrecision(str) {
         str = str.slice(0, -1);
     }
     return str;
+}
+export class Trace {
+    constructor() {
+    }
+    static setTraceBoolean(b) {
+        isTrace = b;
+    }
+    static trace(message, ...optionalParams) {
+        if (isTrace) {
+            console.log(message, ...optionalParams);
+        }
+    }
 }
 //# sourceMappingURL=lib.utils.js.map

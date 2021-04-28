@@ -42,4 +42,9 @@ export declare function logout(): {
     message: string;
 };
 export declare function toPrecision(str: string): string;
+export declare class Trace {
+    constructor();
+    static setTraceBoolean(b: boolean): void;
+    static trace(message?: string, ...optionalParams: any[]): void;
+}
 export {};

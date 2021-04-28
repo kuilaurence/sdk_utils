@@ -1,15 +1,15 @@
-import { logout as _logout, connect as _connect, getBalance as _getBalance, approveToken as _approveToken, isETHAddress as _isETHAddress } from "./lib.utils";
+import { Trace, toPrecision as _toPrecision, logout as _logout, connect as _connect, getBalance as _getBalance, approveToken as _approveToken, isETHAddress as _isETHAddress } from "./lib.utils";
+export declare const T: typeof Trace;
 export declare const sleep: (ms: number) => Promise<unknown>;
 export declare const logout: typeof _logout;
 export declare const connect: typeof _connect;
 export declare const getBalance: typeof _getBalance;
+export declare const toPrecision: typeof _toPrecision;
 export declare const approveToken: typeof _approveToken;
 export declare const isETHAddress: typeof _isETHAddress;
-export declare var tokenDic: {};
 export declare var rankList: {
     data: [];
 };
-export declare var trace: boolean;
 export declare function getTokenSymbol(token_address: string): string;
 export declare function getAllowance(token_address: string, type: string): Promise<string>;
 export declare function getApproveTokens(token_symbol: string): string;
