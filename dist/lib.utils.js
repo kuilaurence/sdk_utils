@@ -219,12 +219,9 @@ export function logout() {
 export function toPrecision(str) {
     if (!Boolean(str))
         return '0';
-    if (!str.includes("."))
-        return str;
-    while (str.slice(-1) === "0") {
-        str = str.slice(0, -1);
-    }
-    if (str.endsWith(".")) {
+    if (!(/^[0-9.]+$/g.test(str)))
+        return '0';
+    while (str.includes(".") && (str.endsWith('.') || str.endsWith('0'))) {
         str = str.slice(0, -1);
     }
     return str;

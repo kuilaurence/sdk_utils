@@ -170,7 +170,11 @@ export async function transferFrom(token_address: string, from_address: string, 
   let bigAmount = convertNormalToBigNumber(amount, await getDecimal(token_address));
   executeContract(tokenContract, "transferFrom", 0, [from_address, to_address, bigAmount], callback);
 }
-
+/**
+ * 获取币的精度
+ * @param token_address 
+ * @returns 
+ */
 export async function getDecimal(token_address: string) {
   let tokenContract = new web3.eth.Contract(ERC20, token_address);
   let decimal = await tokenContract.methods.decimals().call();
@@ -351,11 +355,8 @@ export function logout() {
  */
 export function toPrecision(str: string) {
   if (!Boolean(str)) return '0';
-  if (!str.includes(".")) return str
-  while (str.slice(-1) === "0") {
-    str = str.slice(0, -1)
-  }
-  if (str.endsWith(".")) {
+  if (!(/^[0-9.]+$/g.test(str))) return '0';
+  while (str.includes(".") && (str.endsWith('.') || str.endsWith('0'))) {
     str = str.slice(0, -1)
   }
   return str
