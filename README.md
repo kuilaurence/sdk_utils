@@ -9,7 +9,7 @@ npm i sdk-utils
 ```javascript
 import { connect, T ,getBalance} from "sdk-utils"   //import
 
-T.setTraceBoolean(true);                            //set log show (true)/ hide(false)
+T.setTraceShow(true);                               //set log show (true)/ hide(false)
 T.trace("----test----", "123132");                  //log demo
                                                     //walletconnect  /  metamask   /  other
 connect("walletconnect", (res) => {                 //connect function    (res)  listener change account/chain

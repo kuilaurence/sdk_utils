@@ -369,7 +369,7 @@ export class Trace {
      *设置log的开关
      * @param b bool
      */
-    static setTraceBoolean(b) {
+    static setTraceShow(b) {
         isTrace = b;
     }
     /**

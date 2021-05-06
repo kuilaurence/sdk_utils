@@ -180,7 +180,7 @@ export declare class Trace {
      *设置log的开关
      * @param b bool
      */
-    static setTraceBoolean(b: boolean): void;
+    static setTraceShow(b: boolean): void;
     /**
      * log的内容
      * @param message log提示
