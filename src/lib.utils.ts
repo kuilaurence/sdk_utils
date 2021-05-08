@@ -6,9 +6,6 @@ import { Contract } from "web3-eth-contract";
 import { chainIdDict, userInfo } from "./lib_const";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
-//全局log
-let isTrace = true;
-
 BigNumber.config({ ROUNDING_MODE: 1 });
 BigNumber.config({ EXPONENTIAL_AT: 1e+9 })
 /**
@@ -350,6 +347,8 @@ export function logout() {
     message: "logout",
   }
 }
+//全局log
+let isTrace = false;
 /**
  * 删除数字末尾多余的0
  * @param str 
