@@ -363,7 +363,7 @@ export async function addMetamaskChain(chainName: "BSC" | "HECO") {
       decimals: 18
     },
     rpcUrls: ['https://http-mainnet.hecochain.com/'],
-    blockExplorerUrls: ['https://scan.huobichain.com/'],
+    blockExplorerUrls: ['https://hecoinfo.com/'],
   }];
   let data = chainName == "BSC" ? dataBSC : dataHECO;
   await _ethereum.request({ method: 'wallet_addEthereumChain', params: data }).catch()
