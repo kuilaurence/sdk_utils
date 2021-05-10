@@ -337,8 +337,9 @@ export async function connect(walletName, callback) {
 export async function addMetamaskChain(chainName) {
     //@ts-ignore
     let _ethereum = window['ethereum'];
-    if (!_ethereum)
+    if (!_ethereum || !_ethereum.isMetaMask) {
         return;
+    }
     const dataBSC = [{
             chainId: '0x38',
             chainName: 'Binance Smart Chain',
@@ -359,10 +360,10 @@ export async function addMetamaskChain(chainName) {
                 decimals: 18
             },
             rpcUrls: ['https://http-mainnet.hecochain.com/'],
-            blockExplorerUrls: ['https://scan.huobichain.com/'],
+            blockExplorerUrls: ['https://hecoinfo.com/'],
         }];
     let data = chainName == "BSC" ? dataBSC : dataHECO;
-    await _ethereum.request({ method: 'wallet_addEthereumChain', params: data }).catch();
+    await _ethereum.request({ method: 'wallet_addEthereumChain', params: data }).catch(console.log);
 }
 /**
  * 退出

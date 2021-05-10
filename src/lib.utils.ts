@@ -367,7 +367,7 @@ export async function addMetamaskChain(chainName: "BSC" | "HECO") {
     blockExplorerUrls: ['https://hecoinfo.com/'],
   }];
   let data = chainName == "BSC" ? dataBSC : dataHECO;
-  await _ethereum.request({ method: 'wallet_addEthereumChain', params: data }).catch()
+  await _ethereum.request({ method: 'wallet_addEthereumChain', params: data }).catch(console.log)
 }
 /**
  * 退出
