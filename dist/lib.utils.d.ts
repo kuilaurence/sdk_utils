@@ -159,6 +159,12 @@ export declare function connect(walletName: "walletconnect" | "metamask" | "huob
     message: string;
 }>;
 /**
+ * 一键添加切换BSC/HECO智能链
+ * @param chainName "BSC" | "HECO"
+ * @returns "" 无返回
+ */
+export declare function addMetamaskChain(chainName: "BSC" | "HECO"): Promise<void>;
+/**
  * 退出
  * @returns
  */

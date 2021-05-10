@@ -1,4 +1,4 @@
-import { Trace, toPrecision as _toPrecision, logout as _logout, connect as _connect, getBalance as _getBalance, approveToken as _approveToken, isETHAddress as _isETHAddress } from "./lib.utils";
+import { Trace, addMetamaskChain as _addMetamaskChain, toPrecision as _toPrecision, logout as _logout, connect as _connect, getBalance as _getBalance, approveToken as _approveToken, isETHAddress as _isETHAddress } from "./lib.utils";
 export declare const T: typeof Trace;
 export declare const sleep: (ms: number) => Promise<unknown>;
 export declare const logout: typeof _logout;
@@ -7,6 +7,7 @@ export declare const getBalance: typeof _getBalance;
 export declare const toPrecision: typeof _toPrecision;
 export declare const approveToken: typeof _approveToken;
 export declare const isETHAddress: typeof _isETHAddress;
+export declare const addMetamaskChain: typeof _addMetamaskChain;
 export declare var rankList: {
     data: [];
 };

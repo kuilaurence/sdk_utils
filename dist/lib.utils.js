@@ -330,6 +330,41 @@ export async function connect(walletName, callback) {
     return resMsg;
 }
 /**
+ * 一键添加切换BSC/HECO智能链
+ * @param chainName "BSC" | "HECO"
+ * @returns "" 无返回
+ */
+export async function addMetamaskChain(chainName) {
+    //@ts-ignore
+    let _ethereum = window['ethereum'];
+    if (!_ethereum)
+        return;
+    const dataBSC = [{
+            chainId: '0x38',
+            chainName: 'Binance Smart Chain',
+            nativeCurrency: {
+                name: 'BNB',
+                symbol: 'BNB',
+                decimals: 18
+            },
+            rpcUrls: ['https://bsc-dataseed.binance.org/'],
+            blockExplorerUrls: ['https://bscscan.com/'],
+        }];
+    const dataHECO = [{
+            chainId: '0x80',
+            chainName: 'HECO Chain',
+            nativeCurrency: {
+                name: 'HT',
+                symbol: 'HT',
+                decimals: 18
+            },
+            rpcUrls: ['https://http-mainnet.hecochain.com/'],
+            blockExplorerUrls: ['https://scan.huobichain.com/'],
+        }];
+    let data = chainName == "BSC" ? dataBSC : dataHECO;
+    await _ethereum.request({ method: 'wallet_addEthereumChain', params: data }).catch();
+}
+/**
  * 退出
  * @returns
  */

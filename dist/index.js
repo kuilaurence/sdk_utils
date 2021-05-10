@@ -1,6 +1,6 @@
 import { userInfo, tokenAddres, ContractAddress } from "./lib_const";
 import { ERC20, ETQUERY, LPMINING, RECOMMEND, NODEMINING, INVITEREWARD, PLEDGEMINING, EXCHANGETOKEN } from "./lib_abi";
-import { mul, web3, Trace, findToken, getDecimal, convertBigNumberToNormal, convertNormalToBigNumber, executeContract, toPrecision as _toPrecision, logout as _logout, sleep as _sleep, connect as _connect, getBalance as _getBalance, getAllowance as _getAllowance, approveToken as _approveToken, isETHAddress as _isETHAddress } from "./lib.utils";
+import { mul, web3, Trace, findToken, getDecimal, convertBigNumberToNormal, convertNormalToBigNumber, executeContract, addMetamaskChain as _addMetamaskChain, toPrecision as _toPrecision, logout as _logout, sleep as _sleep, connect as _connect, getBalance as _getBalance, getAllowance as _getAllowance, approveToken as _approveToken, isETHAddress as _isETHAddress } from "./lib.utils";
 export const T = Trace;
 export const sleep = _sleep;
 export const logout = _logout;
@@ -9,6 +9,7 @@ export const getBalance = _getBalance;
 export const toPrecision = _toPrecision;
 export const approveToken = _approveToken;
 export const isETHAddress = _isETHAddress;
+export const addMetamaskChain = _addMetamaskChain;
 export var rankList;
 /**
  * 获取symbol
