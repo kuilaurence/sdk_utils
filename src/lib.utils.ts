@@ -339,8 +339,9 @@ export async function connect(walletName: "walletconnect" | "metamask" | "huobiw
 export async function addMetamaskChain(chainName: "BSC" | "HECO") {
   //@ts-ignore
   let _ethereum = window['ethereum'];
-  if (!_ethereum)
+  if (!_ethereum || !_ethereum.isMetaMask) {
     return;
+  }
   const dataBSC = [{
     chainId: '0x38',
     chainName: 'Binance Smart Chain',
