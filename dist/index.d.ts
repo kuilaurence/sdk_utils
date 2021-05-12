@@ -29,6 +29,20 @@ export declare function getTokenSymbol(token_address: string): string;
  */
 export declare function getAllowance(token_address: string): Promise<string>;
 /**
+ * 池子存的数量
+ * @param token_address
+ * @returns
+ */
+export declare function poolInfo(token_address: string): Promise<{
+    data: {
+        supplyToken: any;
+        shareToken: any;
+        totalBorrow: string;
+        loss: string;
+        totalDeposit: string;
+    };
+}>;
+/**
  * 对token授权
  * @param token_address
  * @param callback
@@ -48,17 +62,6 @@ export declare function deposit(token_address: string, amount: string, callback:
  * @param callback
  */
 export declare function withdraw(token_address: string, amount: string, callback: (code: number, hash: string) => void): void;
-/**
- * 收取et
- * @param type
- * @param callback
- */
-/**
- * 质押ETHST
- * @param type
- * @param amount
- * @param callback
- */
 /**
  * test
  * @param callback

@@ -42,6 +42,24 @@ export async function getAllowance(token_address: string) {
   let destina_address = ContractAddress[userInfo.chainID].mulBank;
   return await _getAllowance(token_address, destina_address);
 }
+/**
+ * 池子存的数量 
+ * @param token_address 
+ * @returns 
+ */
+export async function poolInfo(token_address: string) {
+  let mulBankContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);
+  let res = await mulBankContract.methods.poolInfo(token_address).call();
+  return {
+    data: {
+      supplyToken: res.supplyToken,
+      shareToken: res.shareToken,
+      totalBorrow: convertBigNumberToNormal(res.totalBorrow, 18),
+      loss: convertBigNumberToNormal(res.loss, 18),
+      totalDeposit: convertBigNumberToNormal(res.totalDeposit, 18),
+    }
+  }
+}
 //---------------------------------------------------上查下操作------------------------------------------------------
 /**
  * 对token授权
@@ -74,42 +92,6 @@ export function withdraw(token_address: string, amount: string, callback: (code:
   let bigAmount = convertNormalToBigNumber(amount, 18);
   executeContract(mulBankContract, "withdraw", 0, [token_address, bigAmount], callback);
 }
-/**
- * 收取et
- * @param type 
- * @param callback 
- */
-//  export function harvestET(type: string, callback: (code: number, hash: string) => void) {
-//   if (type == "ETHST") {
-//     let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID].pledgeMining);
-//     executeContract(pledgeMiningContract, "withdraw_ET", 0, [], callback);
-//   } else if (type === "ETHSTUSDT") {
-//     let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID].lpMining);
-//     executeContract(lpMiningContract, "withdrawIncome", 0, ["0"], callback);
-//   } else {
-//     let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID].lpMining);
-//     executeContract(lpMiningContract, "withdrawIncome", 0, ["1"], callback);
-//   }
-// }
-/**
- * 质押ETHST
- * @param type 
- * @param amount 
- * @param callback 
- */
-// export function stake(type: string, amount: string, callback: (code: number, hash: string) => void) {
-//   let bigAmount = convertNormalToBigNumber(amount, 18);
-//   if (type === "ETHST") {
-//     let pledgeMiningContract = new web3.eth.Contract(PLEDGEMINING, ContractAddress[userInfo.chainID].pledgeMining);
-//     executeContract(pledgeMiningContract, "stakeEthSt", 0, [bigAmount], callback);
-//   } else if (type === "ETHSTUSDT") {
-//     let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID].lpMining);
-//     executeContract(lpMiningContract, "stackLp", 0, ['0', bigAmount], callback);
-//   } else {
-//     let lpMiningContract = new web3.eth.Contract(LPMINING, ContractAddress[userInfo.chainID].lpMining);
-//     executeContract(lpMiningContract, "stackLp", 0, ['1', bigAmount], callback);
-//   }
-// }
 /**
  * test
  * @param callback 
