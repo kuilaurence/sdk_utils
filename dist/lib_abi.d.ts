@@ -1,10 +1,3 @@
 import { AbiItem } from "web3-utils";
 export declare const ERC20: AbiItem[];
-export declare const LPMINING: AbiItem[];
-export declare const RECOMMEND: AbiItem[];
-export declare const NODEMINING: AbiItem[];
-export declare const INVITEREWARD: AbiItem[];
-export declare const PLEDGEMINING: AbiItem[];
-export declare const EXCHANGETOKEN: AbiItem[];
-export declare const FIXEDSUPPLYTOKEN: AbiItem[];
-export declare const ETQUERY: AbiItem[];
+export declare const MULBANK: AbiItem[];

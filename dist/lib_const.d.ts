@@ -10,73 +10,38 @@ export declare const chainIdDict: {
 };
 export declare const userInfo: {
     account: string;
-    chainID: 1 | 97 | 128;
-    chain: "Ethereum" | "BSCTest" | "HECO";
+    chainID: 1 | 4 | 97 | 128;
+    chain: "Ethereum" | "Rinkeby" | "BSCTest" | "HECO";
 };
 export declare const ContractAddress: {
     1: {
-        mdexFactoryContract: string;
-        mdexRouterContract: string;
-        mdexPoolContract: string;
-        recommend: string;
-        lpMining: string;
-        exchangeToken: string;
-        pledgeMining: string;
-        teamMining: string;
-        inviteReward: string;
-        nodeMining: string;
-        etQuery: string;
+        mulBank: string;
+    };
+    4: {
+        mulBank: string;
     };
     97: {
-        mdexFactoryContract: string;
-        mdexRouterContract: string;
-        mdexPoolContract: string;
-        recommend: string;
-        lpMining: string;
-        exchangeToken: string;
-        pledgeMining: string;
-        teamMining: string;
-        inviteReward: string;
-        nodeMining: string;
-        etQuery: string;
+        mulBank: string;
     };
     128: {
-        mdexFactoryContract: string;
-        mdexRouterContract: string;
-        mdexPoolContract: string;
-        recommend: string;
-        lpMining: string;
-        exchangeToken: string;
-        pledgeMining: string;
-        teamMining: string;
-        inviteReward: string;
-        nodeMining: string;
-        etQuery: string;
+        mulBank: string;
     };
 };
 export declare const tokenAddres: {
     1: {
         USDT: string;
-        WETH: string;
-        ETHST: string;
-        ET: string;
-        ETUSDT: string;
-        ETHSTUSDT: string;
+        BTC: string;
+    };
+    4: {
+        USDT: string;
+        BTC: string;
     };
     97: {
         USDT: string;
-        WETH: string;
-        ETHST: string;
-        ET: string;
-        ETUSDT: string;
-        ETHSTUSDT: string;
+        BTC: string;
     };
     128: {
         USDT: string;
-        WETH: string;
-        ETHST: string;
-        ET: string;
-        ETUSDT: string;
-        ETHSTUSDT: string;
+        BTC: string;
     };
 };
