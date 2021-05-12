@@ -1,5 +1,5 @@
-import { userInfo, tokenAddres, ContractAddress } from "./lib_const";
 import { ERC20, MULBANK } from "./lib_abi";
+import { userInfo, tokenAddres, ContractAddress } from "./lib_const";
 import { web3, Trace, findToken, getDecimal, convertBigNumberToNormal, convertNormalToBigNumber, executeContract, addMetamaskChain as _addMetamaskChain, toPrecision as _toPrecision, logout as _logout, sleep as _sleep, connect as _connect, getBalance as _getBalance, getAllowance as _getAllowance, approveToken as _approveToken, isETHAddress as _isETHAddress } from "./lib.utils";
 export const T = Trace;
 export const sleep = _sleep;
