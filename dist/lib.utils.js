@@ -228,7 +228,7 @@ let walletDisconnectTimer;
 const provider = new WalletConnectProvider({
     rpc: {
         1: "https://jsonrpc.maiziqianbao.net/",
-        56: 'https://bsc-dataseed4.defibit.io:443',
+        56: 'https://bsc-dataseed.binance.org/',
     },
 });
 /**
