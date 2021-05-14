@@ -31,7 +31,7 @@ export function getTokenAddress(token_symbol: string) {
  */
 export function getTokenSymbol(token_address: string) {
   let symbol = findToken(tokenAddres[userInfo.chainID], token_address);
-  return symbol || "not know";
+  return symbol || "unknow";
 }
 /**
  * 获取授权值
