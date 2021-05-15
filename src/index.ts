@@ -87,9 +87,9 @@ function getTick(token0_address: string, token1_address: string, ratio: number) 
   let val1 = Math.log2(1.0001);
   let ans = Math.floor(val0 / val1);
   if (val0 > 0) {
-    return (ans - ans % 200).toString();
+    return (ans - ans % 60).toString();
   } else {
-    return (ans - (200 - Math.abs(ans) % 200)).toString();
+    return (ans - (200 - Math.abs(ans) % 60)).toString();
   }
 }
 export async function getBtcUsdtPrice() {
