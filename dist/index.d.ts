@@ -29,6 +29,12 @@ export declare function getTokenSymbol(token_address: string): string;
  */
 export declare function getAllowance(token_address: string): Promise<string>;
 /**
+ * getInvestAllowance 投资相关的
+ * @param token_address
+ * @returns
+ */
+export declare function getInvestAllowance(token_address: string): Promise<string>;
+/**
  * 池子存的数量
  * @param token_address
  * @returns
@@ -48,6 +54,12 @@ export declare function poolInfo(token_address: string): Promise<{
  * @param callback
  */
 export declare function approveToken(token_address: string, callback: (code: number, hash: string) => void): Promise<void>;
+/**
+ * approveInvestToken 投资相关的approve
+ * @param token_address
+ * @param callback
+ */
+export declare function approveInvestToken(token_address: string, callback: (code: number, hash: string) => void): Promise<void>;
 /**
  * deposit买入
  * @param token_address

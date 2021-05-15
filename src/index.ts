@@ -43,6 +43,15 @@ export async function getAllowance(token_address: string) {
   return await _getAllowance(token_address, destina_address);
 }
 /**
+ * getInvestAllowance 投资相关的
+ * @param token_address 
+ * @returns 
+ */
+export async function getInvestAllowance(token_address: string) {
+  let destina_address = ContractAddress[userInfo.chainID].v3strategy;
+  return await _getAllowance(token_address, destina_address);
+}
+/**
  * 池子存的数量 
  * @param token_address 
  * @returns 
@@ -68,6 +77,15 @@ export async function poolInfo(token_address: string) {
  */
 export async function approveToken(token_address: string, callback: (code: number, hash: string) => void) {
   let destina_address = ContractAddress[userInfo.chainID].mulBank;
+  _approveToken(token_address, destina_address, callback);
+}
+/**
+ * approveInvestToken 投资相关的approve
+ * @param token_address 
+ * @param callback 
+ */
+export async function approveInvestToken(token_address: string, callback: (code: number, hash: string) => void) {
+  let destina_address = ContractAddress[userInfo.chainID].v3strategy;
   _approveToken(token_address, destina_address, callback);
 }
 /**
