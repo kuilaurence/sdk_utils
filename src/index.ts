@@ -69,6 +69,29 @@ export async function poolInfo(token_address: string) {
     }
   }
 }
+/**
+ * 
+ * @param token0_address 
+ * @param token1_address 
+ * @param ratio 价格
+ * @returns 
+ */
+function getTick(token0_address: string, token1_address: string, ratio: number) {
+  if (Number(token0_address) > Number(token1_address)) {
+    let temp = token0_address;
+    token0_address = token1_address;
+    token1_address = temp;
+    ratio = 1 / ratio;
+  }
+  let val0 = Math.log2(ratio);
+  let val1 = Math.log2(1.0001);
+  let ans = Math.floor(val0 / val1);
+  if (val0 > 0) {
+    return (ans - ans % 200).toString();
+  } else {
+    return (ans - (200 - Math.abs(ans) % 200)).toString();
+  }
+}
 //---------------------------------------------------上查下操作------------------------------------------------------
 /**
  * 对token授权
@@ -117,13 +140,15 @@ export function withdraw(token_address: string, amount: string, callback: (code:
  * @param fee 
  * @param amount0 
  * @param amount1 
- * @param tickLower 
- * @param tickUpper 
+ * @param leftPrice 
+ * @param rightPrice 
  * @param callback 
  */
-export function invest(token0_address: string, token1_address: string, fee: string, amount0: string, amount1: string, tickLower: string, tickUpper: string, callback: (code: number, hash: string) => void) {
+export function invest(token0_address: string, token1_address: string, fee: string, amount0: string, amount1: string, leftPrice: string, rightPrice: string, callback: (code: number, hash: string) => void) {
   let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
   console.log("--------v3strategyContract--------", v3strategyContract);
+  let tickLower = getTick(token0_address, token1_address, +leftPrice);
+  let tickUpper = getTick(token0_address, token1_address, +rightPrice);
   let bigAmount0 = convertNormalToBigNumber(amount0, 18);
   let bigAmount1 = convertNormalToBigNumber(amount1, 18);
   executeContract(v3strategyContract, "invest", 0, [token0_address, token1_address, fee, bigAmount0, bigAmount1, tickLower, tickUpper], callback);

@@ -81,11 +81,11 @@ export declare function withdraw(token_address: string, amount: string, callback
  * @param fee
  * @param amount0
  * @param amount1
- * @param tickLower
- * @param tickUpper
+ * @param leftPrice
+ * @param rightPrice
  * @param callback
  */
-export declare function invest(token0_address: string, token1_address: string, fee: string, amount0: string, amount1: string, tickLower: string, tickUpper: string, callback: (code: number, hash: string) => void): void;
+export declare function invest(token0_address: string, token1_address: string, fee: string, amount0: string, amount1: string, leftPrice: string, rightPrice: string, callback: (code: number, hash: string) => void): void;
 export declare function Divest(token_address: string, amount: string, callback: (code: number, hash: string) => void): void;
 /**
  * test
