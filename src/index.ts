@@ -92,6 +92,13 @@ function getTick(token0_address: string, token1_address: string, ratio: number) 
     return (ans - (200 - Math.abs(ans) % 200)).toString();
   }
 }
+export async function getBtcUsdtPrice() {
+  let usdt = new web3.eth.Contract(ERC20, getTokenAddress("USDT"));
+  let btc = new web3.eth.Contract(ERC20, getTokenAddress("BTC"));
+  let usdtbalance = await usdt.methods.balanceOf("0x305f1af06d3365818554a927340a360aff4ce5f9").call();
+  let btcbalance = await btc.methods.balanceOf("0x305f1af06d3365818554a927340a360aff4ce5f9").call();
+  return usdtbalance / btcbalance;
+}
 //---------------------------------------------------上查下操作------------------------------------------------------
 /**
  * 对token授权

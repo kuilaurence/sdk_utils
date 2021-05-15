@@ -48,6 +48,7 @@ export declare function poolInfo(token_address: string): Promise<{
         totalDeposit: string;
     };
 }>;
+export declare function getBtcUsdtPrice(): Promise<number>;
 /**
  * 对token授权
  * @param token_address
