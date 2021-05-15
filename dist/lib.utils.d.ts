@@ -140,7 +140,7 @@ export declare function getAllowance(token_address: string, destina_address: str
  * @param params 参数
  * @param callback 回调
  */
-export declare function executeContract(contract: Contract, methodName: string, value: number, params: string[], callback: (code: number, hash: string) => void): void;
+export declare function executeContract(contract: Contract, methodName: string, value: number, params: any, callback: (code: number, hash: string) => void): void;
 /**
  * 链接钱包
  * @param walletName 钱包的名字小写

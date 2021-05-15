@@ -146,7 +146,19 @@ export function invest(token0_address, token1_address, fee, amount0, amount1, le
     let tickUpper = getTick(token0_address, token1_address, +rightPrice);
     let bigAmount0 = convertNormalToBigNumber(amount0, 18);
     let bigAmount1 = convertNormalToBigNumber(amount1, 18);
-    executeContract(v3strategyContract, "invest", 0, [token0_address, token1_address, fee, bigAmount0, bigAmount1, tickLower, tickUpper], callback);
+    executeContract(v3strategyContract, "invest", 0, [
+        {
+            "components": {
+                "token0": token0_address,
+                "token1": token1_address,
+                "fee": fee,
+                "amount0Desired": bigAmount0,
+                "amount1Desired": bigAmount1,
+                "tickLower": tickLower,
+                "tickUpper": tickUpper
+            }
+        }
+    ], callback);
 }
 export function Divest(token_address, amount, callback) {
     let mulWorkContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);

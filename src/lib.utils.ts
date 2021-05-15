@@ -209,7 +209,7 @@ export async function getAllowance(token_address: string, destina_address: strin
  * @param params 参数
  * @param callback 回调
  */
-export function executeContract(contract: Contract, methodName: string, value: number, params: string[], callback: (code: number, hash: string) => void) {
+export function executeContract(contract: Contract, methodName: string, value: number, params: any, callback: (code: number, hash: string) => void) {
   contract.methods[methodName](...params)
     .send({ from: userInfo.account, value: value })
     .on("transactionHash", function (hash: string) {
