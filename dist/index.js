@@ -100,10 +100,9 @@ export function withdraw(token_address, amount, callback) {
 export function invest(token0_address, token1_address, fee, amount0, amount1, tickLower, tickUpper, callback) {
     let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
     console.log("--------v3strategyContract--------", v3strategyContract);
-    let bigfee = convertNormalToBigNumber(fee, 18);
     let bigAmount0 = convertNormalToBigNumber(amount0, 18);
     let bigAmount1 = convertNormalToBigNumber(amount1, 18);
-    executeContract(v3strategyContract, "invest", 0, [token0_address, token1_address, bigfee, bigAmount0, bigAmount1, tickLower, tickUpper], callback);
+    executeContract(v3strategyContract, "invest", 0, [token0_address, token1_address, fee, bigAmount0, bigAmount1, tickLower, tickUpper], callback);
 }
 export function Divest(token_address, amount, callback) {
     let mulWorkContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);
