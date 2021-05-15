@@ -61,6 +61,24 @@ export async function poolInfo(token_address: string) {
   }
 }
 /**
+ * 投资前查询创建的账户信息
+ * @returns 
+ */
+export async function workers() {
+  let mulWorkContract = new web3.eth.Contract(MULWORK, ContractAddress[userInfo.chainID].mulWork);
+  let res = await mulWorkContract.methods.workers(userInfo.account).call();
+  return {
+    data: {
+      createTime: res.createTime,
+      created: res.created,
+      lastWorkTime: res.lastWorkTime,
+      power: res.power,
+      totalProfit: res.totalProfit,
+      workerId: res.workerId
+    }
+  }
+}
+/**
  * 
  * @param token0_address 
  * @param token1_address 

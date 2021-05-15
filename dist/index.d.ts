@@ -42,6 +42,20 @@ export declare function poolInfo(token_address: string): Promise<{
         totalDeposit: string;
     };
 }>;
+/**
+ * 投资前查询创建的账户信息
+ * @returns
+ */
+export declare function workers(): Promise<{
+    data: {
+        createTime: any;
+        created: any;
+        lastWorkTime: any;
+        power: any;
+        totalProfit: any;
+        workerId: any;
+    };
+}>;
 export declare function getBtcUsdtPrice(): Promise<number>;
 /**
  * 对token授权
