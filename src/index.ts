@@ -43,15 +43,6 @@ export async function getAllowance(token_address: string) {
   return await _getAllowance(token_address, destina_address);
 }
 /**
- * getInvestAllowance 投资相关的
- * @param token_address 
- * @returns 
- */
-export async function getInvestAllowance(token_address: string) {
-  let destina_address = ContractAddress[userInfo.chainID].v3strategy;
-  return await _getAllowance(token_address, destina_address);
-}
-/**
  * 池子存的数量 
  * @param token_address 
  * @returns 
@@ -110,15 +101,6 @@ export async function approveToken(token_address: string, callback: (code: numbe
   _approveToken(token_address, destina_address, callback);
 }
 /**
- * approveInvestToken 投资相关的approve
- * @param token_address 
- * @param callback 
- */
-export async function approveInvestToken(token_address: string, callback: (code: number, hash: string) => void) {
-  let destina_address = ContractAddress[userInfo.chainID].v3strategy;
-  _approveToken(token_address, destina_address, callback);
-}
-/**
  * deposit买入
  * @param token_address 
  * @param amount 
@@ -158,6 +140,8 @@ export function invest(token0_address: string, token1_address: string, fee: stri
   let tickUpper = getTick(token0_address, token1_address, +rightPrice);
   let bigAmount0 = convertNormalToBigNumber(amount0, 18);
   let bigAmount1 = convertNormalToBigNumber(amount1, 18);
+  console.log("-----tickLower----->>", tickLower);
+  console.log("-----tickUpper----->>", tickUpper);
   executeContract(v3strategyContract, "invest", 0, [
     {
       "token0": token0_address,
@@ -174,6 +158,14 @@ export function Divest(token_address: string, amount: string, callback: (code: n
   let mulWorkContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);
   let bigAmount = convertNormalToBigNumber(amount, 18);
   executeContract(mulWorkContract, "Divest", 0, [token_address, bigAmount], callback);
+}
+/**
+ * 创建账号（投资前先创建）
+ * @param callback 
+ */
+export function createAccount(callback: (code: number, hash: string) => void) {
+  let mulWorkContract = new web3.eth.Contract(MULWORK, ContractAddress[userInfo.chainID].mulWork);
+  executeContract(mulWorkContract, "createAccount", 0, [], callback);
 }
 /**
  * test

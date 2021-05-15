@@ -1,4 +1,4 @@
-import { ERC20, MULBANK, UNISWAPV3STRATEGY } from "./lib_abi";
+import { ERC20, MULBANK, MULWORK, UNISWAPV3STRATEGY } from "./lib_abi";
 import { userInfo, tokenAddres, ContractAddress } from "./lib_const";
 import { web3, Trace, findToken, getDecimal, convertBigNumberToNormal, convertNormalToBigNumber, executeContract, addMetamaskChain as _addMetamaskChain, toPrecision as _toPrecision, logout as _logout, sleep as _sleep, connect as _connect, getBalance as _getBalance, getAllowance as _getAllowance, approveToken as _approveToken, isETHAddress as _isETHAddress } from "./lib.utils";
 export const T = Trace;
@@ -34,15 +34,6 @@ export function getTokenSymbol(token_address) {
  */
 export async function getAllowance(token_address) {
     let destina_address = ContractAddress[userInfo.chainID].mulBank;
-    return await _getAllowance(token_address, destina_address);
-}
-/**
- * getInvestAllowance 投资相关的
- * @param token_address
- * @returns
- */
-export async function getInvestAllowance(token_address) {
-    let destina_address = ContractAddress[userInfo.chainID].v3strategy;
     return await _getAllowance(token_address, destina_address);
 }
 /**
@@ -105,15 +96,6 @@ export async function approveToken(token_address, callback) {
     _approveToken(token_address, destina_address, callback);
 }
 /**
- * approveInvestToken 投资相关的approve
- * @param token_address
- * @param callback
- */
-export async function approveInvestToken(token_address, callback) {
-    let destina_address = ContractAddress[userInfo.chainID].v3strategy;
-    _approveToken(token_address, destina_address, callback);
-}
-/**
  * deposit买入
  * @param token_address
  * @param amount
@@ -153,6 +135,8 @@ export function invest(token0_address, token1_address, fee, amount0, amount1, le
     let tickUpper = getTick(token0_address, token1_address, +rightPrice);
     let bigAmount0 = convertNormalToBigNumber(amount0, 18);
     let bigAmount1 = convertNormalToBigNumber(amount1, 18);
+    console.log("-----tickLower----->>", tickLower);
+    console.log("-----tickUpper----->>", tickUpper);
     executeContract(v3strategyContract, "invest", 0, [
         {
             "token0": token0_address,
@@ -169,6 +153,14 @@ export function Divest(token_address, amount, callback) {
     let mulWorkContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);
     let bigAmount = convertNormalToBigNumber(amount, 18);
     executeContract(mulWorkContract, "Divest", 0, [token_address, bigAmount], callback);
+}
+/**
+ * 创建账号（投资前先创建）
+ * @param callback
+ */
+export function createAccount(callback) {
+    let mulWorkContract = new web3.eth.Contract(MULWORK, ContractAddress[userInfo.chainID].mulWork);
+    executeContract(mulWorkContract, "createAccount", 0, [], callback);
 }
 /**
  * test
