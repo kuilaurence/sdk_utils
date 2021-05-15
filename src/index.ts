@@ -153,15 +153,13 @@ export function invest(token0_address: string, token1_address: string, fee: stri
   let bigAmount1 = convertNormalToBigNumber(amount1, 18);
   executeContract(v3strategyContract, "invest", 0, [
     {
-      "components": {
-        "token0": token0_address,
-        "token1": token1_address,
-        "fee": fee,
-        "amount0Desired": bigAmount0,
-        "amount1Desired": bigAmount1,
-        "tickLower": tickLower,
-        "tickUpper": tickUpper
-      }
+      "token0": token0_address,
+      "token1": token1_address,
+      "fee": fee,
+      "amount0Desired": bigAmount0,
+      "amount1Desired": bigAmount1,
+      "tickLower": tickLower,
+      "tickUpper": tickUpper
     }
   ], callback);
 }
