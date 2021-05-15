@@ -1,4 +1,4 @@
-import { ERC20, MULBANK } from "./lib_abi";
+import { ERC20, MULBANK, MULWORK } from "./lib_abi";
 import { userInfo, tokenAddres, ContractAddress } from "./lib_const";
 import {
   add, sub, mul, div, web3, Trace, findToken, getDecimal, convertBigNumberToNormal, convertNormalToBigNumber, executeContract,
@@ -91,6 +91,16 @@ export function withdraw(token_address: string, amount: string, callback: (code:
   let mulBankContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);
   let bigAmount = convertNormalToBigNumber(amount, 18);
   executeContract(mulBankContract, "withdraw", 0, [token_address, bigAmount], callback);
+}
+export function invest(token_address: string, amount: string, callback: (code: number, hash: string) => void) {
+  let mulWorkContract = new web3.eth.Contract(MULWORK, ContractAddress[userInfo.chainID].mulWork);
+  let bigAmount = convertNormalToBigNumber(amount, 18);
+  executeContract(mulWorkContract, "invest", 0, [token_address, bigAmount], callback);
+}
+export function Divest(token_address: string, amount: string, callback: (code: number, hash: string) => void) {
+  let mulWorkContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);
+  let bigAmount = convertNormalToBigNumber(amount, 18);
+  executeContract(mulWorkContract, "Divest", 0, [token_address, bigAmount], callback);
 }
 /**
  * test

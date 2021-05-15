@@ -19,15 +19,23 @@ export const userInfo: { account: string, chainID: 1 | 4 | 97 | 128, chain: "Eth
 export const ContractAddress = {
   1: {
     mulBank: "0x07dAd2A3d15B780717Bfb1156B6E5306d74cA3fF",
+    v3strategy: "0x5b99c265E4dE7E71a7C3987DF61268795517e1bF",
+    mulWork: "0x994aA39EAC34882855a2A2fE7a73C2D6a32440fA",
   },
   4: {
     mulBank: "0x07dAd2A3d15B780717Bfb1156B6E5306d74cA3fF",
+    v3strategy: "0x5b99c265E4dE7E71a7C3987DF61268795517e1bF",
+    mulWork: "0x994aA39EAC34882855a2A2fE7a73C2D6a32440fA",
   },
   97: {
     mulBank: "0x07dAd2A3d15B780717Bfb1156B6E5306d74cA3fF",
+    v3strategy: "0x5b99c265E4dE7E71a7C3987DF61268795517e1bF",
+    mulWork: "0x994aA39EAC34882855a2A2fE7a73C2D6a32440fA",
   },
   128: {
     mulBank: "0x07dAd2A3d15B780717Bfb1156B6E5306d74cA3fF",
+    v3strategy: "0x5b99c265E4dE7E71a7C3987DF61268795517e1bF",
+    mulWork: "0x994aA39EAC34882855a2A2fE7a73C2D6a32440fA",
   },
 };
 

@@ -16,15 +16,23 @@ export declare const userInfo: {
 export declare const ContractAddress: {
     1: {
         mulBank: string;
+        v3strategy: string;
+        mulWork: string;
     };
     4: {
         mulBank: string;
+        v3strategy: string;
+        mulWork: string;
     };
     97: {
         mulBank: string;
+        v3strategy: string;
+        mulWork: string;
     };
     128: {
         mulBank: string;
+        v3strategy: string;
+        mulWork: string;
     };
 };
 export declare const tokenAddres: {

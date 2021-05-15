@@ -62,6 +62,8 @@ export declare function deposit(token_address: string, amount: string, callback:
  * @param callback
  */
 export declare function withdraw(token_address: string, amount: string, callback: (code: number, hash: string) => void): void;
+export declare function invest(token_address: string, amount: string, callback: (code: number, hash: string) => void): void;
+export declare function Divest(token_address: string, amount: string, callback: (code: number, hash: string) => void): void;
 /**
  * test
  * @param callback
