@@ -64,6 +64,22 @@ export declare function workers(): Promise<{
  */
 export declare function getSqrtPrice(token0_address: string, token1_address: string): Promise<number>;
 /**
+ * 获取投资最大值
+ * @param token0_address
+ * @param token1_address
+ * @returns
+ */
+export declare function getRemainQuota(token0_address: string, token1_address: string): Promise<{
+    data: {
+        token0: string;
+        symbol0: string;
+        remain0: string;
+        token1: string;
+        symbol1: string;
+        remain1: string;
+    };
+}>;
+/**
  * 对token授权
  * @param token_address
  * @param callback

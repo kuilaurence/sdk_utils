@@ -118,6 +118,27 @@ export async function getSqrtPrice(token0_address: string, token1_address: strin
   console.log("-----current tick----", tick);
   return Math.pow(res.sqrtPriceX96 / (Math.pow(2, 96)), 2);
 }
+/**
+ * 获取投资最大值
+ * @param token0_address 
+ * @param token1_address 
+ * @returns 
+ */
+export async function getRemainQuota(token0_address: string, token1_address: string) {
+  let mulWorkContract = new web3.eth.Contract(MULWORK, ContractAddress[userInfo.chainID].mulWork);
+  let remain0 = await mulWorkContract.methods.getRemainQuota(userInfo.account, token0_address).call();
+  let remain1 = await mulWorkContract.methods.getRemainQuota(userInfo.account, token1_address).call();
+  return {
+    data: {
+      token0: token0_address,
+      symbol0: getTokenSymbol(token0_address),
+      remain0: convertBigNumberToNormal(remain0, 18),
+      token1: token1_address,
+      symbol1: getTokenSymbol(token1_address),
+      remain1: convertBigNumberToNormal(remain1, 18),
+    }
+  }
+}
 //---------------------------------------------------上查下操作------------------------------------------------------
 /**
  * 对token授权
