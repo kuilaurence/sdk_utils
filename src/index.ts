@@ -1,4 +1,4 @@
-import { ERC20, MULBANK, MULWORK, UNISWAPV3STRATEGY } from "./lib_abi";
+import { ERC20, MULBANK, MULWORK, UNISWAPV3POOL, UNISWAPV3STRATEGY } from "./lib_abi";
 import { userInfo, tokenAddres, ContractAddress } from "./lib_const";
 import {
   add, sub, mul, div, web3, Trace, findToken, getDecimal, convertBigNumberToNormal, convertNormalToBigNumber, executeContract,
@@ -85,13 +85,17 @@ export async function workers() {
  * @param ratio 价格
  * @returns 
  */
-function getTick(token0_address: string, token1_address: string, ratio: number) {
+async function getTick(token0_address: string, token1_address: string, _ratio: number) {
   if (Number(token0_address) > Number(token1_address)) {
     let temp = token0_address;
     token0_address = token1_address;
     token1_address = temp;
-    ratio = 1 / ratio;
   }
+  let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
+  let res = await v3poolContract.methods.slot0().call();
+  console.log(res);
+  let tick = res.tick;
+  let ratio = Math.pow(res.sqrtPriceX96 / (Math.pow(2, 96)), 2);
   let val0 = Math.log2(ratio);
   let val1 = Math.log2(1.0001);
   let ans = Math.floor(val0 / val1);
