@@ -172,10 +172,14 @@ export function invest(token0_address: string, token1_address: string, fee: stri
     }
   ], callback);
 }
-export function Divest(token_address: string, amount: string, callback: (code: number, hash: string) => void) {
-  let mulWorkContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);
-  let bigAmount = convertNormalToBigNumber(amount, 18);
-  executeContract(mulWorkContract, "Divest", 0, [token_address, bigAmount], callback);
+/**
+ * 撤资
+ * @param id 
+ * @param callback 
+ */
+export function takeProfit(id: string, callback: (code: number, hash: string) => void) {
+  let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
+  executeContract(v3strategyContract, "takeProfit", 0, [id], callback);
 }
 /**
  * 创建账号（投资前先创建）

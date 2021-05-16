@@ -89,7 +89,12 @@ export declare function withdraw(token_address: string, amount: string, callback
  * @param callback
  */
 export declare function invest(token0_address: string, token1_address: string, fee: string, amount0: string, amount1: string, leftPrice: string, rightPrice: string, callback: (code: number, hash: string) => void): void;
-export declare function Divest(token_address: string, amount: string, callback: (code: number, hash: string) => void): void;
+/**
+ * 撤资
+ * @param id
+ * @param callback
+ */
+export declare function takeProfit(id: string, callback: (code: number, hash: string) => void): void;
 /**
  * 创建账号（投资前先创建）
  * @param callback
