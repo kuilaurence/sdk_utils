@@ -94,7 +94,7 @@ export declare function withdraw(token_address: string, amount: string, callback
  * @param rightPrice
  * @param callback
  */
-export declare function invest(token0_address: string, token1_address: string, fee: string, amount0: string, amount1: string, leftPrice: string, rightPrice: string, callback: (code: number, hash: string) => void): void;
+export declare function invest(token0_address: string, token1_address: string, fee: string, amount0: string, amount1: string, leftPrice: string, rightPrice: string, callback: (code: number, hash: string) => void): Promise<void>;
 /**
  * 撤资
  * @param id

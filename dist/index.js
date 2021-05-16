@@ -156,11 +156,11 @@ export function withdraw(token_address, amount, callback) {
  * @param rightPrice
  * @param callback
  */
-export function invest(token0_address, token1_address, fee, amount0, amount1, leftPrice, rightPrice, callback) {
+export async function invest(token0_address, token1_address, fee, amount0, amount1, leftPrice, rightPrice, callback) {
     let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
     console.log("--------v3strategyContract--------", v3strategyContract);
-    let tickLower = getTick(token0_address, token1_address, +leftPrice);
-    let tickUpper = getTick(token0_address, token1_address, +rightPrice);
+    let tickLower = await getTick(token0_address, token1_address, +leftPrice);
+    let tickUpper = await getTick(token0_address, token1_address, +rightPrice);
     let bigAmount0 = convertNormalToBigNumber(amount0, 18);
     let bigAmount1 = convertNormalToBigNumber(amount1, 18);
     console.log("-----tickLower----->>", tickLower);
