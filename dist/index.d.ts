@@ -56,7 +56,13 @@ export declare function workers(): Promise<{
         workerId: any;
     };
 }>;
-export declare function getBtcUsdtPrice(): Promise<number>;
+/**
+ * 获取池子的价格（暂时只有 usdt/btc）
+ * @param token0_address
+ * @param token1_address
+ * @returns
+ */
+export declare function getSqrtPrice(token0_address: string, token1_address: string): Promise<number>;
 /**
  * 对token授权
  * @param token_address

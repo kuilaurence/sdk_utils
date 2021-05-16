@@ -85,17 +85,12 @@ export async function workers() {
  * @param ratio 价格
  * @returns 
  */
-async function getTick(token0_address: string, token1_address: string, _ratio: number) {
+async function getTick(token0_address: string, token1_address: string, ratio: number) {
   if (Number(token0_address) > Number(token1_address)) {
     let temp = token0_address;
     token0_address = token1_address;
     token1_address = temp;
   }
-  let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
-  let res = await v3poolContract.methods.slot0().call();
-  console.log(res);
-  let tick = res.tick;
-  let ratio = Math.pow(res.sqrtPriceX96 / (Math.pow(2, 96)), 2);
   let val0 = Math.log2(ratio);
   let val1 = Math.log2(1.0001);
   let ans = Math.floor(val0 / val1);
@@ -105,12 +100,23 @@ async function getTick(token0_address: string, token1_address: string, _ratio: n
     return (ans - (200 - Math.abs(ans) % 60)).toString();
   }
 }
-export async function getBtcUsdtPrice() {
-  let usdt = new web3.eth.Contract(ERC20, getTokenAddress("USDT"));
-  let btc = new web3.eth.Contract(ERC20, getTokenAddress("BTC"));
-  let usdtbalance = await usdt.methods.balanceOf("0x305f1af06d3365818554a927340a360aff4ce5f9").call();
-  let btcbalance = await btc.methods.balanceOf("0x305f1af06d3365818554a927340a360aff4ce5f9").call();
-  return usdtbalance / btcbalance;
+/**
+ * 获取池子的价格（暂时只有 usdt/btc）
+ * @param token0_address 
+ * @param token1_address 
+ * @returns 
+ */
+export async function getSqrtPrice(token0_address: string, token1_address: string) {
+  if (Number(token0_address) > Number(token1_address)) {
+    let temp = token0_address;
+    token0_address = token1_address;
+    token1_address = temp;
+  }
+  let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
+  let res = await v3poolContract.methods.slot0().call();
+  let tick = res.tick;//参考
+  console.log("-----current tick----", tick);
+  return Math.pow(res.sqrtPriceX96 / (Math.pow(2, 96)), 2);
 }
 //---------------------------------------------------上查下操作------------------------------------------------------
 /**
