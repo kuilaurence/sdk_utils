@@ -114,7 +114,7 @@ interface DictObject {
  * @param compare 比较(可选)
  * @returns key
  */
-export function findToken(obj: DictObject, value: string, compare = (a: string, b: string) => a === b) {
+export function findToken(obj: DictObject, value: string, compare = (a: string, b: string) => a.toLowerCase() === b.toLowerCase()) {
   return Object.keys(obj).find((k) => compare(obj[k], value));
 }
 /**

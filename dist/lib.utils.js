@@ -107,7 +107,7 @@ export const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
  * @param compare 比较(可选)
  * @returns key
  */
-export function findToken(obj, value, compare = (a, b) => a === b) {
+export function findToken(obj, value, compare = (a, b) => a.toLowerCase() === b.toLowerCase()) {
     return Object.keys(obj).find((k) => compare(obj[k], value));
 }
 /**
