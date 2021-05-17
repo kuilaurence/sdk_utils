@@ -22,22 +22,22 @@ export const ContractAddress = {
         v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
     },
     4: {
-        mulBank: "0x19A8DE0ec08f7ACCb51399cbb6C4E9FAe6286Ff2",
-        v3strategy: "0x692A57A8c705d36a5512447f9BAC41d0356aE9e4",
+        mulBank: "0xEC18491Ec36E77A6F14e582ed5b834054bCd7DF4",
+        mulWork: "0x49FE482D61b2194d25d70F8D2004E2BDD574BF09",
+        v3strategy: "0x7D48c75623550CF48fC2bd7244159749D22d6c90",
         v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
-        mulWork: "0x51c327321A4Cfa6024190833ED7a34Ba112c958b",
     },
     97: {
-        mulBank: "0x19A8DE0ec08f7ACCb51399cbb6C4E9FAe6286Ff2",
-        v3strategy: "0x692A57A8c705d36a5512447f9BAC41d0356aE9e4",
+        mulBank: "0xEC18491Ec36E77A6F14e582ed5b834054bCd7DF4",
+        mulWork: "0x49FE482D61b2194d25d70F8D2004E2BDD574BF09",
+        v3strategy: "0x7D48c75623550CF48fC2bd7244159749D22d6c90",
         v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
-        mulWork: "0x51c327321A4Cfa6024190833ED7a34Ba112c958b",
     },
     128: {
-        mulBank: "0x19A8DE0ec08f7ACCb51399cbb6C4E9FAe6286Ff2",
-        v3strategy: "0x692A57A8c705d36a5512447f9BAC41d0356aE9e4",
+        mulBank: "0xEC18491Ec36E77A6F14e582ed5b834054bCd7DF4",
+        mulWork: "0x49FE482D61b2194d25d70F8D2004E2BDD574BF09",
+        v3strategy: "0x7D48c75623550CF48fC2bd7244159749D22d6c90",
         v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
-        mulWork: "0x51c327321A4Cfa6024190833ED7a34Ba112c958b",
     },
 };
 //每次部署需要配置,普通币的地址

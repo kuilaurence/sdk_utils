@@ -22,21 +22,21 @@ export declare const ContractAddress: {
     };
     4: {
         mulBank: string;
+        mulWork: string;
         v3strategy: string;
         v3pool: string;
-        mulWork: string;
     };
     97: {
         mulBank: string;
+        mulWork: string;
         v3strategy: string;
         v3pool: string;
-        mulWork: string;
     };
     128: {
         mulBank: string;
+        mulWork: string;
         v3strategy: string;
         v3pool: string;
-        mulWork: string;
     };
 };
 export declare const tokenAddres: {
