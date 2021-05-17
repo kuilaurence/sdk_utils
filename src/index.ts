@@ -49,11 +49,22 @@ export async function getAllowance(token_address: string) {
  */
 export async function poolInfo(token_address: string) {
   let mulBankContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);
+  let _totalShare = await mulBankContract.methods.getTotalShare(token_address).call();
+  let totalShare = convertBigNumberToNormal(_totalShare, 18);
+
   let res = await mulBankContract.methods.poolInfo(token_address).call();
+  let tokenContract = new web3.eth.Contract(ERC20, res.shareToken);
+
+  let _shareTokenTotalSupply = await tokenContract.methods.totalSupply().call();
+  let shareTokenTotalSupply = convertBigNumberToNormal(_shareTokenTotalSupply, 18);
+
+  let shareTokenBalance = await getBalance(res.shareToken);
   return {
     data: {
       supplyToken: res.supplyToken,
       shareToken: res.shareToken,
+      shareTokenBalance: shareTokenBalance,
+      reward: (+shareTokenBalance - (+shareTokenBalance * +totalShare / +shareTokenTotalSupply)).toFixed(8),
       totalBorrow: convertBigNumberToNormal(res.totalBorrow, 18),
       loss: convertBigNumberToNormal(res.loss, 18),
       totalDeposit: convertBigNumberToNormal(res.totalDeposit, 18),

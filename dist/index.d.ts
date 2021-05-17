@@ -37,6 +37,8 @@ export declare function poolInfo(token_address: string): Promise<{
     data: {
         supplyToken: any;
         shareToken: any;
+        shareTokenBalance: string;
+        reward: string;
         totalBorrow: string;
         loss: string;
         totalDeposit: string;
