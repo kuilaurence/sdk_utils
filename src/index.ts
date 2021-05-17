@@ -272,7 +272,6 @@ export async function getinvestList() {
         }
       }
     `;
-  console.log(query)
   return fetch(ContractAddress[userInfo.chainID].graphql, {
     method: "post",
     headers: {
