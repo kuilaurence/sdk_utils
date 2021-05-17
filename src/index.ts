@@ -242,26 +242,38 @@ export async function networkHashrateInfo() {
   });
 }
 /**
- * 拿贡献榜单
+ * 拿投资列表（缓存的）
  * @returns 
  */
-export function getRankList() {
+export function getList() {
   return rankList;
 }
 /**
- * 拿贡献榜单预先
+ * 拿投资列表
  * @returns 
  */
-export async function getRankListBefore() {
+export async function getinvestList() {
   const query = `
     {
-        nodeMiningStakes(orderBy: amount, orderDirection: desc, first: 20) {
-          id
-          amount
+      positions(where:{user:"${userInfo.account}"}) {
+        id
+        user
+        positionId
+        token0
+        token1
+        debt0
+        debt1
+        exit0
+        exit1
+        liquidity
+        tickLower
+        tickUpper
+        close
         }
       }
     `;
-  return fetch("https://api.ethst.io/subgraphs/name/ethst/ethst_project", {
+  console.log(query)
+  return fetch(ContractAddress[userInfo.chainID].graphql, {
     method: "post",
     headers: {
       "Content-type": "application/json",
@@ -269,12 +281,15 @@ export async function getRankListBefore() {
     body: JSON.stringify({ query, }),
   }).then((response) => response.json())
     .then((data) => {
-      const nodeMiningStakes = data.data.nodeMiningStakes;
-      rankList = {
-        data: nodeMiningStakes.map((item: any) => {
+      let history = data.data.positions;
+      return rankList = {
+        data: history.map((item: any) => {
           return {
             ...item,
-            amount: convertBigNumberToNormal(item.amount, 18),
+            debt0: convertBigNumberToNormal(item.debt0, 18),
+            debt1: convertBigNumberToNormal(item.debt1, 18),
+            leftPrice: Math.pow(1.0001, item.tickLower),
+            rightPrice: Math.pow(1.0001, item.tickUpper),
           };
         }),
       };

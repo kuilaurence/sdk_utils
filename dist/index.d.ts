@@ -133,14 +133,16 @@ export declare function test(callback: (code: number, hash: string) => void): Pr
  */
 export declare function networkHashrateInfo(): Promise<any>;
 /**
- * 拿贡献榜单
+ * 拿投资列表（缓存的）
  * @returns
  */
-export declare function getRankList(): {
+export declare function getList(): {
     data: [];
 };
 /**
- * 拿贡献榜单预先
+ * 拿投资列表
  * @returns
  */
-export declare function getRankListBefore(): Promise<void>;
+export declare function getinvestList(): Promise<void | {
+    data: any;
+}>;
