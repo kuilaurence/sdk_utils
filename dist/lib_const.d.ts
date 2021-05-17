@@ -16,9 +16,9 @@ export declare const userInfo: {
 export declare const ContractAddress: {
     1: {
         mulBank: string;
+        mulWork: string;
         v3strategy: string;
         v3pool: string;
-        mulWork: string;
     };
     4: {
         mulBank: string;
