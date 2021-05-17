@@ -265,7 +265,6 @@ export async function getinvestList() {
         }
       }
     `;
-    console.log(query);
     return fetch(ContractAddress[userInfo.chainID].graphql, {
         method: "post",
         headers: {
@@ -281,8 +280,8 @@ export async function getinvestList() {
                     ...item,
                     debt0: convertBigNumberToNormal(item.debt0, 18),
                     debt1: convertBigNumberToNormal(item.debt1, 18),
-                    leftPrice: Math.pow(1.0001, item.tickLower),
-                    rightPrice: Math.pow(1.0001, item.tickUpper),
+                    priceLower: Math.pow(1.0001, item.tickLower),
+                    priceUpper: Math.pow(1.0001, item.tickUpper),
                 };
             }),
         };
