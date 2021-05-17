@@ -48,7 +48,11 @@ export declare const uniswapv3strategy: ({
         type: string;
     }[];
     name: string;
-    outputs: never[];
+    outputs: {
+        internalType: string;
+        name: string;
+        type: string;
+    }[];
     stateMutability: string;
     type: string;
     anonymous?: undefined;

@@ -116,7 +116,7 @@ export declare function invest(token0_address: string, token1_address: string, f
  * @param id
  * @param callback
  */
-export declare function takeProfit(id: string, callback: (code: number, hash: string) => void): void;
+export declare function divest(id: string, callback: (code: number, hash: string) => void): void;
 /**
  * 创建账号（投资前先创建）
  * @param callback

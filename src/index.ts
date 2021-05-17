@@ -208,9 +208,9 @@ export async function invest(token0_address: string, token1_address: string, fee
  * @param id 
  * @param callback 
  */
-export function takeProfit(id: string, callback: (code: number, hash: string) => void) {
+export function divest(id: string, callback: (code: number, hash: string) => void) {
   let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
-  executeContract(v3strategyContract, "takeProfit", 0, [id], callback);
+  executeContract(v3strategyContract, "divest", 0, [id], callback);
 }
 /**
  * 创建账号（投资前先创建）
