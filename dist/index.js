@@ -286,6 +286,8 @@ export async function getinvestList() {
                     debt1: convertBigNumberToNormal(item.debt1, 18),
                     priceLower: Math.pow(1.0001, item.tickLower),
                     priceUpper: Math.pow(1.0001, item.tickUpper),
+                    symbol0: getTokenSymbol(item.token0),
+                    symbol1: getTokenSymbol(item.token1),
                 };
             }),
         };
