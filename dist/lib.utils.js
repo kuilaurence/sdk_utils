@@ -353,7 +353,7 @@ export async function addMetamaskChain(chainName) {
         }];
     const dataHECO = [{
             chainId: '0x80',
-            chainName: 'HECO Chain',
+            chainName: 'HECO Mainnet',
             nativeCurrency: {
                 name: 'HT',
                 symbol: 'HT',
