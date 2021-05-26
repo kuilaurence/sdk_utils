@@ -45,19 +45,19 @@ export declare const ContractAddress: {
 };
 export declare const tokenAddres: {
     1: {
-        USDT: string;
-        BTC: string;
+        USDC: string;
+        ETH: string;
     };
     4: {
-        USDT: string;
-        BTC: string;
+        USDC: string;
+        ETH: string;
     };
     97: {
-        USDT: string;
-        BTC: string;
+        USDC: string;
+        ETH: string;
     };
     128: {
-        USDT: string;
-        BTC: string;
+        USDC: string;
+        ETH: string;
     };
 };

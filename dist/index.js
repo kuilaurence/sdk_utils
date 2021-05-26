@@ -134,10 +134,10 @@ export async function getRemainQuota(token0_address, token1_address) {
         data: {
             token0: token0_address,
             symbol0: getTokenSymbol(token0_address),
-            remain0: convertBigNumberToNormal(remain0, 18),
+            remain0: convertBigNumberToNormal(remain0, await getDecimal(token0_address)),
             token1: token1_address,
             symbol1: getTokenSymbol(token1_address),
-            remain1: convertBigNumberToNormal(remain1, 18),
+            remain1: convertBigNumberToNormal(remain1, await getDecimal(token1_address)),
         }
     };
 }
@@ -159,7 +159,7 @@ export async function approveToken(token_address, callback) {
  */
 export async function deposit(token_address, amount, callback) {
     let mulBankContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);
-    let bigAmount = convertNormalToBigNumber(amount, 18);
+    let bigAmount = convertNormalToBigNumber(amount, await getDecimal(token_address));
     executeContract(mulBankContract, "deposit", 0, [token_address, bigAmount], callback);
 }
 /**
@@ -188,8 +188,8 @@ export async function invest(token0_address, token1_address, fee, amount0, amoun
     let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
     let tickLower = await getTick(token0_address, token1_address, +leftPrice);
     let tickUpper = await getTick(token0_address, token1_address, +rightPrice);
-    let bigAmount0 = convertNormalToBigNumber(amount0, 18);
-    let bigAmount1 = convertNormalToBigNumber(amount1, 18);
+    let bigAmount0 = convertNormalToBigNumber(amount0, await getDecimal(token0_address));
+    let bigAmount1 = convertNormalToBigNumber(amount1, await getDecimal(token1_address));
     executeContract(v3strategyContract, "invest", 0, [
         {
             "token0": token0_address,

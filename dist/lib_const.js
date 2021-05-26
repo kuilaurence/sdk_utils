@@ -16,30 +16,30 @@ export const userInfo = {
 //每次部署需要配置,对应合约地址
 export const ContractAddress = {
     1: {
-        mulBank: "0xEC18491Ec36E77A6F14e582ed5b834054bCd7DF4",
-        mulWork: "0x49FE482D61b2194d25d70F8D2004E2BDD574BF09",
-        v3strategy: "0x7D48c75623550CF48fC2bd7244159749D22d6c90",
+        mulBank: "0x9C8002edD58E331965467F9bc67D7853a7d00d9E",
+        mulWork: "0xa5d38bC3Ac8909ff967545bc742Bf4216C382bc2",
+        v3strategy: "0x0aaBf33f0B6d0FDE41cDF4Bebc977A54BcDcDA33",
         v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
         graphql: "https://api.thegraph.com/subgraphs/name/winless/multiple",
     },
     4: {
-        mulBank: "0xEC18491Ec36E77A6F14e582ed5b834054bCd7DF4",
-        mulWork: "0x49FE482D61b2194d25d70F8D2004E2BDD574BF09",
-        v3strategy: "0x7D48c75623550CF48fC2bd7244159749D22d6c90",
+        mulBank: "0x9C8002edD58E331965467F9bc67D7853a7d00d9E",
+        mulWork: "0xa5d38bC3Ac8909ff967545bc742Bf4216C382bc2",
+        v3strategy: "0x0aaBf33f0B6d0FDE41cDF4Bebc977A54BcDcDA33",
         v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
         graphql: "https://api.thegraph.com/subgraphs/name/winless/multiple",
     },
     97: {
-        mulBank: "0xEC18491Ec36E77A6F14e582ed5b834054bCd7DF4",
-        mulWork: "0x49FE482D61b2194d25d70F8D2004E2BDD574BF09",
-        v3strategy: "0x7D48c75623550CF48fC2bd7244159749D22d6c90",
+        mulBank: "0x9C8002edD58E331965467F9bc67D7853a7d00d9E",
+        mulWork: "0xa5d38bC3Ac8909ff967545bc742Bf4216C382bc2",
+        v3strategy: "0x0aaBf33f0B6d0FDE41cDF4Bebc977A54BcDcDA33",
         v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
         graphql: "https://api.thegraph.com/subgraphs/name/winless/multiple",
     },
     128: {
-        mulBank: "0xEC18491Ec36E77A6F14e582ed5b834054bCd7DF4",
-        mulWork: "0x49FE482D61b2194d25d70F8D2004E2BDD574BF09",
-        v3strategy: "0x7D48c75623550CF48fC2bd7244159749D22d6c90",
+        mulBank: "0x9C8002edD58E331965467F9bc67D7853a7d00d9E",
+        mulWork: "0xa5d38bC3Ac8909ff967545bc742Bf4216C382bc2",
+        v3strategy: "0x0aaBf33f0B6d0FDE41cDF4Bebc977A54BcDcDA33",
         v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
         graphql: "https://api.thegraph.com/subgraphs/name/winless/multiple",
     },
@@ -47,20 +47,20 @@ export const ContractAddress = {
 //每次部署需要配置,普通币的地址
 export const tokenAddres = {
     1: {
-        USDT: "0x7F849aA38Fe8988c702B7Fe9828b04e1FDD330a3",
-        BTC: "0x409695Ee4FF431cDED2c2427Dc4ffB7958C3D7A5",
+        USDC: "0xd5B61730D852780c0E0D2cb04cAdEF7498ab0fab",
+        ETH: "0x794aa9dDEF81Fcb4AE1e5bd0eD3664D982C77183",
     },
     4: {
-        USDT: "0x7F849aA38Fe8988c702B7Fe9828b04e1FDD330a3",
-        BTC: "0x409695Ee4FF431cDED2c2427Dc4ffB7958C3D7A5",
+        USDC: "0xd5B61730D852780c0E0D2cb04cAdEF7498ab0fab",
+        ETH: "0x794aa9dDEF81Fcb4AE1e5bd0eD3664D982C77183",
     },
     97: {
-        USDT: "0x7F849aA38Fe8988c702B7Fe9828b04e1FDD330a3",
-        BTC: "0x409695Ee4FF431cDED2c2427Dc4ffB7958C3D7A5",
+        USDC: "0xd5B61730D852780c0E0D2cb04cAdEF7498ab0fab",
+        ETH: "0x794aa9dDEF81Fcb4AE1e5bd0eD3664D982C77183",
     },
     128: {
-        USDT: "0x7F849aA38Fe8988c702B7Fe9828b04e1FDD330a3",
-        BTC: "0x409695Ee4FF431cDED2c2427Dc4ffB7958C3D7A5",
+        USDC: "0xd5B61730D852780c0E0D2cb04cAdEF7498ab0fab",
+        ETH: "0x794aa9dDEF81Fcb4AE1e5bd0eD3664D982C77183",
     },
 };
 //# sourceMappingURL=lib_const.js.map
