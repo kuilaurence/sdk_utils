@@ -48,15 +48,16 @@ export async function getAllowance(token_address: string) {
  * @returns 
  */
 export async function poolInfo(token_address: string) {
+  let decimal = await getDecimal(token_address);
   let mulBankContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);
   let _totalShare = await mulBankContract.methods.getTotalShare(token_address).call();
-  let totalShare = convertBigNumberToNormal(_totalShare, 18);
+  let totalShare = convertBigNumberToNormal(_totalShare, decimal);
 
   let res = await mulBankContract.methods.poolInfo(token_address).call();
   let tokenContract = new web3.eth.Contract(ERC20, res.shareToken);
 
   let _shareTokenTotalSupply = await tokenContract.methods.totalSupply().call();
-  let shareTokenTotalSupply = convertBigNumberToNormal(_shareTokenTotalSupply, 18);
+  let shareTokenTotalSupply = convertBigNumberToNormal(_shareTokenTotalSupply, decimal);
 
   let shareTokenBalance = await getBalance(res.shareToken);
   return {
@@ -65,9 +66,9 @@ export async function poolInfo(token_address: string) {
       shareToken: res.shareToken,
       shareTokenBalance: shareTokenBalance,
       reward: (+shareTokenBalance - (+shareTokenBalance * +totalShare / +shareTokenTotalSupply)).toFixed(8),
-      totalBorrow: convertBigNumberToNormal(res.totalBorrow, 18),
-      loss: convertBigNumberToNormal(res.loss, 18),
-      totalDeposit: convertBigNumberToNormal(res.totalDeposit, 18),
+      totalBorrow: convertBigNumberToNormal(res.totalBorrow, decimal),
+      loss: convertBigNumberToNormal(res.loss, decimal),
+      totalDeposit: convertBigNumberToNormal(res.totalDeposit, decimal),
     }
   }
 }
@@ -176,9 +177,9 @@ export async function deposit(token_address: string, amount: string, callback: (
  * @param amount 
  * @param callback 
  */
-export function withdraw(token_address: string, amount: string, callback: (code: number, hash: string) => void) {
+export async function withdraw(token_address: string, amount: string, callback: (code: number, hash: string) => void) {
   let mulBankContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);
-  let bigAmount = convertNormalToBigNumber(amount, 18);
+  let bigAmount = convertNormalToBigNumber(amount, await getDecimal(token_address));
   executeContract(mulBankContract, "withdraw", 0, [token_address, bigAmount], callback);
 }
 /**
