@@ -60,12 +60,19 @@ export async function poolInfo(token_address: string) {
   let shareTokenTotalSupply = convertBigNumberToNormal(_shareTokenTotalSupply, decimal);
 
   let shareTokenBalance = await getBalance(res.shareToken);
+
+  let reward = '0';
+  if (+shareTokenTotalSupply <= 0) {
+    reward = '0';
+  } else {
+    reward = (+shareTokenBalance - (+shareTokenBalance * +totalShare / +shareTokenTotalSupply)).toFixed(8);
+  }
   return {
     data: {
       supplyToken: res.supplyToken,
       shareToken: res.shareToken,
       shareTokenBalance: shareTokenBalance,
-      reward: (+shareTokenBalance - (+shareTokenBalance * +totalShare / +shareTokenTotalSupply)).toFixed(8),
+      reward: reward,
       totalBorrow: convertBigNumberToNormal(res.totalBorrow, decimal),
       loss: convertBigNumberToNormal(res.loss, decimal),
       totalDeposit: convertBigNumberToNormal(res.totalDeposit, decimal),
