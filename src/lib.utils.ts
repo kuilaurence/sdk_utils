@@ -330,7 +330,10 @@ export async function connect(walletName: "walletconnect" | "metamask" | "huobiw
     } else {
       //@ts-ignore
       let _ethereum = window["ethereum"];
-      if (!_ethereum) return resMsg;
+      if (!_ethereum) {
+        resMsg.message = "Check your wallet!";
+        return resMsg;
+      }
       let accounts = await _ethereum.enable();
       web3 = new Web3(_ethereum);
       userInfo.account = accounts[0];
