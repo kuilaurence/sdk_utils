@@ -325,8 +325,10 @@ export async function connect(walletName, callback) {
         else {
             //@ts-ignore
             let _ethereum = window["ethereum"];
-            if (!_ethereum)
+            if (!_ethereum) {
+                resMsg.message = "Check your wallet!";
                 return resMsg;
+            }
             let accounts = await _ethereum.enable();
             web3 = new Web3(_ethereum);
             userInfo.account = accounts[0];
