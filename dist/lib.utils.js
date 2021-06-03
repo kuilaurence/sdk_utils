@@ -1,6 +1,7 @@
 import Web3 from "web3";
 export var web3;
 import { ERC20 } from "./lib_abi";
+import walletlink from 'walletlink';
 import { BigNumber } from "bignumber.js";
 import { chainIdDict, userInfo } from "./lib_const";
 import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -231,6 +232,12 @@ const provider = new WalletConnectProvider({
         56: 'https://bsc-dataseed.binance.org/',
     },
 });
+const walletLink = new walletlink({
+    appName: "Multiple",
+    appLogoUrl: "https://avatars.githubusercontent.com/u/23645629?s=48&v=4",
+    darkMode: false
+});
+const coinbaseRpc = "https://jsonrpc.maiziqianbao.net/";
 /**
  * 链接钱包
  * @param walletName 钱包的名字小写
@@ -289,6 +296,30 @@ export async function connect(walletName, callback) {
                         });
                     }
                 }, 300);
+            });
+        }
+        else if (walletName === "coinbasewallet") {
+            let _ethereum = walletLink.makeWeb3Provider(coinbaseRpc, 1);
+            let accounts = await _ethereum.enable();
+            web3 = new Web3(_ethereum);
+            userInfo.account = accounts[0];
+            userInfo.chainID = 1;
+            userInfo.chain = "Ethereum";
+            resMsg.account = userInfo.account;
+            resMsg.chainID = userInfo.chainID;
+            resMsg.chain = userInfo.chain;
+            _ethereum.on("disconnect", (code, reason) => {
+                if (code) {
+                    userInfo.account = "";
+                    userInfo.chainID = 1;
+                    userInfo.chain = "Ethereum";
+                    callback({
+                        account: "",
+                        chainID: 1,
+                        chain: "",
+                        message: "disconnect",
+                    });
+                }
             });
         }
         else {
@@ -374,6 +405,7 @@ export function logout() {
     userInfo.chainID = 1;
     userInfo.chain = "Ethereum";
     provider.disconnect();
+    walletLink.disconnect();
     return {
         account: "",
         chainID: 1,

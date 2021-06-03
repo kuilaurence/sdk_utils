@@ -1,6 +1,7 @@
 import Web3 from "web3";
 export var web3: Web3;
 import { ERC20 } from "./lib_abi";
+import walletlink from 'walletlink';
 import { BigNumber } from "bignumber.js";
 import { Contract } from "web3-eth-contract";
 import { chainIdDict, userInfo } from "./lib_const";
@@ -237,13 +238,21 @@ const provider = new WalletConnectProvider({
     56: 'https://bsc-dataseed.binance.org/',
   },
 });
+
+const walletLink = new walletlink({
+  appName: "Multiple",
+  appLogoUrl: "https://avatars.githubusercontent.com/u/23645629?s=48&v=4",
+  darkMode: false
+})
+
+const coinbaseRpc = "https://jsonrpc.maiziqianbao.net/";
 /**
  * 链接钱包
  * @param walletName 钱包的名字小写
  * @param callback 
  * @returns 
  */
-export async function connect(walletName: "walletconnect" | "metamask" | "huobiwallet" | "mathwallet" | "tokenpocket", callback: (data: { account: string; chainID: number; chain: string, message: string; }) => void) {
+export async function connect(walletName: "walletconnect" | "metamask" | "huobiwallet" | "mathwallet" | "tokenpocket" | "coinbasewallet", callback: (data: { account: string; chainID: number; chain: string, message: string; }) => void) {
   let resMsg = {
     account: "",
     chainID: 0,
@@ -294,6 +303,29 @@ export async function connect(walletName: "walletconnect" | "metamask" | "huobiw
             })
           }
         }, 300);
+      })
+    } else if (walletName === "coinbasewallet") {
+      let _ethereum = walletLink.makeWeb3Provider(coinbaseRpc, 1);
+      let accounts = await _ethereum.enable();
+      web3 = new Web3(_ethereum);
+      userInfo.account = accounts[0];
+      userInfo.chainID = 1;
+      userInfo.chain = "Ethereum";
+      resMsg.account = userInfo.account;
+      resMsg.chainID = userInfo.chainID;
+      resMsg.chain = userInfo.chain;
+      _ethereum.on("disconnect", (code: number, reason: string) => {
+        if (code) {
+          userInfo.account = "";
+          userInfo.chainID = 1;
+          userInfo.chain = "Ethereum";
+          callback({
+            account: "",
+            chainID: 1,
+            chain: "",
+            message: "disconnect",
+          })
+        }
       })
     } else {
       //@ts-ignore
@@ -378,6 +410,7 @@ export function logout() {
   userInfo.chainID = 1;
   userInfo.chain = "Ethereum";
   provider.disconnect();
+  walletLink.disconnect();
   return {
     account: "",
     chainID: 1,

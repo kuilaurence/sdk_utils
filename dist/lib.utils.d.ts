@@ -147,7 +147,7 @@ export declare function executeContract(contract: Contract, methodName: string, 
  * @param callback
  * @returns
  */
-export declare function connect(walletName: "walletconnect" | "metamask" | "huobiwallet" | "mathwallet" | "tokenpocket", callback: (data: {
+export declare function connect(walletName: "walletconnect" | "metamask" | "huobiwallet" | "mathwallet" | "tokenpocket" | "coinbasewallet", callback: (data: {
     account: string;
     chainID: number;
     chain: string;
