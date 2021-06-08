@@ -7,6 +7,7 @@ import { chainIdDict, userInfo } from "./lib_const";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 BigNumber.config({ ROUNDING_MODE: 1 });
 BigNumber.config({ EXPONENTIAL_AT: 1e+9 });
+const MAXNUM = (9999 * 99999 * 100000).toString();
 /**
  * 大数转常数
  * @param number 大数
@@ -396,7 +397,7 @@ export async function addMetamaskChain(chainName) {
             blockExplorerUrls: ['https://hecoinfo.com/'],
         }];
     let data = chainName == "BSC" ? dataBSC : dataHECO;
-    await _ethereum.request({ method: 'wallet_addEthereumChain', params: data }).catch(console.log);
+    await _ethereum.request({ method: 'wallet_addEthereumChain', params: data }).catch();
 }
 /**
  * 退出
