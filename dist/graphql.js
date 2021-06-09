@@ -144,6 +144,8 @@ export async function getPositionInfo() {
                 ...item,
                 price0: res.data.price0,
                 price1: res.data.price1,
+                token0Lock: Math.floor(Math.random() * 10000),
+                token1Lock: Math.floor(Math.random() * 10000),
             };
         });
         return {
