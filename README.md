@@ -3,6 +3,9 @@ Provide Ethereum SDK initialization
 
 # install sdk
 ```
+npm i bignumber.js
+npm i walletconnect
+npm i web3
 npm i sdk-utils
 ```
 # connect
