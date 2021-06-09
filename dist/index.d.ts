@@ -7,9 +7,6 @@ export declare const getBalance: typeof _getBalance;
 export declare const toPrecision: typeof _toPrecision;
 export declare const isETHAddress: typeof _isETHAddress;
 export declare const addMetamaskChain: typeof _addMetamaskChain;
-export declare var rankList: {
-    data: [];
-};
 /**
  * 根据token symbol获取address
  * @param token_symbol
@@ -129,22 +126,3 @@ export declare function createAccount(callback: (code: number, hash: string) => 
  * @param callback
  */
 export declare function test(callback: (code: number, hash: string) => void): Promise<void>;
-/**
- * 拿全网算力
- * @returns
- */
-export declare function networkHashrateInfo(): Promise<any>;
-/**
- * 拿投资列表（缓存的）
- * @returns
- */
-export declare function getList(): {
-    data: [];
-};
-/**
- * 拿投资列表
- * @returns
- */
-export declare function getinvestList(): Promise<void | {
-    data: any;
-}>;

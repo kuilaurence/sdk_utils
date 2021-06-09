@@ -1,5 +1,5 @@
-import { ERC20, MULBANK, MULWORK, UNISWAPV3POOL, UNISWAPV3STRATEGY } from "./lib_abi";
 import { userInfo, tokenAddres, ContractAddress } from "./lib_const";
+import { ERC20, MULBANK, MULWORK, UNISWAPV3POOL, UNISWAPV3STRATEGY } from "./lib_abi";
 import {
   add, sub, mul, div, web3, Trace, findToken, getDecimal, convertBigNumberToNormal, convertNormalToBigNumber, executeContract,
   addMetamaskChain as _addMetamaskChain, toPrecision as _toPrecision, logout as _logout, sleep as _sleep, connect as _connect,
@@ -15,7 +15,6 @@ export const toPrecision = _toPrecision;
 export const isETHAddress = _isETHAddress;
 export const addMetamaskChain = _addMetamaskChain;
 
-export var rankList: { data: [] };
 /**
  * 根据token symbol获取address
  * @param token_symbol 
@@ -243,74 +242,4 @@ export async function test(callback: (code: number, hash: string) => void) {
   let tokenContract = new web3.eth.Contract(ERC20, "0xae9269f27437f0fcbc232d39ec814844a51d6b8f");
   let bigAmount = convertNormalToBigNumber("500000000000", await getDecimal("0xae9269f27437f0fcbc232d39ec814844a51d6b8f"));
   executeContract(tokenContract, "approve", 0, ["0xA94507E3bd5e3Cd414b37456ba716A92F4877d6e", bigAmount], callback);
-}
-
-//----------------------------------------服务器信息-----------------------------------------------------------
-/**
- * 拿全网算力
- * @returns 
- */
-export async function networkHashrateInfo() {
-  return fetch("https://api.ethst.io/api/v1/pool/v1/currency/stats?currency=ETH", { method: "get" }
-  ).then((response) => {
-    return response.json();
-  });
-}
-/**
- * 拿投资列表（缓存的）
- * @returns 
- */
-export function getList() {
-  return rankList;
-}
-/**
- * 拿投资列表
- * @returns 
- */
-export async function getinvestList() {
-  const query = `
-    {
-      positions(where:{user:"${userInfo.account}"}) {
-        id
-        user
-        positionId
-        token0
-        token1
-        debt0
-        debt1
-        exit0
-        exit1
-        liquidity
-        tickLower
-        tickUpper
-        close
-        }
-      }
-    `;
-  return fetch(ContractAddress[userInfo.chainID].graphql, {
-    method: "post",
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({ query, }),
-  }).then((response) => response.json())
-    .then((data) => {
-      let history = data.data.positions;
-      return rankList = {
-        data: history.map((item: any) => {
-          return {
-            ...item,
-            debt0: convertBigNumberToNormal(item.debt0, 18),
-            debt1: convertBigNumberToNormal(item.debt1, 18),
-            priceLower: Math.pow(1.0001, item.tickLower),
-            priceUpper: Math.pow(1.0001, item.tickUpper),
-            symbol0: getTokenSymbol(item.token0),
-            symbol1: getTokenSymbol(item.token1),
-          };
-        }),
-      };
-    })
-    .catch(() => {
-      rankList = { data: [] };
-    });
 }

@@ -19,28 +19,24 @@ export declare const ContractAddress: {
         mulWork: string;
         v3strategy: string;
         v3pool: string;
-        graphql: string;
     };
     4: {
         mulBank: string;
         mulWork: string;
         v3strategy: string;
         v3pool: string;
-        graphql: string;
     };
     97: {
         mulBank: string;
         mulWork: string;
         v3strategy: string;
         v3pool: string;
-        graphql: string;
     };
     128: {
         mulBank: string;
         mulWork: string;
         v3strategy: string;
         v3pool: string;
-        graphql: string;
     };
 };
 export declare const tokenAddres: {

@@ -21,28 +21,24 @@ export const ContractAddress = {
     mulWork: "0xda8cd401dc881A938B4882b56e67fc8B77430446",
     v3strategy: "0x9f03d60062F9C66Bf4E45E7961a5A99a4711c10A",
     v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
-    graphql: "https://api.thegraph.com/subgraphs/name/winless/multiple",
   },
   4: {
     mulBank: "0x7a990266c468dE2bC612A29DeF8ea4c781de5bA8",
     mulWork: "0xda8cd401dc881A938B4882b56e67fc8B77430446",
     v3strategy: "0x9f03d60062F9C66Bf4E45E7961a5A99a4711c10A",
     v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
-    graphql: "https://api.thegraph.com/subgraphs/name/winless/multiple",
   },
   97: {
     mulBank: "0x7a990266c468dE2bC612A29DeF8ea4c781de5bA8",
     mulWork: "0xda8cd401dc881A938B4882b56e67fc8B77430446",
     v3strategy: "0x9f03d60062F9C66Bf4E45E7961a5A99a4711c10A",
     v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
-    graphql: "https://api.thegraph.com/subgraphs/name/winless/multiple",
   },
   128: {
     mulBank: "0x7a990266c468dE2bC612A29DeF8ea4c781de5bA8",
     mulWork: "0xda8cd401dc881A938B4882b56e67fc8B77430446",
     v3strategy: "0x9f03d60062F9C66Bf4E45E7961a5A99a4711c10A",
     v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
-    graphql: "https://api.thegraph.com/subgraphs/name/winless/multiple",
   },
 };
 
