@@ -6,8 +6,8 @@ import { tickToPrice, priceToClosestTick } from "@uniswap/v3-sdk";
 import { Price, Token } from "@uniswap/sdk-core";
 
 function getprice(tick: number) {
+    let token0 = new Token(1, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 6);//usdt
     let token1 = new Token(1, "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", 18);//eth
-    let token0 = new Token(1, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 6);//usdc
     let price0 = tickToPrice(token0, token1, tick).toFixed(4);
     let price1 = tickToPrice(token1, token0, tick).toFixed(4);
     // console.log("--------", priceToClosestTick(new Price(token0, token1, 2643.5847 * 1e6, 1e18)));
@@ -17,6 +17,15 @@ function getprice(tick: number) {
             price1: price1,
         }
     }
+}
+/**
+ * x*y=l
+ * x/y=price
+ * @param tick 
+ * @param liquidity 
+ */
+function gettokensLock(tick: number, liquidity: number) {
+
 }
 
 var tokenList: [];
