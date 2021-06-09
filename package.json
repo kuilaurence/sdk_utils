@@ -1,6 +1,6 @@
 {
   "name": "sdk-utils",
-  "version": "1.0.83",
+  "version": "1.0.84",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "Provide Ethereum SDK initialization",
@@ -19,13 +19,13 @@
   "license": "ISC",
   "devDependencies": {
     "ts-loader": "^9.1.2",
+    "bignumber.js": "^9.0.1",
+    "walletconnect": "^1.4.1",
+    "web3": "^1.3.6",
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "bignumber.js": "^9.0.1",
-    "walletconnect": "^1.4.1",
-    "walletlink": "^2.1.3",
-    "web3": "^1.3.6"
+    "walletlink": "^2.1.3"
   },
   "bugs": "https://github.com/kuilaurence/sdk_utils/issues"
 }
