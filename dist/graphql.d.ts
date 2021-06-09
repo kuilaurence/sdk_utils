@@ -13,6 +13,14 @@ export declare function getinvestList(): Promise<{
  */
 export declare function getPositionInfo(): Promise<{
     data: {
+        ticks: {
+            tvlToken0: number;
+            tvlToken1: number;
+        }[];
+    };
+}>;
+export declare function getPositionInfo2(): Promise<{
+    data: {
         ticks: any;
         poolInfo: any;
         ethPriceUSD: any;

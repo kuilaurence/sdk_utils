@@ -4,6 +4,7 @@ import { convertBigNumberToNormal } from "./lib.utils";
 
 import { tickToPrice, priceToClosestTick } from "@uniswap/v3-sdk";
 import { Price, Token } from "@uniswap/sdk-core";
+import { getV3LP } from "./api2";
 
 function getprice(tick: number) {
     let token0 = new Token(1, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 6);//usdt
@@ -111,6 +112,14 @@ let skip = 0;
  * @returns 
  */
 export async function getPositionInfo() {
+    let res = await getV3LP();
+    return {
+        data: {
+            ticks: res,
+        }
+    }
+}
+export async function getPositionInfo2() {
     const query = `
     {
         bundles {

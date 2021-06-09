@@ -50,6 +50,7 @@ import { userInfo } from "./lib_const";
 import { convertBigNumberToNormal } from "./lib.utils";
 import { tickToPrice } from "@uniswap/v3-sdk";
 import { Token } from "@uniswap/sdk-core";
+import { getV3LP } from "./api2";
 function getprice(tick) {
     var token0 = new Token(1, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 6); //usdt
     var token1 = new Token(1, "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", 18); //eth
@@ -131,6 +132,23 @@ var skip = 0;
  * @returns
  */
 export function getPositionInfo() {
+    return __awaiter(this, void 0, void 0, function () {
+        var res;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, getV3LP()];
+                case 1:
+                    res = _a.sent();
+                    return [2 /*return*/, {
+                            data: {
+                                ticks: res,
+                            }
+                        }];
+            }
+        });
+    });
+}
+export function getPositionInfo2() {
     return __awaiter(this, void 0, void 0, function () {
         var query;
         return __generator(this, function (_a) {
