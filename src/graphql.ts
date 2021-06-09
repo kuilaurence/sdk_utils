@@ -1,8 +1,24 @@
 import { getTokenSymbol } from "./index";
 import { userInfo } from "./lib_const";
-import { getDecimal, convertBigNumberToNormal } from "./lib.utils";
+import { convertBigNumberToNormal } from "./lib.utils";
 
-var rankList: { data: [] };
+import { tickToPrice, priceToClosestTick } from "@uniswap/v3-sdk";
+import { Price, Token } from "@uniswap/sdk-core";
+
+function getprice(tick: number) {
+    let token1 = new Token(1, "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", 18);//eth
+    let token0 = new Token(1, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 6);//usdc
+    let price0 = tickToPrice(token0, token1, tick).toFixed(4);
+    let price1 = tickToPrice(token1, token0, tick).toFixed(4);
+    // console.log("--------", priceToClosestTick(new Price(token0, token1, 2643.5847 * 1e6, 1e18)));
+    return {
+        data: {
+            price0: price0,
+            price1: price1,
+        }
+    }
+}
+
 var tokenList: [];
 
 let graphql = "https://api.thegraph.com/subgraphs/name/winless/multiple";
@@ -47,7 +63,7 @@ export async function getinvestList() {
     }).then((response) => response.json())
         .then((data) => {
             let history = data.data.positions;
-            return rankList = {
+            return {
                 data: history.map((item: any) => {
                     return {
                         ...item,
@@ -62,7 +78,7 @@ export async function getinvestList() {
             };
         })
         .catch(() => {
-            rankList = { data: [] };
+            return { data: [] };
         });
 }
 let poolAddress = "0xe7F7EEbc62f0ab73E63A308702A9d0B931A2870e";
@@ -79,7 +95,36 @@ export async function getPositionInfo() {
         bundles {
           ethPriceUSD
         }
-        ticks(first: 1000, skip: 0, where: {poolAddress:"${poolAddress}", tickIdx_lte: 210300, tickIdx_gte: 186300}) {
+        pool(id: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e") {
+            id
+            feeTier
+            liquidity
+            sqrtPrice
+            tick
+            token0 {
+              id
+              symbol
+              name
+              decimals
+              derivedETH
+            }
+            token1 {
+              id
+              symbol
+              name
+              decimals
+              derivedETH
+            }
+            token0Price
+            token1Price
+            volumeUSD
+            txCount
+            totalValueLockedToken0
+            totalValueLockedToken1
+            totalValueLockedUSD
+        }
+        ticks(first: 1000, skip: 0, where: {poolAddress: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e", tickIdx_lte: 210300, tickIdx_gte: 186300}) {
+          tickIdx
           liquidityGross
           liquidityNet
           price0
@@ -96,25 +141,31 @@ export async function getPositionInfo() {
     }).then((response) => response.json())
         .then((data) => {
             let ethPriceUSD = data.data.bundles[0].ethPriceUSD;
+            let poolInfo = data.data.pool;
             let ticks = data.data.ticks;
-            console.log("-------->", ethPriceUSD);
-            console.log("-------->", ticks);
-            // let history = data.data.positions;
-            // return rankList = {
-            //     data: history.map((item: any) => {
-            //         return {
-            //             ...item,
-            //         };
-            //     }),
-            // };
+            ticks = ticks.map((item: any) => {
+                let res = getprice(+item.tickIdx);
+                return {
+                    ...item,
+                    price0: res.data.price0,
+                    price1: res.data.price1,
+                };
+            });
+            return {
+                data: {
+                    ticks: ticks,
+                    poolInfo: poolInfo,
+                    ethPriceUSD: ethPriceUSD,
+                }
+            }
         })
         .catch(() => {
-            rankList = { data: [] };
+            return { data: [] };
         });
 }
 /**
- * 获取tokens
- * @returns
+ * token列表
+ * @returns 
  */
 export async function getTokenList() {
     const query = `
