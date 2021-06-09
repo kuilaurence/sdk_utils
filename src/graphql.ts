@@ -18,14 +18,26 @@ function getprice(tick: number) {
         }
     }
 }
+
 /**
  * x*y=l
  * x/y=price
  * @param tick 
  * @param liquidity 
  */
-function gettokensLock(tick: number, liquidity: number) {
-
+function gettokensLock(token0_address: string, token1_address: string, tick: number, liquidity: number) {
+    let token0 = new Token(1, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 6);//usdt
+    let token1 = new Token(1, "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", 18);//eth
+    let price0 = tickToPrice(token0, token1, tick).toFixed(4);
+    let price1 = tickToPrice(token1, token0, tick).toFixed(4);
+    let locakToken0 = Math.sqrt(liquidity / +price0);
+    let locakToken1 = Math.sqrt(liquidity / +price1);
+    return {
+        data: {
+            locakToken0: locakToken0,
+            locakToken1: locakToken1,
+        }
+    }
 }
 
 var tokenList: [];
@@ -154,12 +166,13 @@ export async function getPositionInfo() {
             let ticks = data.data.ticks;
             ticks = ticks.map((item: any) => {
                 let res = getprice(+item.tickIdx);
+                let lockInfo = gettokensLock("", "", +item.tickIdx, +item.liquidityGross);
                 return {
                     ...item,
                     price0: res.data.price0,
                     price1: res.data.price1,
-                    token0Lock: Math.floor(Math.random() * 10000),
-                    token1Lock: Math.floor(Math.random() * 10000),
+                    token0Lock: lockInfo.data.locakToken0,
+                    token1Lock: lockInfo.data.locakToken1,
                 };
             });
             return {
