@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "strict": true,
-        "target": "esnext",
+        "target": "es5",
         "module": "esnext",
         "outDir": "dist",
         "sourceMap": true,

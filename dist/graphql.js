@@ -1,13 +1,60 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 import { getTokenSymbol } from "./index";
 import { userInfo } from "./lib_const";
 import { convertBigNumberToNormal } from "./lib.utils";
 import { tickToPrice } from "@uniswap/v3-sdk";
 import { Token } from "@uniswap/sdk-core";
 function getprice(tick) {
-    let token0 = new Token(1, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 6); //usdt
-    let token1 = new Token(1, "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", 18); //eth
-    let price0 = tickToPrice(token0, token1, tick).toFixed(4);
-    let price1 = tickToPrice(token1, token0, tick).toFixed(4);
+    var token0 = new Token(1, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 6); //usdt
+    var token1 = new Token(1, "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", 18); //eth
+    var price0 = tickToPrice(token0, token1, tick).toFixed(4);
+    var price1 = tickToPrice(token1, token0, tick).toFixed(4);
     // console.log("--------", priceToClosestTick(new Price(token0, token1, 2643.5847 * 1e6, 1e18)));
     return {
         data: {
@@ -23,12 +70,12 @@ function getprice(tick) {
  * @param liquidity
  */
 function gettokensLock(token0_address, token1_address, tick, liquidity) {
-    let token0 = new Token(1, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 6); //usdt
-    let token1 = new Token(1, "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", 18); //eth
-    let price0 = tickToPrice(token0, token1, tick).toFixed(4);
-    let price1 = tickToPrice(token1, token0, tick).toFixed(4);
-    let locakToken0 = Math.sqrt(liquidity / +price0);
-    let locakToken1 = Math.sqrt(liquidity / +price1);
+    var token0 = new Token(1, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 6); //usdt
+    var token1 = new Token(1, "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", 18); //eth
+    var price0 = tickToPrice(token0, token1, tick).toFixed(4);
+    var price1 = tickToPrice(token1, token0, tick).toFixed(4);
+    var locakToken0 = Math.sqrt(liquidity / +price0);
+    var locakToken1 = Math.sqrt(liquidity / +price1);
     return {
         data: {
             locakToken0: locakToken0,
@@ -37,8 +84,8 @@ function gettokensLock(token0_address, token1_address, tick, liquidity) {
     };
 }
 var tokenList;
-let graphql = "https://api.thegraph.com/subgraphs/name/winless/multiple";
-let playground = "http://120.92.137.203:9002/subgraphs/name/multiple/graph";
+var graphql = "https://api.thegraph.com/subgraphs/name/winless/multiple";
+var playground = "http://120.92.137.203:9002/subgraphs/name/multiple/graph";
 // export async function networkHashrateInfo() {
 //     return fetch("https://api.ethst.io/api/v1/pool/v1/currency/stats?currency=ETH", { method: "get" }
 //     ).then((response) => {
@@ -49,166 +96,100 @@ let playground = "http://120.92.137.203:9002/subgraphs/name/multiple/graph";
  * 拿投资列表
  * @returns
  */
-export async function getinvestList() {
-    const query = `
-      {
-        positions(where:{user:"${userInfo.account}"}) {
-          id
-          user
-          positionId
-          token0
-          token1
-          debt0
-          debt1
-          exit0
-          exit1
-          liquidity
-          tickLower
-          tickUpper
-          close
-          }
-        }
-      `;
-    return fetch(graphql, {
-        method: "post",
-        headers: {
-            "Content-type": "application/json",
-        },
-        body: JSON.stringify({ query }),
-    }).then((response) => response.json())
-        .then((data) => {
-        let history = data.data.positions;
-        return {
-            data: history.map((item) => {
-                return {
-                    ...item,
-                    debt0: convertBigNumberToNormal(item.debt0, 18),
-                    debt1: convertBigNumberToNormal(item.debt1, 18),
-                    priceLower: Math.pow(1.0001, item.tickLower),
-                    priceUpper: Math.pow(1.0001, item.tickUpper),
-                    symbol0: getTokenSymbol(item.token0),
-                    symbol1: getTokenSymbol(item.token1),
-                };
-            }),
-        };
-    })
-        .catch(() => {
-        return { data: [] };
+export function getinvestList() {
+    return __awaiter(this, void 0, void 0, function () {
+        var query;
+        return __generator(this, function (_a) {
+            query = "\n      {\n        positions(where:{user:\"" + userInfo.account + "\"}) {\n          id\n          user\n          positionId\n          token0\n          token1\n          debt0\n          debt1\n          exit0\n          exit1\n          liquidity\n          tickLower\n          tickUpper\n          close\n          }\n        }\n      ";
+            return [2 /*return*/, fetch(graphql, {
+                    method: "post",
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                    body: JSON.stringify({ query: query }),
+                }).then(function (response) { return response.json(); })
+                    .then(function (data) {
+                    var history = data.data.positions;
+                    return {
+                        data: history.map(function (item) {
+                            return __assign(__assign({}, item), { debt0: convertBigNumberToNormal(item.debt0, 18), debt1: convertBigNumberToNormal(item.debt1, 18), priceLower: Math.pow(1.0001, item.tickLower), priceUpper: Math.pow(1.0001, item.tickUpper), symbol0: getTokenSymbol(item.token0), symbol1: getTokenSymbol(item.token1) });
+                        }),
+                    };
+                })
+                    .catch(function () {
+                    return { data: [] };
+                })];
+        });
     });
 }
-let poolAddress = "0xe7F7EEbc62f0ab73E63A308702A9d0B931A2870e";
-let tickIdxLowerBound = 81770;
-let tickIdxUpperBound = 82770;
-let skip = 0;
+var poolAddress = "0xe7F7EEbc62f0ab73E63A308702A9d0B931A2870e";
+var tickIdxLowerBound = 81770;
+var tickIdxUpperBound = 82770;
+var skip = 0;
 /**
  * 获取池子信息
  * @returns
  */
-export async function getPositionInfo() {
-    const query = `
-    {
-        bundles {
-          ethPriceUSD
-        }
-        pool(id: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e") {
-            id
-            feeTier
-            liquidity
-            sqrtPrice
-            tick
-            token0 {
-              id
-              symbol
-              name
-              decimals
-              derivedETH
-            }
-            token1 {
-              id
-              symbol
-              name
-              decimals
-              derivedETH
-            }
-            token0Price
-            token1Price
-            volumeUSD
-            txCount
-            totalValueLockedToken0
-            totalValueLockedToken1
-            totalValueLockedUSD
-        }
-        ticks(first: 1000, skip: 0, where: {poolAddress: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e", tickIdx_lte: 210300, tickIdx_gte: 186300}) {
-          tickIdx
-          liquidityGross
-          liquidityNet
-          price0
-          price1
-        }
-      }
-      `;
-    return fetch(playground, {
-        method: "post",
-        headers: {
-            "Content-type": "application/json",
-        },
-        body: JSON.stringify({ query }),
-    }).then((response) => response.json())
-        .then((data) => {
-        let ethPriceUSD = data.data.bundles[0].ethPriceUSD;
-        let poolInfo = data.data.pool;
-        let ticks = data.data.ticks;
-        ticks = ticks.map((item) => {
-            let res = getprice(+item.tickIdx);
-            let lockInfo = gettokensLock("", "", +item.tickIdx, +item.liquidityGross);
-            return {
-                ...item,
-                price0: res.data.price0,
-                price1: res.data.price1,
-                token0Lock: lockInfo.data.locakToken0,
-                token1Lock: lockInfo.data.locakToken1,
-            };
+export function getPositionInfo() {
+    return __awaiter(this, void 0, void 0, function () {
+        var query;
+        return __generator(this, function (_a) {
+            query = "\n    {\n        bundles {\n          ethPriceUSD\n        }\n        pool(id: \"0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e\") {\n            id\n            feeTier\n            liquidity\n            sqrtPrice\n            tick\n            token0 {\n              id\n              symbol\n              name\n              decimals\n              derivedETH\n            }\n            token1 {\n              id\n              symbol\n              name\n              decimals\n              derivedETH\n            }\n            token0Price\n            token1Price\n            volumeUSD\n            txCount\n            totalValueLockedToken0\n            totalValueLockedToken1\n            totalValueLockedUSD\n        }\n        ticks(first: 1000, skip: 0, where: {poolAddress: \"0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e\", tickIdx_lte: 210300, tickIdx_gte: 186300}) {\n          tickIdx\n          liquidityGross\n          liquidityNet\n          price0\n          price1\n        }\n      }\n      ";
+            return [2 /*return*/, fetch(playground, {
+                    method: "post",
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                    body: JSON.stringify({ query: query }),
+                }).then(function (response) { return response.json(); })
+                    .then(function (data) {
+                    var ethPriceUSD = data.data.bundles[0].ethPriceUSD;
+                    var poolInfo = data.data.pool;
+                    var ticks = data.data.ticks;
+                    ticks = ticks.map(function (item) {
+                        var res = getprice(+item.tickIdx);
+                        var lockInfo = gettokensLock("", "", +item.tickIdx, +item.liquidityGross);
+                        return __assign(__assign({}, item), { price0: res.data.price0, price1: res.data.price1, token0Lock: lockInfo.data.locakToken0, token1Lock: lockInfo.data.locakToken1 });
+                    });
+                    return {
+                        data: {
+                            ticks: ticks,
+                            poolInfo: poolInfo,
+                            ethPriceUSD: ethPriceUSD,
+                        }
+                    };
+                })
+                    .catch(function () {
+                    return { data: [] };
+                })];
         });
-        return {
-            data: {
-                ticks: ticks,
-                poolInfo: poolInfo,
-                ethPriceUSD: ethPriceUSD,
-            }
-        };
-    })
-        .catch(() => {
-        return { data: [] };
     });
 }
 /**
  * token列表
  * @returns
  */
-export async function getTokenList() {
-    const query = `
-    {
-        tokens {
-          id
-          symbol
-          decimals
-        }
-    }
-    `;
-    return fetch(playground, {
-        method: "post",
-        headers: {
-            "Content-type": "application/json",
-        },
-        body: JSON.stringify({ query }),
-    }).then((response) => response.json())
-        .then((data) => {
-        tokenList = data.data.tokens;
-        console.log(tokenList);
-        return tokenList;
-    })
-        .catch(() => {
-        tokenList = [];
+export function getTokenList() {
+    return __awaiter(this, void 0, void 0, function () {
+        var query;
+        return __generator(this, function (_a) {
+            query = "\n    {\n        tokens {\n          id\n          symbol\n          decimals\n        }\n    }\n    ";
+            return [2 /*return*/, fetch(playground, {
+                    method: "post",
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                    body: JSON.stringify({ query: query }),
+                }).then(function (response) { return response.json(); })
+                    .then(function (data) {
+                    tokenList = data.data.tokens;
+                    console.log(tokenList);
+                    return tokenList;
+                })
+                    .catch(function () {
+                    tokenList = [];
+                })];
+        });
     });
 }
 //# sourceMappingURL=graphql.js.map
