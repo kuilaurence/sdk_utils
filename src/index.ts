@@ -169,13 +169,13 @@ export async function getRemainQuota(token0_address: string, token1_address: str
  */
 export async function getTokenValue(type: "token0" | "token1", token0_address: string, token1_address: string, priceLower: number, priceCurrent: number, priceUpper: number, amount: number) {
   let resultAmount = 0;
-  let tickLower = +getTick(token0_address, token1_address, priceLower);
-  let tickCurrent = +getTick(token0_address, token1_address, priceCurrent);
-  let tickUpper = +getTick(token0_address, token1_address, priceUpper);
+  let tickLower = await getTick(token0_address, token1_address, priceLower);
+  let tickCurrent = await getTick(token0_address, token1_address, priceCurrent);
+  let tickUpper = await getTick(token0_address, token1_address, priceUpper);
   if (type === "token0") {//usdt
-    resultAmount = amount / (Math.sqrt(tickLower) - Math.sqrt(tickCurrent))
+    resultAmount = amount / (Math.sqrt(+tickLower) - Math.sqrt(+tickCurrent))
   } else {//eth
-    resultAmount = amount * ((Math.sqrt(tickCurrent) * Math.sqrt(tickUpper)) / ((Math.sqrt(tickUpper) - Math.sqrt(tickCurrent))));
+    resultAmount = amount * ((Math.sqrt(+tickCurrent) * Math.sqrt(+tickUpper)) / ((Math.sqrt(+tickUpper) - Math.sqrt(+tickCurrent))));
   }
   return { resultAmount }
 }
@@ -186,9 +186,9 @@ export async function getTokenValue(type: "token0" | "token1", token0_address: s
  * @param price 
  * @returns 
  */
-export function getCloseToTickPrice(token0_address: string, token1_address: string, price: number) {
-  let tick = +getTick(token0_address, token1_address, price);
-  return Math.pow(2, (tick * Math.log2(1.0001)));
+export async function getCloseToTickPrice(token0_address: string, token1_address: string, price: number) {
+  let tick = await getTick(token0_address, token1_address, price);
+  return Math.pow(2, (+tick * Math.log2(1.0001)));
 }
 //---------------------------------------------------上查下操作------------------------------------------------------
 /**
