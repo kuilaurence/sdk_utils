@@ -171,9 +171,9 @@ export async function getRemainQuota(token0_address: string, token1_address: str
  */
 export async function getTokenValue(type: "token0" | "token1", token0_address: string, token1_address: string, priceLower: number, priceCurrent: number, priceUpper: number, amount: number) {
   let resultAmount = 0;
-  let tickLower = await getTick(token0_address, token1_address, priceLower);
+  let tickLower = await getTick(token0_address, token1_address, priceUpper);//交换
   let tickCurrent = await getTick(token0_address, token1_address, priceCurrent);
-  let tickUpper = await getTick(token0_address, token1_address, priceUpper);
+  let tickUpper = await getTick(token0_address, token1_address, priceLower);//交换
   if (type === "token0") {//usdt
     resultAmount = amount / (Math.sqrt(+tickCurrent) - Math.sqrt(+tickLower))
   } else {//eth
