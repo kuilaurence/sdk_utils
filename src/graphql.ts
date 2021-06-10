@@ -101,7 +101,7 @@ export async function getPositionInfo2(poolAddress: string) {
         bundles {
           ethPriceUSD
         }
-        pool(id: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e") {
+        pool(id: "${poolAddress}") {
             id
             feeTier
             liquidity
@@ -128,13 +128,6 @@ export async function getPositionInfo2(poolAddress: string) {
             totalValueLockedToken0
             totalValueLockedToken1
             totalValueLockedUSD
-        }
-        ticks(first: 1000, skip: 0, where: {poolAddress: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e", tickIdx_lte: 210300, tickIdx_gte: 186300}) {
-          tickIdx
-          liquidityGross
-          liquidityNet
-          price0
-          price1
         }
       }
       `;
