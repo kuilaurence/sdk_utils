@@ -32,10 +32,10 @@ const fetchData = (query: string) => {
   }).then((response) => response.json());
 };
 
-const fetchInitializedTicks = function () {
+const fetchInitializedTicks = function (low: number, upper: number) {
   const query = `
         query {
-          ticks(first: 1000, skip: 0, where: {poolAddress: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e", tickIdx_lte: 210300, tickIdx_gte: 186300}) {
+          ticks(first: 1000, skip: 0, where: {poolAddress: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e", tickIdx_lte: ${upper}, tickIdx_gte: ${low}}) {
             tickIdx
             liquidityGross
             liquidityNet
@@ -154,7 +154,7 @@ export const fetchTicksSurroundingPrice = async (
   const tickIdxLowerBound = activeTickIdx - numSurroundingTicks * tickSpacing;
   const tickIdxUpperBound = activeTickIdx + numSurroundingTicks * tickSpacing;
 
-  const initializedTicksResult = await fetchInitializedTicks();
+  const initializedTicksResult = await fetchInitializedTicks(tickIdxLowerBound, tickIdxUpperBound);
   // console.log('--------initializedTicksResult----',initializedTicksResult)
   const { ticks: initializedTicks } = initializedTicksResult.data;
 
