@@ -156,6 +156,40 @@ export async function getRemainQuota(token0_address: string, token1_address: str
     }
   }
 }
+/**
+ *算出对应token的量
+ * @param type 
+ * @param token0_address 
+ * @param token1_address 
+ * @param priceLower 
+ * @param priceCurrent 
+ * @param priceUpper 
+ * @param amount 
+ * @returns 
+ */
+export async function getTokenValue(type: "token0" | "token1", token0_address: string, token1_address: string, priceLower: number, priceCurrent: number, priceUpper: number, amount: number) {
+  let resultAmount = 0;
+  let tickLower = +getTick(token0_address, token1_address, priceLower);
+  let tickCurrent = +getTick(token0_address, token1_address, priceCurrent);
+  let tickUpper = +getTick(token0_address, token1_address, priceUpper);
+  if (type === "token0") {//usdt
+    resultAmount = amount / (Math.sqrt(tickLower) - Math.sqrt(tickCurrent))
+  } else {//eth
+    resultAmount = amount * ((Math.sqrt(tickCurrent) * Math.sqrt(tickUpper)) / ((Math.sqrt(tickUpper) - Math.sqrt(tickCurrent))));
+  }
+  return { resultAmount }
+}
+/**
+ * 拿tick上的价格
+ * @param token0_address 
+ * @param token1_address 
+ * @param price 
+ * @returns 
+ */
+export function getCloseToTickPrice(token0_address: string, token1_address: string, price: number) {
+  let tick = +getTick(token0_address, token1_address, price);
+  return Math.pow(2, (tick * Math.log2(1.0001)));
+}
 //---------------------------------------------------上查下操作------------------------------------------------------
 /**
  * 对token授权

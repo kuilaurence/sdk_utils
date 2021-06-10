@@ -79,6 +79,28 @@ export declare function getRemainQuota(token0_address: string, token1_address: s
     };
 }>;
 /**
+ *算出对应token的量
+ * @param type
+ * @param token0_address
+ * @param token1_address
+ * @param priceLower
+ * @param priceCurrent
+ * @param priceUpper
+ * @param amount
+ * @returns
+ */
+export declare function getTokenValue(type: "token0" | "token1", token0_address: string, token1_address: string, priceLower: number, priceCurrent: number, priceUpper: number, amount: number): Promise<{
+    resultAmount: number;
+}>;
+/**
+ * 拿tick上的价格
+ * @param token0_address
+ * @param token1_address
+ * @param price
+ * @returns
+ */
+export declare function getCloseToTickPrice(token0_address: string, token1_address: string, price: number): number;
+/**
  * 对token授权
  * @param token_address
  * @param callback

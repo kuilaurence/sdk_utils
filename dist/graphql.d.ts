@@ -1,3 +1,9 @@
+export declare function getprice(token0_address: string, token1_address: string, tick: number): {
+    data: {
+        price0: string;
+        price1: string;
+    };
+};
 /**
  * 拿投资列表
  * @returns

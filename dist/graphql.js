@@ -51,7 +51,7 @@ import { convertBigNumberToNormal } from "./lib.utils";
 import { tickToPrice } from "@uniswap/v3-sdk";
 import { Token } from "@uniswap/sdk-core";
 import { getV3LP } from "./api2";
-function getprice(token0_address, token1_address, tick) {
+export function getprice(token0_address, token1_address, tick) {
     var token0 = new Token(1, token0_address, 6); //usdt
     var token1 = new Token(1, token1_address, 18); //eth
     var price0 = tickToPrice(token0, token1, tick).toFixed(4);

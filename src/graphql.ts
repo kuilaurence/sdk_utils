@@ -6,7 +6,7 @@ import { tickToPrice, priceToClosestTick } from "@uniswap/v3-sdk";
 import { Price, Token } from "@uniswap/sdk-core";
 import { getV3LP } from "./api2";
 
-function getprice(token0_address: string, token1_address: string, tick: number) {
+export function getprice(token0_address: string, token1_address: string, tick: number) {
     let token0 = new Token(1, token0_address, 6);//usdt
     let token1 = new Token(1, token1_address, 18);//eth
     let price0 = tickToPrice(token0, token1, tick).toFixed(4);
