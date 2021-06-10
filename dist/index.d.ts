@@ -99,7 +99,7 @@ export declare function getTokenValue(type: "token0" | "token1", token0_address:
  * @param price
  * @returns
  */
-export declare function getCloseToTickPrice(token0_address: string, token1_address: string, price: number): number;
+export declare function getCloseToTickPrice(token0_address: string, token1_address: string, price: number): Promise<number>;
 /**
  * 对token授权
  * @param token_address

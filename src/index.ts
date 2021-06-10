@@ -133,7 +133,8 @@ export async function getSqrtPrice(token0_address: string, token1_address: strin
   let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
   let res = await v3poolContract.methods.slot0().call();
   let tick = res.tick;//参考
-  return Math.pow(res.sqrtPriceX96 / (Math.pow(2, 96)), 2);
+  let temp = Math.pow(res.sqrtPriceX96 / (Math.pow(2, 96)), 2);
+  return 1 / temp * 1e12;
 }
 /**
  * 获取投资最大值

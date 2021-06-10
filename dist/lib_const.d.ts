@@ -7,11 +7,12 @@ export declare const chainIdDict: {
     56: string;
     97: string;
     128: string;
+    336: string;
 };
 export declare const userInfo: {
     account: string;
-    chainID: 1 | 4 | 97 | 128;
-    chain: "Ethereum" | "Rinkeby" | "BSCTest" | "HECO";
+    chainID: 1 | 4 | 97 | 128 | 336;
+    chain: "Ethereum" | "Rinkeby" | "BSCTest" | "HECO" | "MULTEST";
 };
 export declare const ContractAddress: {
     1: {
@@ -38,7 +39,7 @@ export declare const ContractAddress: {
         v3strategy: string;
         v3pool: string;
     };
-    338: {
+    336: {
         mulBank: string;
         mulWork: string;
         v3strategy: string;

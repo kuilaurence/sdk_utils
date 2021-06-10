@@ -196,21 +196,22 @@ function getTick(token0_address, token1_address, ratio) {
  */
 export function getSqrtPrice(token0_address, token1_address) {
     return __awaiter(this, void 0, void 0, function () {
-        var temp, v3poolContract, res, tick;
+        var temp_1, v3poolContract, res, tick, temp;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     if (Number(token0_address) > Number(token1_address)) {
-                        temp = token0_address;
+                        temp_1 = token0_address;
                         token0_address = token1_address;
-                        token1_address = temp;
+                        token1_address = temp_1;
                     }
                     v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
                     return [4 /*yield*/, v3poolContract.methods.slot0().call()];
                 case 1:
                     res = _a.sent();
                     tick = res.tick;
-                    return [2 /*return*/, Math.pow(res.sqrtPriceX96 / (Math.pow(2, 96)), 2)];
+                    temp = Math.pow(res.sqrtPriceX96 / (Math.pow(2, 96)), 2);
+                    return [2 /*return*/, 1 / temp * 1e12];
             }
         });
     });
@@ -272,17 +273,26 @@ export function getTokenValue(type, token0_address, token1_address, priceLower, 
     return __awaiter(this, void 0, void 0, function () {
         var resultAmount, tickLower, tickCurrent, tickUpper;
         return __generator(this, function (_a) {
-            resultAmount = 0;
-            tickLower = +getTick(token0_address, token1_address, priceLower);
-            tickCurrent = +getTick(token0_address, token1_address, priceCurrent);
-            tickUpper = +getTick(token0_address, token1_address, priceUpper);
-            if (type === "token0") { //usdt
-                resultAmount = amount / (Math.sqrt(tickLower) - Math.sqrt(tickCurrent));
+            switch (_a.label) {
+                case 0:
+                    resultAmount = 0;
+                    return [4 /*yield*/, getTick(token0_address, token1_address, priceLower)];
+                case 1:
+                    tickLower = _a.sent();
+                    return [4 /*yield*/, getTick(token0_address, token1_address, priceCurrent)];
+                case 2:
+                    tickCurrent = _a.sent();
+                    return [4 /*yield*/, getTick(token0_address, token1_address, priceUpper)];
+                case 3:
+                    tickUpper = _a.sent();
+                    if (type === "token0") { //usdt
+                        resultAmount = amount / (Math.sqrt(+tickCurrent) - Math.sqrt(+tickLower));
+                    }
+                    else { //eth
+                        resultAmount = amount * ((Math.sqrt(+tickCurrent) * Math.sqrt(+tickUpper)) / ((Math.sqrt(+tickUpper) - Math.sqrt(+tickCurrent))));
+                    }
+                    return [2 /*return*/, { resultAmount: resultAmount }];
             }
-            else { //eth
-                resultAmount = amount * ((Math.sqrt(tickCurrent) * Math.sqrt(tickUpper)) / ((Math.sqrt(tickUpper) - Math.sqrt(tickCurrent))));
-            }
-            return [2 /*return*/, { resultAmount: resultAmount }];
         });
     });
 }
@@ -294,8 +304,17 @@ export function getTokenValue(type, token0_address, token1_address, priceLower, 
  * @returns
  */
 export function getCloseToTickPrice(token0_address, token1_address, price) {
-    var tick = +getTick(token0_address, token1_address, price);
-    return Math.pow(2, (tick * Math.log2(1.0001)));
+    return __awaiter(this, void 0, void 0, function () {
+        var tick;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, getTick(token0_address, token1_address, price)];
+                case 1:
+                    tick = _a.sent();
+                    return [2 /*return*/, Math.pow(2, (+tick * Math.log2(1.0001)))];
+            }
+        });
+    });
 }
 //---------------------------------------------------上查下操作------------------------------------------------------
 /**
