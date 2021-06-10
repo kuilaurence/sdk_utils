@@ -173,7 +173,7 @@ export async function getTokenValue(type: "token0" | "token1", token0_address: s
   let tickCurrent = await getTick(token0_address, token1_address, priceCurrent);
   let tickUpper = await getTick(token0_address, token1_address, priceUpper);
   if (type === "token0") {//usdt
-    resultAmount = amount / (Math.sqrt(+tickLower) - Math.sqrt(+tickCurrent))
+    resultAmount = amount / (Math.sqrt(+tickCurrent) - Math.sqrt(+tickLower))
   } else {//eth
     resultAmount = amount * ((Math.sqrt(+tickCurrent) * Math.sqrt(+tickUpper)) / ((Math.sqrt(+tickUpper) - Math.sqrt(+tickCurrent))));
   }
