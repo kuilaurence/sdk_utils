@@ -18,33 +18,33 @@ export const userInfo: { account: string, chainID: 1 | 4 | 97 | 128 | 336, chain
 //每次部署需要配置,对应合约地址
 export const ContractAddress = {
   1: {
-    mulBank: "0xbAB4e71AeCc5Db2069e1Ed1348ef234903D3edC2",
-    mulWork: "0x5A1A0f244aCdA38E660e5443A071cf0743644b43",
-    v3strategy: "0x197aDD212c298493B70EcA9b8a75fc962de7C4A4",
+    mulBank: "0x2752CD810Ed6B5a7DE5e024cE375897A07f5DC61",
+    mulWork: "0x29ec2D75d10d19099c7708957ff7ddFff9736E4D",
+    v3strategy: "0x09411ab83053945E880ca22d6ec42ea3BfDeE92F",
     v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
   },
   4: {
-    mulBank: "0xbAB4e71AeCc5Db2069e1Ed1348ef234903D3edC2",
-    mulWork: "0x5A1A0f244aCdA38E660e5443A071cf0743644b43",
-    v3strategy: "0x197aDD212c298493B70EcA9b8a75fc962de7C4A4",
+    mulBank: "0x2752CD810Ed6B5a7DE5e024cE375897A07f5DC61",
+    mulWork: "0x29ec2D75d10d19099c7708957ff7ddFff9736E4D",
+    v3strategy: "0x09411ab83053945E880ca22d6ec42ea3BfDeE92F",
     v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
   },
   97: {
-    mulBank: "0xbAB4e71AeCc5Db2069e1Ed1348ef234903D3edC2",
-    mulWork: "0x5A1A0f244aCdA38E660e5443A071cf0743644b43",
-    v3strategy: "0x197aDD212c298493B70EcA9b8a75fc962de7C4A4",
+    mulBank: "0x2752CD810Ed6B5a7DE5e024cE375897A07f5DC61",
+    mulWork: "0x29ec2D75d10d19099c7708957ff7ddFff9736E4D",
+    v3strategy: "0x09411ab83053945E880ca22d6ec42ea3BfDeE92F",
     v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
   },
   128: {
-    mulBank: "0xbAB4e71AeCc5Db2069e1Ed1348ef234903D3edC2",
-    mulWork: "0x5A1A0f244aCdA38E660e5443A071cf0743644b43",
-    v3strategy: "0x197aDD212c298493B70EcA9b8a75fc962de7C4A4",
+    mulBank: "0x2752CD810Ed6B5a7DE5e024cE375897A07f5DC61",
+    mulWork: "0x29ec2D75d10d19099c7708957ff7ddFff9736E4D",
+    v3strategy: "0x09411ab83053945E880ca22d6ec42ea3BfDeE92F",
     v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
   },
   336: {
-    mulBank: "0xbAB4e71AeCc5Db2069e1Ed1348ef234903D3edC2",
-    mulWork: "0x5A1A0f244aCdA38E660e5443A071cf0743644b43",
-    v3strategy: "0x197aDD212c298493B70EcA9b8a75fc962de7C4A4",
+    mulBank: "0x2752CD810Ed6B5a7DE5e024cE375897A07f5DC61",
+    mulWork: "0x29ec2D75d10d19099c7708957ff7ddFff9736E4D",
+    v3strategy: "0x09411ab83053945E880ca22d6ec42ea3BfDeE92F",
     v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
   },
 };
