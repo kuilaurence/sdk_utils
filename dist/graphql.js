@@ -51,9 +51,9 @@ import { convertBigNumberToNormal } from "./lib.utils";
 import { tickToPrice } from "@uniswap/v3-sdk";
 import { Token } from "@uniswap/sdk-core";
 import { getV3LP } from "./api2";
-function getprice(tick) {
-    var token0 = new Token(1, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 6); //usdt
-    var token1 = new Token(1, "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", 18); //eth
+function getprice(token0_address, token1_address, tick) {
+    var token0 = new Token(1, token0_address, 6); //usdt
+    var token1 = new Token(1, token1_address, 18); //eth
     var price0 = tickToPrice(token0, token1, tick).toFixed(4);
     var price1 = tickToPrice(token1, token0, tick).toFixed(4);
     // console.log("--------", priceToClosestTick(new Price(token0, token1, 2643.5847 * 1e6, 1e18)));
@@ -64,35 +64,9 @@ function getprice(tick) {
         }
     };
 }
-/**
- * x*y=l
- * x/y=price
- * @param tick
- * @param liquidity
- */
-function gettokensLock(token0_address, token1_address, tick, liquidity) {
-    var token0 = new Token(1, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 6); //usdt
-    var token1 = new Token(1, "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", 18); //eth
-    var price0 = tickToPrice(token0, token1, tick).toFixed(4);
-    var price1 = tickToPrice(token1, token0, tick).toFixed(4);
-    var locakToken0 = Math.sqrt(liquidity / +price0);
-    var locakToken1 = Math.sqrt(liquidity / +price1);
-    return {
-        data: {
-            locakToken0: locakToken0,
-            locakToken1: locakToken1,
-        }
-    };
-}
 var tokenList;
 var graphql = "https://api.thegraph.com/subgraphs/name/winless/multiple";
 var playground = "http://120.92.137.203:9002/subgraphs/name/multiple/graph";
-// export async function networkHashrateInfo() {
-//     return fetch("https://api.ethst.io/api/v1/pool/v1/currency/stats?currency=ETH", { method: "get" }
-//     ).then((response) => {
-//         return response.json();
-//     });
-// }
 /**
  * 拿投资列表
  * @returns
@@ -123,32 +97,38 @@ export function getinvestList() {
         });
     });
 }
-var poolAddress = "0xe7F7EEbc62f0ab73E63A308702A9d0B931A2870e";
-var tickIdxLowerBound = 81770;
-var tickIdxUpperBound = 82770;
-var skip = 0;
 /**
  * 获取池子信息
  * @returns
  */
-export function getPositionInfo() {
+export function getPositionInfo(poolAddress) {
     return __awaiter(this, void 0, void 0, function () {
-        var res;
+        var res, res2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, getV3LP()];
                 case 1:
                     res = _a.sent();
+                    return [4 /*yield*/, getPositionInfo2(poolAddress)];
+                case 2:
+                    res2 = _a.sent();
                     return [2 /*return*/, {
                             data: {
                                 ticks: res,
+                                poolInfo: res2.poolInfo,
+                                ethPriceUSD: res2.ethPriceUSD,
                             }
                         }];
             }
         });
     });
 }
-export function getPositionInfo2() {
+/**
+ * 填写pool地址
+ * @param poolAddress
+ * @returns
+ */
+export function getPositionInfo2(poolAddress) {
     return __awaiter(this, void 0, void 0, function () {
         var query;
         return __generator(this, function (_a) {
@@ -163,22 +143,10 @@ export function getPositionInfo2() {
                     .then(function (data) {
                     var ethPriceUSD = data.data.bundles[0].ethPriceUSD;
                     var poolInfo = data.data.pool;
-                    var ticks = data.data.ticks;
-                    ticks = ticks.map(function (item) {
-                        var res = getprice(+item.tickIdx);
-                        var lockInfo = gettokensLock("", "", +item.tickIdx, +item.liquidityGross);
-                        return __assign(__assign({}, item), { price0: res.data.price0, price1: res.data.price1, token0Lock: lockInfo.data.locakToken0, token1Lock: lockInfo.data.locakToken1 });
-                    });
                     return {
-                        data: {
-                            ticks: ticks,
-                            poolInfo: poolInfo,
-                            ethPriceUSD: ethPriceUSD,
-                        }
+                        poolInfo: poolInfo,
+                        ethPriceUSD: ethPriceUSD,
                     };
-                })
-                    .catch(function () {
-                    return { data: [] };
                 })];
         });
     });

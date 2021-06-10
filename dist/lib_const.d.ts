@@ -38,6 +38,12 @@ export declare const ContractAddress: {
         v3strategy: string;
         v3pool: string;
     };
+    338: {
+        mulBank: string;
+        mulWork: string;
+        v3strategy: string;
+        v3pool: string;
+    };
 };
 export declare const tokenAddres: {
     1: {
@@ -53,6 +59,10 @@ export declare const tokenAddres: {
         ETH: string;
     };
     128: {
+        USDC: string;
+        ETH: string;
+    };
+    336: {
         USDC: string;
         ETH: string;
     };

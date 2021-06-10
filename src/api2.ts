@@ -321,8 +321,8 @@ export const getV3LP = () => fetchTicksSurroundingPrice()
     return formatData(res.data);
   })
 
-const token1 = new Token(1, "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", 18);
-const token0 = new Token(1, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 6);
+const token0 = new Token(1, "0x751290426902f507a9c0c536994b0f3997855BA0", 6);
+const token1 = new Token(1, "0xcfFd1542b1Fa9902C6Ef2799394B4de482AaC33a", 18);
 async function formatData(poolTickData: any) {
   const newData: { tvlToken0: number; tvlToken1: number }[] = await Promise.all(
     poolTickData.ticksProcessed.map(async (t: TickProcessed, i: number) => {

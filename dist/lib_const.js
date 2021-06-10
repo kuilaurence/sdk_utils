@@ -16,47 +16,57 @@ export var userInfo = {
 //每次部署需要配置,对应合约地址
 export var ContractAddress = {
     1: {
-        mulBank: "0x7a990266c468dE2bC612A29DeF8ea4c781de5bA8",
-        mulWork: "0xda8cd401dc881A938B4882b56e67fc8B77430446",
-        v3strategy: "0x9f03d60062F9C66Bf4E45E7961a5A99a4711c10A",
-        v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
+        mulBank: "0xbAB4e71AeCc5Db2069e1Ed1348ef234903D3edC2",
+        mulWork: "0x5A1A0f244aCdA38E660e5443A071cf0743644b43",
+        v3strategy: "0x197aDD212c298493B70EcA9b8a75fc962de7C4A4",
+        v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
     },
     4: {
-        mulBank: "0x7a990266c468dE2bC612A29DeF8ea4c781de5bA8",
-        mulWork: "0xda8cd401dc881A938B4882b56e67fc8B77430446",
-        v3strategy: "0x9f03d60062F9C66Bf4E45E7961a5A99a4711c10A",
-        v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
+        mulBank: "0xbAB4e71AeCc5Db2069e1Ed1348ef234903D3edC2",
+        mulWork: "0x5A1A0f244aCdA38E660e5443A071cf0743644b43",
+        v3strategy: "0x197aDD212c298493B70EcA9b8a75fc962de7C4A4",
+        v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
     },
     97: {
-        mulBank: "0x7a990266c468dE2bC612A29DeF8ea4c781de5bA8",
-        mulWork: "0xda8cd401dc881A938B4882b56e67fc8B77430446",
-        v3strategy: "0x9f03d60062F9C66Bf4E45E7961a5A99a4711c10A",
-        v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
+        mulBank: "0xbAB4e71AeCc5Db2069e1Ed1348ef234903D3edC2",
+        mulWork: "0x5A1A0f244aCdA38E660e5443A071cf0743644b43",
+        v3strategy: "0x197aDD212c298493B70EcA9b8a75fc962de7C4A4",
+        v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
     },
     128: {
-        mulBank: "0x7a990266c468dE2bC612A29DeF8ea4c781de5bA8",
-        mulWork: "0xda8cd401dc881A938B4882b56e67fc8B77430446",
-        v3strategy: "0x9f03d60062F9C66Bf4E45E7961a5A99a4711c10A",
-        v3pool: "0x305f1af06d3365818554a927340a360aff4ce5f9",
+        mulBank: "0xbAB4e71AeCc5Db2069e1Ed1348ef234903D3edC2",
+        mulWork: "0x5A1A0f244aCdA38E660e5443A071cf0743644b43",
+        v3strategy: "0x197aDD212c298493B70EcA9b8a75fc962de7C4A4",
+        v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
+    },
+    338: {
+        mulBank: "0xbAB4e71AeCc5Db2069e1Ed1348ef234903D3edC2",
+        mulWork: "0x5A1A0f244aCdA38E660e5443A071cf0743644b43",
+        v3strategy: "0x197aDD212c298493B70EcA9b8a75fc962de7C4A4",
+        v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
     },
 };
 //每次部署需要配置,普通币的地址
 export var tokenAddres = {
     1: {
-        USDC: "0xd5B61730D852780c0E0D2cb04cAdEF7498ab0fab",
-        ETH: "0x794aa9dDEF81Fcb4AE1e5bd0eD3664D982C77183",
+        USDC: "0x751290426902f507a9c0c536994b0f3997855BA0",
+        ETH: "0xcfFd1542b1Fa9902C6Ef2799394B4de482AaC33a",
     },
     4: {
-        USDC: "0xd5B61730D852780c0E0D2cb04cAdEF7498ab0fab",
-        ETH: "0x794aa9dDEF81Fcb4AE1e5bd0eD3664D982C77183",
+        USDC: "0x751290426902f507a9c0c536994b0f3997855BA0",
+        ETH: "0xcfFd1542b1Fa9902C6Ef2799394B4de482AaC33a",
     },
     97: {
-        USDC: "0xd5B61730D852780c0E0D2cb04cAdEF7498ab0fab",
-        ETH: "0x794aa9dDEF81Fcb4AE1e5bd0eD3664D982C77183",
+        USDC: "0x751290426902f507a9c0c536994b0f3997855BA0",
+        ETH: "0xcfFd1542b1Fa9902C6Ef2799394B4de482AaC33a",
     },
     128: {
-        USDC: "0xd5B61730D852780c0E0D2cb04cAdEF7498ab0fab",
-        ETH: "0x794aa9dDEF81Fcb4AE1e5bd0eD3664D982C77183",
+        USDC: "0x751290426902f507a9c0c536994b0f3997855BA0",
+        ETH: "0xcfFd1542b1Fa9902C6Ef2799394B4de482AaC33a",
     },
+    336: {
+        USDC: "0x751290426902f507a9c0c536994b0f3997855BA0",
+        ETH: "0xcfFd1542b1Fa9902C6Ef2799394B4de482AaC33a",
+    }
 };
 //# sourceMappingURL=lib_const.js.map

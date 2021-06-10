@@ -200,8 +200,8 @@ export var getV3LP = function () { return fetchTicksSurroundingPrice()
     .then(function (res) {
     return formatData(res.data);
 }); };
-var token1 = new Token(1, "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", 18);
-var token0 = new Token(1, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 6);
+var token0 = new Token(1, "0x751290426902f507a9c0c536994b0f3997855BA0", 6);
+var token1 = new Token(1, "0xcfFd1542b1Fa9902C6Ef2799394B4de482AaC33a", 18);
 function formatData(poolTickData) {
     return __awaiter(this, void 0, void 0, function () {
         var newData;
