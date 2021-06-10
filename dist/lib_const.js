@@ -1,4 +1,4 @@
-export var chainIdDict = {
+export const chainIdDict = {
     1: "Ethereum",
     3: "Ropsten",
     4: "Rinkeby",
@@ -9,13 +9,13 @@ export var chainIdDict = {
     128: "HECO",
     336: "MULTEST"
 };
-export var userInfo = {
+export const userInfo = {
     account: "",
     chainID: 1,
     chain: "Ethereum",
 };
 //每次部署需要配置,对应合约地址
-export var ContractAddress = {
+export const ContractAddress = {
     1: {
         mulBank: "0xbAB4e71AeCc5Db2069e1Ed1348ef234903D3edC2",
         mulWork: "0x5A1A0f244aCdA38E660e5443A071cf0743644b43",
@@ -48,7 +48,7 @@ export var ContractAddress = {
     },
 };
 //每次部署需要配置,普通币的地址
-export var tokenAddres = {
+export const tokenAddres = {
     1: {
         USDC: "0x751290426902f507a9c0c536994b0f3997855BA0",
         ETH: "0xcfFd1542b1Fa9902C6Ef2799394B4de482AaC33a",
