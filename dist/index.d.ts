@@ -79,7 +79,7 @@ export declare function getRemainQuota(token0_address: string, token1_address: s
     };
 }>;
 /**
- *算出对应token的量
+ *算出对应token的量  sqrtPrice = sqrt(b/a) * 2^96 = sqrt(1.0001^tick) * 2^96
  * @param type
  * @param token0_address
  * @param token1_address
@@ -87,10 +87,10 @@ export declare function getRemainQuota(token0_address: string, token1_address: s
  * @param priceCurrent
  * @param priceUpper
  * @param amount
- * @returns
+ * @returns c * b / (c - b) * (b - a);      c a  互换位置
  */
 export declare function getTokenValue(type: "token0" | "token1", token0_address: string, token1_address: string, priceLower: number, priceCurrent: number, priceUpper: number, amount: number): Promise<{
-    resultAmount: number;
+    amount: number;
 }>;
 /**
  * 拿tick上的价格
@@ -137,7 +137,8 @@ export declare function invest(token0_address: string, token1_address: string, f
  * @param id
  * @param callback
  */
-export declare function divest(id: string, callback: (code: number, hash: string) => void): void;
+export declare function divest(id: string, isclose: boolean, callback: (code: number, hash: string) => void): void;
+export declare function divest1(id: string, callback: (code: number, hash: string) => void): void;
 /**
  * 创建账号（投资前先创建）
  * @param callback

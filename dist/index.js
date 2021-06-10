@@ -126,6 +126,7 @@ export async function getSqrtPrice(token0_address, token1_address) {
     let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
     let res = await v3poolContract.methods.slot0().call();
     let tick = res.tick; //参考
+    console.log("-----tick-------", tick);
     let temp = Math.pow(res.sqrtPriceX96 / (Math.pow(2, 96)), 2);
     return 1 / temp * 1e12;
 }
@@ -151,7 +152,7 @@ export async function getRemainQuota(token0_address, token1_address) {
     };
 }
 /**
- *算出对应token的量
+ *算出对应token的量  sqrtPrice = sqrt(b/a) * 2^96 = sqrt(1.0001^tick) * 2^96
  * @param type
  * @param token0_address
  * @param token1_address
@@ -159,20 +160,31 @@ export async function getRemainQuota(token0_address, token1_address) {
  * @param priceCurrent
  * @param priceUpper
  * @param amount
- * @returns
+ * @returns c * b / (c - b) * (b - a);      c a  互换位置
  */
 export async function getTokenValue(type, token0_address, token1_address, priceLower, priceCurrent, priceUpper, amount) {
+    let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
+    let res = await v3poolContract.methods.slot0().call();
     let resultAmount = 0;
-    let tickLower = await getTick(token0_address, token1_address, priceLower);
+    let tickLower = await getTick(token0_address, token1_address, priceUpper);
     let tickCurrent = await getTick(token0_address, token1_address, priceCurrent);
-    let tickUpper = await getTick(token0_address, token1_address, priceUpper);
+    let tickUpper = await getTick(token0_address, token1_address, priceLower);
+    let sqrtPricelower = Math.sqrt(Math.pow(1.0001, +tickLower));
+    let sqrtPriceCurrent = Math.sqrt(Math.pow(1.0001, +tickCurrent)); //slot0    sqrpicex96/2**96
+    let sqrtPriceupper = Math.sqrt(Math.pow(1.0001, +tickUpper));
+    let a = sqrtPricelower;
+    // let b=sqrtPriceCurrent;
+    let b = res.sqrtPriceX96 / (Math.pow(2, 96));
+    let c = sqrtPriceupper;
     if (type === "token0") { //usdt
-        resultAmount = amount / (Math.sqrt(+tickCurrent) - Math.sqrt(+tickLower));
+        let temp = c * b / (c - b) * (b - a);
+        resultAmount = temp / 1e12 * amount;
     }
     else { //eth
-        resultAmount = amount * ((Math.sqrt(+tickCurrent) * Math.sqrt(+tickUpper)) / ((Math.sqrt(+tickUpper) - Math.sqrt(+tickCurrent))));
+        let temp = (c - b) / (b - a) / (b * c);
+        resultAmount = temp * 1e12 * amount;
     }
-    return { resultAmount };
+    return { amount: resultAmount };
 }
 /**
  * 拿tick上的价格
@@ -182,6 +194,7 @@ export async function getTokenValue(type, token0_address, token1_address, priceL
  * @returns
  */
 export async function getCloseToTickPrice(token0_address, token1_address, price) {
+    price = 1 / price * 1e12;
     let tick = await getTick(token0_address, token1_address, price);
     return Math.pow(1.0001, +tick);
 }
@@ -234,6 +247,9 @@ export async function invest(token0_address, token1_address, fee, amount0, amoun
     let tickUpper = await getTick(token0_address, token1_address, +leftPrice); //交换
     let bigAmount0 = convertNormalToBigNumber(amount0, await getDecimal(token0_address));
     let bigAmount1 = convertNormalToBigNumber(amount1, await getDecimal(token1_address));
+    console.log("-----v3strategyContract---------", v3strategyContract);
+    console.log("---tickLower--", tickLower);
+    console.log("---tickUpper---", tickUpper);
     executeContract(v3strategyContract, "invest", 0, [
         {
             "token0": token0_address,
@@ -251,8 +267,72 @@ export async function invest(token0_address, token1_address, fee, amount0, amoun
  * @param id
  * @param callback
  */
-export function divest(id, callback) {
+export function divest(id, isclose, callback) {
     let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
+    executeContract(v3strategyContract, "divest", 0, [id, isclose], callback);
+}
+export function divest1(id, callback) {
+    let api = [
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "newOwner",
+                    "type": "address"
+                }
+            ],
+            "name": "changeOwner",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "oldOwner",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "newOwner",
+                    "type": "address"
+                }
+            ],
+            "name": "OwnerSet",
+            "type": "event"
+        },
+        {
+            "inputs": [],
+            "name": "throwError",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getOwner",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ];
+    //@ts-ignore
+    let v3strategyContract = new web3.eth.Contract(api, "0xA2427ccE613052493AFff8cf19E50FD065C10466");
     executeContract(v3strategyContract, "divest", 0, [id], callback);
 }
 /**
