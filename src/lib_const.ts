@@ -7,9 +7,10 @@ export const chainIdDict = {
   56: "BSC",
   97: "BSCTest",
   128: "HECO",
+  336: "MULTEST"
 };
 
-export const userInfo: { account: string, chainID: 1 | 4 | 97 | 128, chain: "Ethereum" | "Rinkeby" | "BSCTest" | "HECO" } = {
+export const userInfo: { account: string, chainID: 1 | 4 | 97 | 128 | 336, chain: "Ethereum" | "Rinkeby" | "BSCTest" | "HECO" | "MULTEST" } = {
   account: "",
   chainID: 1,
   chain: "Ethereum",
@@ -40,7 +41,7 @@ export const ContractAddress = {
     v3strategy: "0x197aDD212c298493B70EcA9b8a75fc962de7C4A4",
     v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
   },
-  338: {
+  336: {
     mulBank: "0xbAB4e71AeCc5Db2069e1Ed1348ef234903D3edC2",
     mulWork: "0x5A1A0f244aCdA38E660e5443A071cf0743644b43",
     v3strategy: "0x197aDD212c298493B70EcA9b8a75fc962de7C4A4",
