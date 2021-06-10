@@ -17,33 +17,33 @@ export const userInfo = {
 //每次部署需要配置,对应合约地址
 export const ContractAddress = {
     1: {
-        mulBank: "0xC3818931b5a64dd9BE59BAac51ffE046cbe28012",
-        mulWork: "0xaBf38DBE035DBBc23d0c63Af5d05Ad7dBfCAE874",
-        v3strategy: "0x695535a2612Cf1b1420b99079F750AE4fff79CB8",
+        mulBank: "0x2e59Ba024B098A867B9166D7258801DB905936e0",
+        mulWork: "0x03B57fd2aB24B3e17f5352C858D9724325c81028",
+        v3strategy: "0xcB1F34996dbf709918A1A7c221b56e82B2C47157",
         v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
     },
     4: {
-        mulBank: "0xC3818931b5a64dd9BE59BAac51ffE046cbe28012",
-        mulWork: "0xaBf38DBE035DBBc23d0c63Af5d05Ad7dBfCAE874",
-        v3strategy: "0x695535a2612Cf1b1420b99079F750AE4fff79CB8",
+        mulBank: "0x2e59Ba024B098A867B9166D7258801DB905936e0",
+        mulWork: "0x03B57fd2aB24B3e17f5352C858D9724325c81028",
+        v3strategy: "0xcB1F34996dbf709918A1A7c221b56e82B2C47157",
         v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
     },
     97: {
-        mulBank: "0xC3818931b5a64dd9BE59BAac51ffE046cbe28012",
-        mulWork: "0xaBf38DBE035DBBc23d0c63Af5d05Ad7dBfCAE874",
-        v3strategy: "0x695535a2612Cf1b1420b99079F750AE4fff79CB8",
+        mulBank: "0x2e59Ba024B098A867B9166D7258801DB905936e0",
+        mulWork: "0x03B57fd2aB24B3e17f5352C858D9724325c81028",
+        v3strategy: "0xcB1F34996dbf709918A1A7c221b56e82B2C47157",
         v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
     },
     128: {
-        mulBank: "0xC3818931b5a64dd9BE59BAac51ffE046cbe28012",
-        mulWork: "0xaBf38DBE035DBBc23d0c63Af5d05Ad7dBfCAE874",
-        v3strategy: "0x695535a2612Cf1b1420b99079F750AE4fff79CB8",
+        mulBank: "0x2e59Ba024B098A867B9166D7258801DB905936e0",
+        mulWork: "0x03B57fd2aB24B3e17f5352C858D9724325c81028",
+        v3strategy: "0xcB1F34996dbf709918A1A7c221b56e82B2C47157",
         v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
     },
     336: {
-        mulBank: "0xC3818931b5a64dd9BE59BAac51ffE046cbe28012",
-        mulWork: "0xaBf38DBE035DBBc23d0c63Af5d05Ad7dBfCAE874",
-        v3strategy: "0x695535a2612Cf1b1420b99079F750AE4fff79CB8",
+        mulBank: "0x2e59Ba024B098A867B9166D7258801DB905936e0",
+        mulWork: "0x03B57fd2aB24B3e17f5352C858D9724325c81028",
+        v3strategy: "0xcB1F34996dbf709918A1A7c221b56e82B2C47157",
         v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
     },
 };

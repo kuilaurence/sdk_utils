@@ -103,9 +103,10 @@ export declare function getCloseToTickPrice(token0_address: string, token1_addre
 /**
  * 对token授权
  * @param token_address
+ * @param type
  * @param callback
  */
-export declare function approveToken(token_address: string, callback: (code: number, hash: string) => void): Promise<void>;
+export declare function approveToken(token_address: string, type: "deposit" | "divest", callback: (code: number, hash: string) => void): Promise<void>;
 /**
  * deposit买入
  * @param token_address
@@ -133,8 +134,19 @@ export declare function withdraw(token_address: string, amount: string, callback
  */
 export declare function invest(token0_address: string, token1_address: string, fee: string, amount0: string, amount1: string, leftPrice: string, rightPrice: string, callback: (code: number, hash: string) => void): Promise<void>;
 /**
+ * 追加
+ * @param token0_address
+ * @param token1_address
+ * @param id
+ * @param amount0
+ * @param amount1
+ * @param callback
+ */
+export declare function addInvest(token0_address: string, token1_address: string, id: string, amount0: string, amount1: string, callback: (code: number, hash: string) => void): Promise<void>;
+/**
  * 撤资
  * @param id
+ * @param isclose
  * @param callback
  */
 export declare function divest(id: string, isclose: boolean, callback: (code: number, hash: string) => void): void;

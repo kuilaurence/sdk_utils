@@ -23,26 +23,6 @@ export declare const uniswapv3strategy: ({
     outputs?: undefined;
 } | {
     inputs: {
-        components: {
-            internalType: string;
-            name: string;
-            type: string;
-        }[];
-        internalType: string;
-        name: string;
-        type: string;
-    }[];
-    name: string;
-    outputs: {
-        internalType: string;
-        name: string;
-        type: string;
-    }[];
-    stateMutability: string;
-    type: string;
-    anonymous?: undefined;
-} | {
-    inputs: {
         internalType: string;
         name: string;
         type: string;
@@ -63,6 +43,31 @@ export declare const uniswapv3strategy: ({
         name: string;
         type: string;
     })[];
+    stateMutability: string;
+    type: string;
+    anonymous?: undefined;
+} | {
+    inputs: ({
+        internalType: string;
+        name: string;
+        type: string;
+        components?: undefined;
+    } | {
+        components: {
+            internalType: string;
+            name: string;
+            type: string;
+        }[];
+        internalType: string;
+        name: string;
+        type: string;
+    })[];
+    name: string;
+    outputs: {
+        internalType: string;
+        name: string;
+        type: string;
+    }[];
     stateMutability: string;
     type: string;
     anonymous?: undefined;

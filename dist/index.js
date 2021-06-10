@@ -202,10 +202,16 @@ export async function getCloseToTickPrice(token0_address, token1_address, price)
 /**
  * 对token授权
  * @param token_address
+ * @param type
  * @param callback
  */
-export async function approveToken(token_address, callback) {
+export async function approveToken(token_address, type, callback) {
     let destina_address = ContractAddress[userInfo.chainID].mulBank;
+    if (type === "deposit") {
+    }
+    else if (type === "divest") {
+        destina_address = ContractAddress[userInfo.chainID].v3strategy;
+    }
     _approveToken(token_address, destina_address, callback);
 }
 /**
@@ -263,8 +269,24 @@ export async function invest(token0_address, token1_address, fee, amount0, amoun
     ], callback);
 }
 /**
+ * 追加
+ * @param token0_address
+ * @param token1_address
+ * @param id
+ * @param amount0
+ * @param amount1
+ * @param callback
+ */
+export async function addInvest(token0_address, token1_address, id, amount0, amount1, callback) {
+    let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
+    let bigAmount0 = convertNormalToBigNumber(amount0, await getDecimal(token0_address));
+    let bigAmount1 = convertNormalToBigNumber(amount1, await getDecimal(token1_address));
+    executeContract(v3strategyContract, "add", 0, [id, bigAmount0, bigAmount1], callback);
+}
+/**
  * 撤资
  * @param id
+ * @param isclose
  * @param callback
  */
 export function divest(id, isclose, callback) {
