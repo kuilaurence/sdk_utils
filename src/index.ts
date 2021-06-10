@@ -189,7 +189,7 @@ export async function getTokenValue(type: "token0" | "token1", token0_address: s
  */
 export async function getCloseToTickPrice(token0_address: string, token1_address: string, price: number) {
   let tick = await getTick(token0_address, token1_address, price);
-  return Math.pow(2, (+tick * Math.log2(1.0001)));
+  return Math.pow(1.0001, +tick);
 }
 //---------------------------------------------------上查下操作------------------------------------------------------
 /**
