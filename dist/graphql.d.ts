@@ -40,9 +40,14 @@ export declare function getPositionInfo2(poolAddress: string): Promise<{
  * 获取strategy
  * @returns
  */
-export declare function strategyEntities(): Promise<{
-    data: any;
-}>;
+export declare function strategyEntities(): Promise<any>;
+export declare function calculatetoken0token1(tickLower: number, tickCurrent: number, tickUpper: number, lp: number, sqrtPrice: number, token0Price: number): {
+    token0amount: number;
+    token1amount: number;
+    totalvalue: number;
+    token0Ratio: number;
+    token1Ratio: number;
+};
 /**
  * token列表
  * @returns

@@ -1,4 +1,4 @@
-import { getTokenSymbol } from "./index";
+import { getTokenSymbol, collect } from "./index";
 import { userInfo } from "./lib_const";
 import { convertBigNumberToNormal } from "./lib.utils";
 
@@ -172,6 +172,8 @@ export async function strategyEntities() {
       }
       accFee0
       accFee1
+      accSwitch0
+      accSwitch1
       currTickLower
       currTickUpper
       currLiquidity
@@ -187,28 +189,63 @@ export async function strategyEntities() {
   }).then((response) => response.json())
     .then((data) => {
       let strategyEntities = data.data.strategyEntities;
-      return {
-        data: strategyEntities.map((item: any) => {
-          let currPriceLower = calculatePrice(item.currTickLower);
-          let currPriceUpper = calculatePrice(item.currTickUpper);
-          if (currPriceLower > currPriceUpper) {
-            [currPriceLower, currPriceUpper] = [currPriceUpper, currPriceLower]
-          }
-          return {
-            ...item,
-            currPriceLower: currPriceLower,
-            currPriceUpper: currPriceUpper,
-            token0Price: res.token0Price,
-            token1Price: res.token1Price,
-            sqrtPrice: res.sqrtPrice,
-            tick: res.tick,
-          }
-        })
-      }
+      return strategyEntities.map((item: any) => {
+        let currPriceLower = calculatePrice(item.currTickLower);
+        let currPriceUpper = calculatePrice(item.currTickUpper);
+        if (currPriceLower > currPriceUpper) {
+          [currPriceLower, currPriceUpper] = [currPriceUpper, currPriceLower]
+        }
+        let token0token1Info = calculatetoken0token1(item.currTickLower, res.tick, item.currTickUpper, item.currLiquidity, res.sqrtPrice, res.token0Price);
+        return {
+          ...item,
+          ...token0token1Info,
+          currPriceLower: currPriceLower,
+          currPriceUpper: currPriceUpper,
+          token0Price: res.token0Price,
+          token1Price: res.token1Price,
+          sqrtPrice: res.sqrtPrice,
+          tick: res.tick,
+          accumulativedee: +item.accFee0 + +item.accFee1 * +res.token0Price,
+        }
+      })
+    }).then(data => {
+      const sids = data.map((item: any) => item.sid)
+      //@ts-ignore
+      sids.reduce(async (pre, sid, i) => {
+        let result = await collect(sid)
+        data[i]["fee0"] = result.data.fee0
+        data[i]["fee1"] = result.data.fee1
+        return 1
+      }, 1)
+      return data
     })
 }
 function calculatePrice(tick: number) {
   return 1 / Math.pow(1.0001, tick) * 1e12;
+}
+export function calculatetoken0token1(tickLower: number, tickCurrent: number, tickUpper: number, lp: number, sqrtPrice: number, token0Price: number) {
+  let a = Math.sqrt(Math.pow(1.0001, tickLower));
+  let b = sqrtPrice / Math.pow(2, 96);
+  let c = Math.sqrt(Math.pow(1.0001, tickUpper));
+  let token0amount = 0;
+  let token1amount = 0;
+  if (tickLower > tickCurrent) {
+    token0amount = 0;
+    token1amount = lp * (b - a) / 1e18;
+  } else if (tickUpper < tickCurrent) {
+    token0amount = lp * (c - b) / (b * c) / 1e6;
+    token1amount = 0;
+  } else {
+    token0amount = lp * (b - a) / (b * a) / 1e6;
+    token1amount = lp * (c - b) / 1e18;
+  }
+  return {
+    token0amount: token0amount,
+    token1amount: token1amount,
+    totalvalue: token0amount + token1amount * token0Price,
+    token0Ratio: token0amount / (token0amount + token1amount * token0Price),
+    token1Ratio: 1 - token0amount / (token0amount + token1amount * token0Price),
+  }
 }
 /**
  * token列表

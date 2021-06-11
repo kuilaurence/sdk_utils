@@ -57,6 +57,17 @@ export declare function workers(): Promise<{
     };
 }>;
 /**
+ * 拿fee
+ * @param sid
+ * @returns
+ */
+export declare function collect(sid: string): Promise<{
+    data: {
+        fee0: string;
+        fee1: string;
+    };
+}>;
+/**
  * 获取池子的价格（暂时只有 usdt/btc）
  * @param token0_address
  * @param token1_address

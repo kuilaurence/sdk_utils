@@ -94,6 +94,21 @@ export async function workers() {
     };
 }
 /**
+ * 拿fee
+ * @param sid
+ * @returns
+ */
+export async function collect(sid) {
+    let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
+    let res = await v3strategyContract.methods.collect(+sid).call({ from: userInfo.account });
+    return {
+        data: {
+            fee0: convertBigNumberToNormal(res.fee0, 6),
+            fee1: convertBigNumberToNormal(res.fee1, 18),
+        }
+    };
+}
+/**
  *
  * @param token0_address
  * @param token1_address
