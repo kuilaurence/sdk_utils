@@ -347,3 +347,32 @@ export async function getDayTvl() {
       }
     })
 }
+/**
+ * 风险图表
+ * @param sid 
+ * @returns 
+ */
+export async function riskManagement(sid: string) {
+  const query = `
+  {
+    switchEntities(where: {sid: "${sid}"}) {
+      timestamp
+      accSwitch0
+      accSwitch1
+    }
+  }
+    `;
+  return fetch(strategyurl, {
+    method: "post",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ query }),
+  }).then((response) => response.json())
+    .then((data) => {
+      let switchEntities = data.data.switchEntities;
+      return {
+        data: switchEntities,
+      }
+    })
+}

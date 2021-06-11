@@ -68,3 +68,11 @@ export declare function getDayTvl(): Promise<{
         volumeUSD: number;
     };
 }>;
+/**
+ * 风险图表
+ * @param sid
+ * @returns
+ */
+export declare function riskManagement(sid: string): Promise<{
+    data: any;
+}>;
