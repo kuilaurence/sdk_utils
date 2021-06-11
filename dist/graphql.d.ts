@@ -63,5 +63,8 @@ export declare function getPoolPrice(): Promise<any>;
  * @returns
  */
 export declare function getDayTvl(): Promise<{
-    data: any;
+    data: {
+        tvlUSD: number;
+        volumeUSD: number;
+    };
 }>;
