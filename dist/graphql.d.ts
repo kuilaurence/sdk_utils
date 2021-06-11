@@ -41,9 +41,7 @@ export declare function getPositionInfo2(poolAddress: string): Promise<{
  * @returns
  */
 export declare function strategyEntities(): Promise<{
-    data: {
-        strategyEntities: any;
-    };
+    data: any;
 }>;
 /**
  * token列表

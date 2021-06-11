@@ -22,6 +22,7 @@ export declare function getTokenSymbol(token_address: string): string;
 /**
  * 获取授权值
  * @param token_address
+ * @param type
  * @returns
  */
 export declare function getAllowance(token_address: string, type: "deposit" | "ivest"): Promise<string>;
@@ -148,10 +149,10 @@ export declare function addInvest(token0_address: string, token1_address: string
  * @param token0_address
  * @param token1_address
  * @param id
- * @param leftPrice
- * @param rightPrice
  * @param amount0
  * @param amount1
+ * @param leftPrice
+ * @param rightPrice
  * @param hedge
  * @param callback
  */

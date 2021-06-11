@@ -29,6 +29,7 @@ export function getTokenSymbol(token_address) {
 /**
  * 获取授权值
  * @param token_address
+ * @param type
  * @returns
  */
 export async function getAllowance(token_address, type) {
@@ -296,10 +297,10 @@ export async function addInvest(token0_address, token1_address, id, amount0, amo
  * @param token0_address
  * @param token1_address
  * @param id
- * @param leftPrice
- * @param rightPrice
  * @param amount0
  * @param amount1
+ * @param leftPrice
+ * @param rightPrice
  * @param hedge
  * @param callback
  */

@@ -165,11 +165,14 @@ export async function strategyEntities() {
         .then((data) => {
         let strategyEntities = data.data.strategyEntities;
         return {
-            data: {
-                strategyEntities: strategyEntities,
-            }
+            data: strategyEntities.map((item) => {
+                return Object.assign(Object.assign({}, item), { currPriceLower: calculatePrice(item.currTickLower), currPriceUpper: calculatePrice(item.currTickUpper) });
+            })
         };
     });
+}
+function calculatePrice(tick) {
+    return 1 / Math.pow(1.0001, tick) * 1e12;
 }
 /**
  * token列表
