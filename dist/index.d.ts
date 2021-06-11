@@ -24,7 +24,7 @@ export declare function getTokenSymbol(token_address: string): string;
  * @param token_address
  * @returns
  */
-export declare function getAllowance(token_address: string): Promise<string>;
+export declare function getAllowance(token_address: string, type: "deposit" | "ivest"): Promise<string>;
 /**
  * 池子存的数量
  * @param token_address
@@ -106,7 +106,7 @@ export declare function getCloseToTickPrice(token0_address: string, token1_addre
  * @param type
  * @param callback
  */
-export declare function approveToken(token_address: string, type: "deposit" | "divest", callback: (code: number, hash: string) => void): Promise<void>;
+export declare function approveToken(token_address: string, type: "deposit" | "ivest", callback: (code: number, hash: string) => void): Promise<void>;
 /**
  * deposit买入
  * @param token_address
@@ -143,6 +143,19 @@ export declare function invest(token0_address: string, token1_address: string, f
  * @param callback
  */
 export declare function addInvest(token0_address: string, token1_address: string, id: string, amount0: string, amount1: string, callback: (code: number, hash: string) => void): Promise<void>;
+/**
+ * 切仓
+ * @param token0_address
+ * @param token1_address
+ * @param id
+ * @param leftPrice
+ * @param rightPrice
+ * @param amount0
+ * @param amount1
+ * @param hedge
+ * @param callback
+ */
+export declare function switching(token0_address: string, token1_address: string, id: string, leftPrice: string, rightPrice: string, amount0: string, amount1: string, hedge: boolean, callback: (code: number, hash: string) => void): Promise<void>;
 /**
  * 撤资
  * @param id
