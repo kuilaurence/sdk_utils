@@ -37,8 +37,13 @@ export function getTokenSymbol(token_address: string) {
  * @param token_address 
  * @returns 
  */
-export async function getAllowance(token_address: string) {
+export async function getAllowance(token_address: string, type: "deposit" | "ivest") {
   let destina_address = ContractAddress[userInfo.chainID].mulBank;
+  if (type === "deposit") {
+
+  } else if (type === "ivest") {
+    destina_address = ContractAddress[userInfo.chainID].v3strategy;
+  }
   return await _getAllowance(token_address, destina_address);
 }
 /**
@@ -213,11 +218,11 @@ export async function getCloseToTickPrice(token0_address: string, token1_address
  * @param type 
  * @param callback 
  */
-export async function approveToken(token_address: string, type: "deposit" | "divest", callback: (code: number, hash: string) => void) {
+export async function approveToken(token_address: string, type: "deposit" | "ivest", callback: (code: number, hash: string) => void) {
   let destina_address = ContractAddress[userInfo.chainID].mulBank;
   if (type === "deposit") {
 
-  } else if (type === "divest") {
+  } else if (type === "ivest") {
     destina_address = ContractAddress[userInfo.chainID].v3strategy;
   }
   _approveToken(token_address, destina_address, callback);
@@ -257,8 +262,11 @@ export async function withdraw(token_address: string, amount: string, callback: 
  */
 export async function invest(token0_address: string, token1_address: string, fee: string, amount0: string, amount1: string, leftPrice: string, rightPrice: string, callback: (code: number, hash: string) => void) {
   let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
-  let tickLower = await getTick(token0_address, token1_address, +rightPrice);//左右
-  let tickUpper = await getTick(token0_address, token1_address, +leftPrice);//交换
+  let tickLower = await getTick(token0_address, token1_address, +leftPrice);
+  let tickUpper = await getTick(token0_address, token1_address, +rightPrice);
+  if (+tickLower > +tickUpper) {
+    [tickLower, tickUpper] = [tickUpper, tickLower];
+  }
   let bigAmount0 = convertNormalToBigNumber(amount0, await getDecimal(token0_address));
   let bigAmount1 = convertNormalToBigNumber(amount1, await getDecimal(token1_address));
   console.log("-----v3strategyContract---------", v3strategyContract);
@@ -290,6 +298,34 @@ export async function addInvest(token0_address: string, token1_address: string, 
   let bigAmount0 = convertNormalToBigNumber(amount0, await getDecimal(token0_address));
   let bigAmount1 = convertNormalToBigNumber(amount1, await getDecimal(token1_address));
   executeContract(v3strategyContract, "add", 0, [id, bigAmount0, bigAmount1], callback);
+}
+/**
+ * 切仓
+ * @param token0_address 
+ * @param token1_address 
+ * @param id 
+ * @param leftPrice 
+ * @param rightPrice 
+ * @param amount0 
+ * @param amount1 
+ * @param hedge 
+ * @param callback 
+ */
+export async function switching(token0_address: string, token1_address: string, id: string, leftPrice: string, rightPrice: string, amount0: string, amount1: string, hedge: boolean, callback: (code: number, hash: string) => void) {
+  let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
+  let tickLower = await getTick(token0_address, token1_address, +leftPrice);
+  let tickUpper = await getTick(token0_address, token1_address, +rightPrice);
+  if (+tickLower > +tickUpper) {
+    [tickLower, tickUpper] = [tickUpper, tickLower];
+  }
+  let bigAmount0 = convertNormalToBigNumber(amount0, await getDecimal(token0_address));
+  let bigAmount1 = convertNormalToBigNumber(amount1, await getDecimal(token1_address));
+  executeContract(v3strategyContract, "switching", 0, [id, {
+    tickLower: tickLower,
+    tickUpper: tickUpper,
+    amount0Desired: bigAmount0,
+    amount1Desired: bigAmount1,
+  }, hedge], callback);
 }
 /**
  * 撤资
