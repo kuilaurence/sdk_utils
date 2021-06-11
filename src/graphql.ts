@@ -188,10 +188,15 @@ export async function strategyEntities() {
       let strategyEntities = data.data.strategyEntities;
       return {
         data: strategyEntities.map((item: any) => {
+          let currPriceLower = calculatePrice(item.currTickLower);
+          let currPriceUpper = calculatePrice(item.currTickUpper);
+          if (currPriceLower > currPriceUpper) {
+            [currPriceLower, currPriceUpper] = [currPriceUpper, currPriceLower]
+          }
           return {
             ...item,
-            currPriceLower: calculatePrice(item.currTickLower),
-            currPriceUpper: calculatePrice(item.currTickUpper),
+            currPriceLower: currPriceLower,
+            currPriceUpper: currPriceUpper,
           }
         })
       }

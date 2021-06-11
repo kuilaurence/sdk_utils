@@ -176,7 +176,12 @@ export async function strategyEntities() {
         let strategyEntities = data.data.strategyEntities;
         return {
             data: strategyEntities.map((item) => {
-                return Object.assign(Object.assign({}, item), { currPriceLower: calculatePrice(item.currTickLower), currPriceUpper: calculatePrice(item.currTickUpper) });
+                let currPriceLower = calculatePrice(item.currTickLower);
+                let currPriceUpper = calculatePrice(item.currTickUpper);
+                if (currPriceLower > currPriceUpper) {
+                    [currPriceLower, currPriceUpper] = [currPriceUpper, currPriceLower];
+                }
+                return Object.assign(Object.assign({}, item), { currPriceLower: currPriceLower, currPriceUpper: currPriceUpper });
             })
         };
     });
