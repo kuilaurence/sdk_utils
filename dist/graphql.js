@@ -284,4 +284,40 @@ export async function getPoolPrice() {
         return pools;
     });
 }
+/**
+ * 获取池子的tvl 24h
+ * @returns
+ */
+export async function getDayTvl() {
+    const query = `
+  {
+    poolDayDatas(orderBy: date, orderDirection: desc, first: 1) {
+      pool {
+        id
+        token0 {
+          symbol
+          id
+        }
+        token1 {
+          symbol
+          id
+        }
+      }
+      date
+      tvlUSD
+      volumeUSD
+    }
+  }
+    `;
+    return fetch(v3gqlurl, {
+        method: "post",
+        headers: {
+            "Content-type": "application/json",
+        },
+        body: JSON.stringify({ query }),
+    }).then((response) => response.json())
+        .then((data) => {
+        return { data: data.data.poolDayDatas };
+    });
+}
 //# sourceMappingURL=graphql.js.map

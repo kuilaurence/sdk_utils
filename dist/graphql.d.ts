@@ -58,3 +58,10 @@ export declare function getTokenList(): Promise<void | []>;
  * @returns
  */
 export declare function getPoolPrice(): Promise<any>;
+/**
+ * 获取池子的tvl 24h
+ * @returns
+ */
+export declare function getDayTvl(): Promise<{
+    data: any;
+}>;
