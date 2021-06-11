@@ -155,7 +155,7 @@ export declare function addInvest(token0_address: string, token1_address: string
  * @param hedge
  * @param callback
  */
-export declare function switching(token0_address: string, token1_address: string, id: string, leftPrice: string, rightPrice: string, amount0: string, amount1: string, hedge: boolean, callback: (code: number, hash: string) => void): Promise<void>;
+export declare function switching(token0_address: string, token1_address: string, id: string, amount0: string, amount1: string, leftPrice: string, rightPrice: string, hedge: boolean, callback: (code: number, hash: string) => void): Promise<void>;
 /**
  * 撤资
  * @param id

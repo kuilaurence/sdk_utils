@@ -303,7 +303,7 @@ export async function addInvest(token0_address, token1_address, id, amount0, amo
  * @param hedge
  * @param callback
  */
-export async function switching(token0_address, token1_address, id, leftPrice, rightPrice, amount0, amount1, hedge, callback) {
+export async function switching(token0_address, token1_address, id, amount0, amount1, leftPrice, rightPrice, hedge, callback) {
     let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
     let tickLower = await getTick(token0_address, token1_address, +leftPrice);
     let tickUpper = await getTick(token0_address, token1_address, +rightPrice);

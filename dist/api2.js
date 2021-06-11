@@ -19,7 +19,7 @@ const FEE_TIER_TO_TICK_SPACING = (feeTier) => {
             throw Error(`Tick spacing for fee tier ${feeTier} undefined.`);
     }
 };
-let playground = "http://120.92.137.203:9002/subgraphs/name/multiple/graph";
+let playground = "http://120.92.137.203:9002/subgraphs/name/multiple/v3";
 const fetchData = (query) => {
     return fetch(playground, {
         method: "post",
