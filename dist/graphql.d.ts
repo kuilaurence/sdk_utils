@@ -48,3 +48,8 @@ export declare function strategyEntities(): Promise<{
  * @returns
  */
 export declare function getTokenList(): Promise<void | []>;
+/**
+ *
+ * @returns
+ */
+export declare function getPoolPrice(): Promise<any>;

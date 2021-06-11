@@ -141,6 +141,7 @@ export async function getPositionInfo2(poolAddress) {
  * @returns
  */
 export async function strategyEntities() {
+    let res = await getPoolPrice();
     const query = `
   {
     strategyEntities(where: {user: "${userInfo.account}"}) {
@@ -181,7 +182,7 @@ export async function strategyEntities() {
                 if (currPriceLower > currPriceUpper) {
                     [currPriceLower, currPriceUpper] = [currPriceUpper, currPriceLower];
                 }
-                return Object.assign(Object.assign({}, item), { currPriceLower: currPriceLower, currPriceUpper: currPriceUpper });
+                return Object.assign(Object.assign({}, item), { currPriceLower: currPriceLower, currPriceUpper: currPriceUpper, token0Price: res.token0Price, token1Price: res.token1Price, sqrtPrice: res.sqrtPrice, tick: res.tick });
             })
         };
     });
@@ -217,6 +218,33 @@ export async function getTokenList() {
     })
         .catch(() => {
         tokenList = [];
+    });
+}
+/**
+ *
+ * @returns
+ */
+export async function getPoolPrice() {
+    const query = `
+  {
+    pools(where: {id: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e"}) {
+      token0Price
+      token1Price
+      sqrtPrice
+      tick
+    }
+  }
+    `;
+    return fetch(v3gqlurl, {
+        method: "post",
+        headers: {
+            "Content-type": "application/json",
+        },
+        body: JSON.stringify({ query }),
+    }).then((response) => response.json())
+        .then((data) => {
+        let pools = data.data.pools[0];
+        return pools;
     });
 }
 //# sourceMappingURL=graphql.js.map
