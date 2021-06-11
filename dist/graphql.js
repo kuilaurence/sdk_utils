@@ -147,6 +147,16 @@ export async function strategyEntities() {
       sid
       end
       pool
+      token0 {
+        symbol
+        id
+        decimals
+      }
+      token1 {
+        symbol
+        id
+        decimals
+      }
       accFee0
       accFee1
       currTickLower
