@@ -40,11 +40,8 @@ export declare function getPositionInfo2(poolAddress: string): Promise<{
  * 获取strategy
  * @returns
  */
-export declare function position2Strategies(): Promise<{
+export declare function strategyEntities(): Promise<{
     data: {
-        poolHourDatas: any;
-        pools: any;
-        position2Strategies: any;
         strategyEntities: any;
     };
 }>;

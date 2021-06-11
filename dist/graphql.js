@@ -19,7 +19,8 @@ export function getprice(token0_address, token1_address, tick) {
 }
 var tokenList;
 let graphql = "https://api.thegraph.com/subgraphs/name/winless/multiple";
-let playground = "http://120.92.137.203:9002/subgraphs/name/multiple/graph";
+let v3gqlurl = "http://120.92.137.203:9002/subgraphs/name/multiple/v3";
+let strategyurl = "http://120.92.137.203:9002/subgraphs/name/multiple/graph-playground";
 /**
  * 拿投资列表
  * @returns
@@ -119,7 +120,7 @@ export async function getPositionInfo2(poolAddress) {
         }
       }
       `;
-    return fetch(playground, {
+    return fetch(v3gqlurl, {
         method: "post",
         headers: {
             "Content-type": "application/json",
@@ -139,52 +140,22 @@ export async function getPositionInfo2(poolAddress) {
  * 获取strategy
  * @returns
  */
-export async function position2Strategies() {
+export async function strategyEntities() {
     const query = `
-    {
-        position2Strategies(where: {user: "${userInfo.account}"}) {
-          id
-          strategy {
-            id
-            udpateAtBlockNumber
-            add {
-              liquidity
-            }
-            switching {
-              positionId
-            }
-          }
-          user
-        }
-        poolHourDatas {
-          id
-          sqrtPrice
-          token0Price
-          token1Price
-        }
-        pools {
-          sqrtPrice
-        }
-        strategyEntities(where: {user: "${userInfo.account}"}) {
-          id
-          user
-          amount0
-          amount1
-          end
-          liquidity
-          position {
-            sid
-            id
-            tick {
-              sid
-              tickLower
-              tickUpper
-            }
-          }
-        }
-      }
+  {
+    strategyEntities(where: {user: "${userInfo.account}"}) {
+      sid
+      end
+      pool
+      accFee0
+      accFee1
+      currTickLower
+      currTickUpper
+      currLiquidity
+    }
+  }
     `;
-    return fetch(playground, {
+    return fetch(strategyurl, {
         method: "post",
         headers: {
             "Content-type": "application/json",
@@ -192,15 +163,9 @@ export async function position2Strategies() {
         body: JSON.stringify({ query }),
     }).then((response) => response.json())
         .then((data) => {
-        let poolHourDatas = data.data.poolHourDatas;
-        let pools = data.data.pools;
-        let position2Strategies = data.data.position2Strategies;
         let strategyEntities = data.data.strategyEntities;
         return {
             data: {
-                poolHourDatas: poolHourDatas,
-                pools: pools,
-                position2Strategies: position2Strategies,
                 strategyEntities: strategyEntities,
             }
         };
@@ -220,7 +185,7 @@ export async function getTokenList() {
         }
     }
     `;
-    return fetch(playground, {
+    return fetch(v3gqlurl, {
         method: "post",
         headers: {
             "Content-type": "application/json",
