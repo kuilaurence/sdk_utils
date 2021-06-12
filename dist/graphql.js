@@ -216,10 +216,10 @@ export function calculatetoken0token1(tickLower, tickCurrent, tickUpper, lp, sqr
     let token1amount = 0;
     if (tickLower > tickCurrent) {
         token0amount = 0;
-        token1amount = lp * (b - a) / 1e18;
+        token1amount = lp * (c - b) / 1e18;
     }
     else if (tickUpper < tickCurrent) {
-        token0amount = lp * (c - b) / (b * c) / 1e6;
+        token0amount = lp * (b - a) / (b * a) / 1e6;
         token1amount = 0;
     }
     else {
