@@ -74,5 +74,23 @@ export declare function getDayTvl(): Promise<{
  * @returns
  */
 export declare function riskManagement(sid: string): Promise<{
-    data: any;
+    data: {
+        unbalanced0: any;
+        unbalanced1: any;
+        hedgingPrice: number;
+        switchEntities: any;
+    };
+}>;
+/**
+ * 拿performance图表数据
+ * @param sid
+ * @returns
+ */
+export declare function performance(sid: string): Promise<{
+    data: {
+        accumulativefees0: any;
+        accumulativefees1: any;
+        annualfee: number;
+        collectEntities: any;
+    };
 }>;

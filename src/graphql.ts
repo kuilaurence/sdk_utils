@@ -236,12 +236,12 @@ export function calculatetoken0token1(tickLower: number, tickCurrent: number, ti
   let c = Math.sqrt(Math.pow(1.0001, tickUpper));
   let token0amount = 0;
   let token1amount = 0;
-  if (tickLower > tickCurrent) {
-    token0amount = 0;
-    token1amount = lp * (c - b) / 1e18;
-  } else if (tickUpper < tickCurrent) {
-    token0amount = lp * (b - a) / (b * a) / 1e6;
+  if (b <= a) {
+    token0amount = lp * (c - a) / (c * a) / 1e6;
     token1amount = 0;
+  } else if (c <= b) {
+    token0amount = 0;
+    token1amount = lp * (c - a) / 1e18;
   } else {
     token0amount = lp * (b - a) / (b * a) / 1e6;
     token1amount = lp * (c - b) / 1e18;
@@ -362,7 +362,7 @@ export async function getDayTvl() {
 export async function riskManagement(sid: string) {
   const query = `
   {
-    switchEntities(where: {sid: "${sid}"}) {
+    switchEntities(orderBy: timestamp,where: {sid: "${sid}"}) {
       timestamp
       accSwitch0
       accSwitch1
@@ -378,8 +378,51 @@ export async function riskManagement(sid: string) {
   }).then((response) => response.json())
     .then((data) => {
       let switchEntities = data.data.switchEntities;
+      let unbalanced0 = switchEntities.length > 0 ? switchEntities[switchEntities.length - 1].accSwitch0 : 0;
+      let unbalanced1 = switchEntities.length > 0 ? switchEntities[switchEntities.length - 1].accSwitch1 : 0;
       return {
-        data: switchEntities,
+        data: {
+          unbalanced0: unbalanced0,
+          unbalanced1: unbalanced1,
+          hedgingPrice: 1,
+          switchEntities,
+        }
+      }
+    })
+}
+/**
+ * 拿performance图表数据
+ * @param sid 
+ * @returns 
+ */
+export async function performance(sid: string) {
+  const query = `
+  {
+    collectEntities(orderBy: timestamp, where: {sid: "${sid}"}) {
+      timestamp
+      accFee0
+      accFee1
+    }
+  }
+    `;
+  return fetch(strategyurl, {
+    method: "post",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ query }),
+  }).then((response) => response.json())
+    .then((data) => {
+      let collectEntities = data.data.collectEntities;
+      let accumulativefees0 = collectEntities.length > 0 ? collectEntities[collectEntities.length - 1].accFee0 : 0;
+      let accumulativefees1 = collectEntities.length > 0 ? collectEntities[collectEntities.length - 1].accFee1 : 0;
+      return {
+        data: {
+          accumulativefees0: accumulativefees0,
+          accumulativefees1: accumulativefees1,
+          annualfee: 0.0,
+          collectEntities
+        }
       }
     })
 }
