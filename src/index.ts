@@ -55,13 +55,13 @@ export async function getAllowance(token_address: string, type: "deposit" | "ive
 export async function poolInfo(token_address: string) {
   let decimal = await getDecimal(token_address);
   let mulBankContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);
-  let _totalShare = await mulBankContract.methods.getTotalShare(token_address).call();
+  let _totalShare = await mulBankContract.methods.getTotalShare(token_address).call({ from: userInfo.account });
   let totalShare = convertBigNumberToNormal(_totalShare, decimal);
 
-  let res = await mulBankContract.methods.poolInfo(token_address).call();
+  let res = await mulBankContract.methods.poolInfo(token_address).call({ from: userInfo.account });
   let tokenContract = new web3.eth.Contract(ERC20, res.shareToken);
 
-  let _shareTokenTotalSupply = await tokenContract.methods.totalSupply().call();
+  let _shareTokenTotalSupply = await tokenContract.methods.totalSupply().call({ from: userInfo.account });
   let shareTokenTotalSupply = convertBigNumberToNormal(_shareTokenTotalSupply, decimal);
 
   let shareTokenBalance = await getBalance(res.shareToken);
@@ -90,7 +90,7 @@ export async function poolInfo(token_address: string) {
  */
 export async function workers() {
   let mulWorkContract = new web3.eth.Contract(MULWORK, ContractAddress[userInfo.chainID].mulWork);
-  let res = await mulWorkContract.methods.workers(userInfo.account).call();
+  let res = await mulWorkContract.methods.workers(userInfo.account).call({ from: userInfo.account });
   return {
     data: {
       createTime: res.createTime,
@@ -153,7 +153,7 @@ export async function getSqrtPrice(token0_address: string, token1_address: strin
     token1_address = temp;
   }
   let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
-  let res = await v3poolContract.methods.slot0().call();
+  let res = await v3poolContract.methods.slot0().call({ from: userInfo.account });
   let tick = res.tick;//参考
   console.log("-----tick-------", tick);
   let temp = Math.pow(res.sqrtPriceX96 / (Math.pow(2, 96)), 2);
@@ -167,8 +167,8 @@ export async function getSqrtPrice(token0_address: string, token1_address: strin
  */
 export async function getRemainQuota(token0_address: string, token1_address: string) {
   let mulWorkContract = new web3.eth.Contract(MULWORK, ContractAddress[userInfo.chainID].mulWork);
-  let remain0 = await mulWorkContract.methods.getRemainQuota(userInfo.account, token0_address).call();
-  let remain1 = await mulWorkContract.methods.getRemainQuota(userInfo.account, token1_address).call();
+  let remain0 = await mulWorkContract.methods.getRemainQuota(userInfo.account, token0_address).call({ from: userInfo.account });
+  let remain1 = await mulWorkContract.methods.getRemainQuota(userInfo.account, token1_address).call({ from: userInfo.account });
   return {
     data: {
       token0: token0_address,
@@ -193,7 +193,7 @@ export async function getRemainQuota(token0_address: string, token1_address: str
  */
 export async function getTokenValue(type: "token0" | "token1", token0_address: string, token1_address: string, priceLower: number, priceCurrent: number, priceUpper: number, amount: number) {
   let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
-  let res = await v3poolContract.methods.slot0().call();
+  let res = await v3poolContract.methods.slot0().call({ from: userInfo.account });
   let resultAmount = 0;
   let tickLower = await getTick(token0_address, token1_address, priceUpper);
   let tickCurrent = await getTick(token0_address, token1_address, priceCurrent);
