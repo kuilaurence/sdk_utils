@@ -172,8 +172,8 @@ export async function strategyEntities() {
       }
       accFee0
       accFee1
-      accSwitch0
-      accSwitch1
+      accInvest0
+      accInvest1
       currTickLower
       currTickUpper
       currLiquidity
@@ -425,4 +425,114 @@ export async function performance(sid: string) {
         }
       }
     })
+}
+/**
+ * 池子价格变化
+ * @returns 
+ */
+export async function getPoolHourPrices(poolAddress: string, timestame: string) {
+  const query = `
+  {
+    poolHourDatas(orderBy: timestamp, orderDirection: desc, first: 1000, where: {pool: "${poolAddress}"}) {
+      id
+      hourIndex
+      timestamp
+      token0Price
+      token1Price
+    }
+  }
+    `;
+  return fetch(v3gqlurl, {
+    method: "post",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ query }),
+  }).then((response) => response.json())
+    .then((data) => {
+      let poolHourDatas = data.data.poolHourDatas;
+      return {
+        data: poolHourDatas
+      }
+    })
+}
+/**
+ * 建仓时间
+ * @param sid 
+ * @returns 
+ */
+export async function getCreatStrategyinfo(sid: string) {
+  const query = `
+  {
+    strategyEntities(where: {sid: "${sid}"}) {
+      position {
+        tick {
+          timestamp
+          tickLower
+          tickUpper
+        }
+      }
+      switching (orderBy:timestamp,first:500){
+        position {
+          tick {
+            timestamp
+            tickLower
+            tickUpper
+          }
+        }
+      }
+    }
+  }
+    `;
+  return fetch(strategyurl, {
+    method: "post",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ query }),
+  }).then((response) => response.json())
+    .then((data) => {
+      let priceLower = calculatePrice(+data.data.strategyEntities[0].position.tick.tickLower);
+      let priceUpper = calculatePrice(+data.data.strategyEntities[0].position.tick.tickUpper);
+      if (priceLower > priceUpper) {
+        [priceLower, priceUpper] = [priceUpper, priceLower];
+      }
+      let firstPosition = {
+        priceLower: priceLower,
+        priceUpper: priceUpper,
+        timestamp: data.data.strategyEntities[0].position.tick.timestamp,
+      }
+      let switching = data.data.strategyEntities[0].switching.map((item: any) => {
+        let priceLower = calculatePrice(+item.position.tick.tickLower);
+        let priceUpper = calculatePrice(+item.position.tick.tickUpper);
+        if (priceLower > priceUpper) {
+          [priceLower, priceUpper] = [priceUpper, priceLower];
+        }
+        return {
+          priceLower: priceLower,
+          priceUpper: priceUpper,
+          timestamp: item.position.tick.timestamp,
+        }
+      })
+      switching.unshift(firstPosition);
+      return {
+        switching,
+      }
+    })
+}
+/**
+ * 分析report图表数据
+ * @param sid 
+ */
+export async function report(poolAddress: string, sid: string) {
+  let res1 = await getCreatStrategyinfo(sid);
+  // let firstTimestemp = res1.firstPosition.timestamp;
+  let firstTimestemp = 0;
+  let timestame = (Number(firstTimestemp) - 1800).toString();
+  let res2 = await getPoolHourPrices(poolAddress, timestame);
+  return {
+    data: {
+      res1, res2
+    }
+  }
 }

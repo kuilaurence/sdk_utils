@@ -94,3 +94,32 @@ export declare function performance(sid: string): Promise<{
         collectEntities: any;
     };
 }>;
+/**
+ * 池子价格变化
+ * @returns
+ */
+export declare function getPoolHourPrices(poolAddress: string, timestame: string): Promise<{
+    data: any;
+}>;
+/**
+ * 建仓时间
+ * @param sid
+ * @returns
+ */
+export declare function getCreatStrategyinfo(sid: string): Promise<{
+    switching: any;
+}>;
+/**
+ * 分析report图表数据
+ * @param sid
+ */
+export declare function report(poolAddress: string, sid: string): Promise<{
+    data: {
+        res1: {
+            switching: any;
+        };
+        res2: {
+            data: any;
+        };
+    };
+}>;
