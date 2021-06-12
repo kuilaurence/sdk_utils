@@ -209,6 +209,12 @@ export async function strategyEntities() {
         }
       })
     }).then(data => {
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].end) {
+          data.splice(i, 1);
+          i -= 1;
+        }
+      }
       const sids = data.map((item: any) => item.sid)
       //@ts-ignore
       sids.reduce(async (pre, sid, i) => {
