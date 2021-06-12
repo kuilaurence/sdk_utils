@@ -209,6 +209,7 @@ export async function strategyEntities() {
         }
       })
     }).then(data => {
+      data.sort((a: any, b: any) => { return a.sid - b.sid });
       for (var i = 0; i < data.length; i++) {
         if (data[i].end) {
           data.splice(i, 1);

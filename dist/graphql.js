@@ -187,15 +187,14 @@ export async function strategyEntities() {
             return Object.assign(Object.assign(Object.assign({}, item), token0token1Info), { currPriceLower: currPriceLower, currPriceUpper: currPriceUpper, token0Price: res.token0Price, token1Price: res.token1Price, sqrtPrice: res.sqrtPrice, tick: res.tick, accumulativedee: +item.accFee0 + +item.accFee1 * +res.token0Price });
         });
     }).then(data => {
+        data.sort((a, b) => { return a.sid - b.sid; });
         for (var i = 0; i < data.length; i++) {
             if (data[i].end) {
                 data.splice(i, 1);
                 i -= 1;
             }
         }
-        const sids = data.map((item) => {
-            return item.sid;
-        });
+        const sids = data.map((item) => item.sid);
         //@ts-ignore
         sids.reduce(async (pre, sid, i) => {
             let result = await collect(sid);
