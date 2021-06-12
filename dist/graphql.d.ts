@@ -99,7 +99,7 @@ export declare function performance(sid: string): Promise<{
  * @returns
  */
 export declare function getPoolHourPrices(poolAddress: string, timestame: string): Promise<{
-    data: any;
+    poolHourDatas: any;
 }>;
 /**
  * 建仓时间
@@ -107,7 +107,7 @@ export declare function getPoolHourPrices(poolAddress: string, timestame: string
  * @returns
  */
 export declare function getCreatStrategyinfo(sid: string): Promise<{
-    switching: any;
+    switchingdetail: any;
 }>;
 /**
  * 分析report图表数据
@@ -115,11 +115,8 @@ export declare function getCreatStrategyinfo(sid: string): Promise<{
  */
 export declare function report(poolAddress: string, sid: string): Promise<{
     data: {
-        res1: {
-            switching: any;
-        };
-        res2: {
-            data: any;
-        };
+        day24hswitchcount: number;
+        totalswitchcount: number;
+        result: any;
     };
 }>;

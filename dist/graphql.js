@@ -413,12 +413,9 @@ export async function performance(sid) {
 export async function getPoolHourPrices(poolAddress, timestame) {
     const query = `
   {
-    poolHourDatas(orderBy: timestamp, orderDirection: desc, first: 1000, where: {pool: "${poolAddress}"}) {
-      id
-      hourIndex
+    poolHourDatas(orderBy: timestamp, first: 1000, where: {timestamp_gt: "${timestame}", pool: "${poolAddress}"}) {
       timestamp
       token0Price
-      token1Price
     }
   }
     `;
@@ -432,7 +429,7 @@ export async function getPoolHourPrices(poolAddress, timestame) {
         .then((data) => {
         let poolHourDatas = data.data.poolHourDatas;
         return {
-            data: poolHourDatas
+            poolHourDatas
         };
     });
 }
@@ -482,7 +479,7 @@ export async function getCreatStrategyinfo(sid) {
             priceUpper: priceUpper,
             timestamp: data.data.strategyEntities[0].position.tick.timestamp,
         };
-        let switching = data.data.strategyEntities[0].switching.map((item) => {
+        let switchingdetail = data.data.strategyEntities[0].switching.map((item) => {
             let priceLower = calculatePrice(+item.position.tick.tickLower);
             let priceUpper = calculatePrice(+item.position.tick.tickUpper);
             if (priceLower > priceUpper) {
@@ -494,9 +491,9 @@ export async function getCreatStrategyinfo(sid) {
                 timestamp: item.position.tick.timestamp,
             };
         });
-        switching.unshift(firstPosition);
+        switchingdetail.unshift(firstPosition);
         return {
-            switching,
+            switchingdetail
         };
     });
 }
@@ -506,13 +503,45 @@ export async function getCreatStrategyinfo(sid) {
  */
 export async function report(poolAddress, sid) {
     let res1 = await getCreatStrategyinfo(sid);
-    // let firstTimestemp = res1.firstPosition.timestamp;
-    let firstTimestemp = 0;
+    let firstTimestemp = res1.switchingdetail[0].timestamp;
     let timestame = (Number(firstTimestemp) - 1800).toString();
     let res2 = await getPoolHourPrices(poolAddress, timestame);
+    let totalswitchcount = res1.switchingdetail.length - 1;
+    let day24hswitchcount = 0;
+    let day24htimestamp = Math.floor(Date.now() / 1000) - 86400;
+    for (let i = res1.switchingdetail.length - 1; i > 0; i--) {
+        if (+res1.switchingdetail[i].timestamp > day24htimestamp) {
+            day24hswitchcount++;
+        }
+        else {
+            break;
+        }
+    }
+    let resultList = [];
+    res1.switchingdetail.forEach((item) => {
+        resultList.push({
+            type: "L",
+            price: +Number(item.priceLower).toFixed(6),
+            timestamp: +item.timestamp,
+        });
+        resultList.push({
+            type: "U",
+            price: +Number(item.priceUpper).toFixed(6),
+            timestamp: +item.timestamp,
+        });
+    });
+    res2.poolHourDatas.forEach((item) => {
+        resultList.push({
+            type: "C",
+            price: +Number(item.token0Price).toFixed(6),
+            timestamp: +item.timestamp,
+        });
+    });
     return {
         data: {
-            res1, res2
+            day24hswitchcount: day24hswitchcount,
+            totalswitchcount: totalswitchcount,
+            result: resultList.sort((a, b) => a.type > b.type ? -1 : 1)
         }
     };
 }
