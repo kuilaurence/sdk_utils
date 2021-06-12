@@ -47,6 +47,7 @@ export declare function calculatetoken0token1(tickLower: number, tickCurrent: nu
     totalvalue: number;
     token0Ratio: number;
     token1Ratio: number;
+    sumLiquidity: number;
 };
 /**
  * token列表

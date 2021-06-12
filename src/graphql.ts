@@ -252,6 +252,7 @@ export function calculatetoken0token1(tickLower: number, tickCurrent: number, ti
     totalvalue: token0amount + token1amount * token0Price,
     token0Ratio: token0amount / (token0amount + token1amount * token0Price),
     token1Ratio: 1 - token0amount / (token0amount + token1amount * token0Price),
+    sumLiquidity: token0amount + token1amount * token0Price,
   }
 }
 /**
@@ -277,7 +278,6 @@ export async function getTokenList() {
   }).then((response) => response.json())
     .then((data) => {
       tokenList = data.data.tokens;
-      console.log(tokenList)
       return tokenList
     })
     .catch(() => {
@@ -364,8 +364,8 @@ export async function riskManagement(sid: string) {
   {
     switchEntities(orderBy: timestamp,where: {sid: "${sid}"}) {
       timestamp
-      accSwitch0
-      accSwitch1
+      accInvest0
+      accInvest1
     }
   }
     `;
@@ -378,8 +378,8 @@ export async function riskManagement(sid: string) {
   }).then((response) => response.json())
     .then((data) => {
       let switchEntities = data.data.switchEntities;
-      let unbalanced0 = switchEntities.length > 0 ? switchEntities[switchEntities.length - 1].accSwitch0 : 0;
-      let unbalanced1 = switchEntities.length > 0 ? switchEntities[switchEntities.length - 1].accSwitch1 : 0;
+      let unbalanced0 = switchEntities.length > 0 ? switchEntities[switchEntities.length - 1].accInvest0 : 0;
+      let unbalanced1 = switchEntities.length > 0 ? switchEntities[switchEntities.length - 1].accInvest1 : 0;
       return {
         data: {
           unbalanced0: unbalanced0,
