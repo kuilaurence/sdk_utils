@@ -130,11 +130,8 @@ function getTick(token0_address: string, token1_address: string, price: number) 
     token0_address = token1_address;
     token1_address = temp;
   }
-  let ratio = 1 / price * 1e12;
-  let val0 = Math.log2(ratio);
-  let val1 = Math.log2(1.0001);
-  let ans = Math.floor(val0 / val1);
-  if (val0 > 0) {
+  let ans = Math.floor(Math.log2(1 / price * 1e12) / Math.log2(1.0001));
+  if (Math.log2(1 / price * 1e12) > 0) {
     return (ans - ans % 60).toString();
   } else {
     return (ans - (200 - Math.abs(ans) % 60)).toString();
@@ -222,9 +219,8 @@ export async function getTokenValue(type: "token0" | "token1", token0_address: s
  * @returns 
  */
 export function getCloseToTickPrice(token0_address: string, token1_address: string, price: number) {
-  price = 1 / price * 1e12;
   let tick = getTick(token0_address, token1_address, price);
-  return Math.pow(1.0001, +tick);
+  return 1 / Math.pow(1.0001, +tick) * 1e12;
 }
 //---------------------------------------------------上查下操作------------------------------------------------------
 /**

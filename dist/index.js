@@ -115,17 +115,14 @@ export async function collect(sid) {
  * @param ratio 价格
  * @returns
  */
-async function getTick(token0_address, token1_address, price) {
+function getTick(token0_address, token1_address, price) {
     if (Number(token0_address) > Number(token1_address)) {
         let temp = token0_address;
         token0_address = token1_address;
         token1_address = temp;
     }
-    let ratio = 1 / price * 1e12;
-    let val0 = Math.log2(ratio);
-    let val1 = Math.log2(1.0001);
-    let ans = Math.floor(val0 / val1);
-    if (val0 > 0) {
+    let ans = Math.floor(Math.log2(1 / price * 1e12) / Math.log2(1.0001));
+    if (Math.log2(1 / price * 1e12) > 0) {
         return (ans - ans % 60).toString();
     }
     else {
@@ -147,7 +144,6 @@ export async function getSqrtPrice(token0_address, token1_address) {
     let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
     let res = await v3poolContract.methods.slot0().call({ from: userInfo.account });
     let tick = res.tick; //参考
-    console.log("-----tick-------", tick);
     let temp = Math.pow(res.sqrtPriceX96 / (Math.pow(2, 96)), 2);
     return 1 / temp * 1e12;
 }
@@ -187,9 +183,9 @@ export async function getTokenValue(type, token0_address, token1_address, priceL
     let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
     let res = await v3poolContract.methods.slot0().call({ from: userInfo.account });
     let resultAmount = 0;
-    let tickLower = await getTick(token0_address, token1_address, priceUpper);
-    let tickCurrent = await getTick(token0_address, token1_address, priceCurrent);
-    let tickUpper = await getTick(token0_address, token1_address, priceLower);
+    let tickLower = getTick(token0_address, token1_address, priceUpper);
+    let tickCurrent = getTick(token0_address, token1_address, priceCurrent);
+    let tickUpper = getTick(token0_address, token1_address, priceLower);
     let sqrtPricelower = Math.sqrt(Math.pow(1.0001, +tickLower));
     let sqrtPriceCurrent = Math.sqrt(Math.pow(1.0001, +tickCurrent)); //slot0    sqrpicex96/2**96
     let sqrtPriceupper = Math.sqrt(Math.pow(1.0001, +tickUpper));
@@ -214,10 +210,9 @@ export async function getTokenValue(type, token0_address, token1_address, priceL
  * @param price
  * @returns
  */
-export async function getCloseToTickPrice(token0_address, token1_address, price) {
-    price = 1 / price * 1e12;
-    let tick = await getTick(token0_address, token1_address, price);
-    return Math.pow(1.0001, +tick);
+export function getCloseToTickPrice(token0_address, token1_address, price) {
+    let tick = getTick(token0_address, token1_address, price);
+    return 1 / Math.pow(1.0001, +tick) * 1e12;
 }
 //---------------------------------------------------上查下操作------------------------------------------------------
 /**
@@ -270,8 +265,8 @@ export async function withdraw(token_address, amount, callback) {
  */
 export async function invest(token0_address, token1_address, fee, amount0, amount1, leftPrice, rightPrice, callback) {
     let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
-    let tickLower = await getTick(token0_address, token1_address, +leftPrice);
-    let tickUpper = await getTick(token0_address, token1_address, +rightPrice);
+    let tickLower = getTick(token0_address, token1_address, +leftPrice);
+    let tickUpper = getTick(token0_address, token1_address, +rightPrice);
     if (+tickLower > +tickUpper) {
         [tickLower, tickUpper] = [tickUpper, tickLower];
     }
@@ -321,8 +316,8 @@ export async function addInvest(token0_address, token1_address, id, amount0, amo
  */
 export async function switching(token0_address, token1_address, id, amount0, amount1, leftPrice, rightPrice, hedge, callback) {
     let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
-    let tickLower = await getTick(token0_address, token1_address, +leftPrice);
-    let tickUpper = await getTick(token0_address, token1_address, +rightPrice);
+    let tickLower = getTick(token0_address, token1_address, +leftPrice);
+    let tickUpper = getTick(token0_address, token1_address, +rightPrice);
     if (+tickLower > +tickUpper) {
         [tickLower, tickUpper] = [tickUpper, tickLower];
     }
