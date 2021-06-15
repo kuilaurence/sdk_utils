@@ -200,11 +200,11 @@ export async function strategyEntities() {
             let result = await collect(sid);
             data[i]["fee0"] = convertBigNumberToNormal(result.data.fee0, 6);
             data[i]["fee1"] = convertBigNumberToNormal(result.data.fee1, 18);
-            data[i]["accFee0"] = +data[i]["accFee0"] + +data[i]["fee0"];
-            data[i]["accFee1"] = +data[i]["accFee1"] + +data[i]["fee1"];
-            data[i]["accFee0"] = data[i]["accFee0"].toFixed(8);
-            data[i]["accFee1"] = data[i]["accFee1"].toFixed(8);
-            data[i]["accumulativedee"] = +data[i]["accFee0"] + +data[i]["accFee1"] * +data[i].token0Price;
+            data[i]["fee0"] = +data[i]["accFee0"] + +data[i]["fee0"];
+            data[i]["fee1"] = +data[i]["accFee1"] + +data[i]["fee1"];
+            data[i]["fee0"] = data[i]["fee0"].toFixed(8);
+            data[i]["fee1"] = data[i]["fee1"].toFixed(8);
+            data[i]["accumulativedee"] = +data[i]["fee0"] + +data[i]["fee1"] * +data[i].token0Price;
             data[i]["accumulativedee"] = data[i]["accumulativedee"].toFixed(8);
             return 1;
         }, 1);
@@ -349,7 +349,11 @@ export async function riskManagement(sid) {
     const query = `
   {
     switchEntities(orderBy: timestamp,where: {sid: "${sid}"}) {
-      timestamp
+      position {
+        tick {
+          sqrtPriceX96
+        }
+      }
       accInvest0
       accInvest1
     }
@@ -363,7 +367,9 @@ export async function riskManagement(sid) {
         body: JSON.stringify({ query }),
     }).then((response) => response.json())
         .then((data) => {
-        let switchEntities = data.data.switchEntities;
+        let switchEntities = data.data.switchEntities.map((item) => {
+            return Object.assign(Object.assign({}, item), { price: (1 / Math.pow(+item.position.tick.sqrtPriceX96 / (Math.pow(2, 96)), 2) * 1e12).toFixed(6) });
+        });
         let unbalanced0 = switchEntities.length > 0 ? switchEntities[switchEntities.length - 1].accInvest0 : 0;
         let unbalanced1 = switchEntities.length > 0 ? switchEntities[switchEntities.length - 1].accInvest1 : 0;
         return {
