@@ -349,6 +349,10 @@ export async function riskManagement(sid) {
     let result = await collect(sid);
     const query = `
   {
+    strategyEntities(where: {sid: "${sid}"}) {
+      accInvest0
+      accInvest1
+    }
     switchEntities(orderBy: timestamp,where: {sid: "${sid}"}) {
       position {
         tick {
@@ -369,13 +373,14 @@ export async function riskManagement(sid) {
         body: JSON.stringify({ query }),
     }).then((response) => response.json())
         .then((data) => {
+        let strategyEntitie = data.data.strategyEntities[0];
         let switchEntities = data.data.switchEntities.map((item) => {
             return Object.assign(Object.assign({}, item), { price: (1 / Math.pow(+item.position.tick.sqrtPriceX96 / (Math.pow(2, 96)), 2) * 1e12).toFixed(6) });
         });
         return {
             data: {
-                unbalanced0: +result.data.fee0 - +switchEntities.accInvest0,
-                unbalanced1: +result.data.fee1 - +switchEntities.accInvest1,
+                unbalanced0: +result.data.fee0 - +strategyEntitie.accInvest0,
+                unbalanced1: +result.data.fee1 - +strategyEntitie.accInvest1,
                 hedgingPrice: 1,
                 switchEntities,
             }

@@ -370,6 +370,10 @@ export async function riskManagement(sid: string) {
   let result = await collect(sid);
   const query = `
   {
+    strategyEntities(where: {sid: "${sid}"}) {
+      accInvest0
+      accInvest1
+    }
     switchEntities(orderBy: timestamp,where: {sid: "${sid}"}) {
       position {
         tick {
@@ -390,6 +394,7 @@ export async function riskManagement(sid: string) {
     body: JSON.stringify({ query }),
   }).then((response) => response.json())
     .then((data) => {
+      let strategyEntitie = data.data.strategyEntities[0];
       let switchEntities = data.data.switchEntities.map((item: any) => {
         return {
           ...item,
@@ -398,8 +403,8 @@ export async function riskManagement(sid: string) {
       });
       return {
         data: {
-          unbalanced0: +result.data.fee0 - +switchEntities.accInvest0,
-          unbalanced1: +result.data.fee1 - +switchEntities.accInvest1,
+          unbalanced0: +result.data.fee0 - +strategyEntitie.accInvest0,
+          unbalanced1: +result.data.fee1 - +strategyEntitie.accInvest1,
           hedgingPrice: 1,
           switchEntities,
         }
