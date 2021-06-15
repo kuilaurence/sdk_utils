@@ -377,6 +377,7 @@ export async function riskManagement(sid: string) {
       }
       accInvest0
       accInvest1
+      timestamp
     }
   }
     `;
