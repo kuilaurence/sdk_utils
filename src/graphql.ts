@@ -400,8 +400,8 @@ export async function riskManagement(sid: string) {
       let unbalanced1 = switchEntities.length > 0 ? switchEntities[switchEntities.length - 1].accInvest1 : 0;
       return {
         data: {
-          unbalanced0: +result.data.fee0 - unbalanced0,
-          unbalanced1: +result.data.fee1 - unbalanced1,
+          unbalanced0: +result.data.fee0 - +unbalanced0,
+          unbalanced1: +result.data.fee1 - +unbalanced1,
           hedgingPrice: 1,
           switchEntities,
         }
