@@ -219,9 +219,16 @@ export async function strategyEntities() {
       const sids = data.map((item: any) => item.sid)
       //@ts-ignore
       sids.reduce(async (pre, sid, i) => {
-        let result = await collect(sid)
-        data[i]["fee0"] = result.data.fee0
-        data[i]["fee1"] = result.data.fee1
+        let result = await collect(sid);
+        data[i]["fee0"] = convertBigNumberToNormal(result.data.fee0, 6)
+        data[i]["fee1"] = convertBigNumberToNormal(result.data.fee1, 18)
+
+        data[i]["accFee0"] = +data[i]["accFee0"] + +data[i]["fee0"]
+        data[i]["accFee1"] = +data[i]["accFee1"] + +data[i]["fee1"]
+        data[i]["accFee0"] = data[i]["accFee0"].toFixed(8)
+        data[i]["accFee1"] = data[i]["accFee1"].toFixed(8)
+        data[i]["accumulativedee"] = +  data[i]["accFee0"] + + data[i]["accFee1"] * +data[i].token0Price;
+        data[i]["accumulativedee"] = data[i]["accumulativedee"].toFixed(8);
         return 1
       }, 1)
       return data
