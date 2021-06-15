@@ -76,8 +76,8 @@ export declare function getDayTvl(): Promise<{
  */
 export declare function riskManagement(sid: string): Promise<{
     data: {
-        unbalanced0: any;
-        unbalanced1: any;
+        unbalanced0: number;
+        unbalanced1: number;
         hedgingPrice: number;
         switchEntities: any;
     };

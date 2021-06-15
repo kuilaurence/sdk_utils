@@ -198,8 +198,8 @@ export async function strategyEntities() {
         //@ts-ignore
         sids.reduce(async (pre, sid, i) => {
             let result = await collect(sid);
-            data[i]["fee0"] = convertBigNumberToNormal(result.data.fee0, 6);
-            data[i]["fee1"] = convertBigNumberToNormal(result.data.fee1, 18);
+            data[i]["fee0"] = result.data.fee0;
+            data[i]["fee1"] = result.data.fee1;
             data[i]["fee0"] = +data[i]["accFee0"] + +data[i]["fee0"];
             data[i]["fee1"] = +data[i]["accFee1"] + +data[i]["fee1"];
             data[i]["fee0"] = data[i]["fee0"].toFixed(8);
@@ -346,6 +346,7 @@ export async function getDayTvl() {
  * @returns
  */
 export async function riskManagement(sid) {
+    let result = await collect(sid);
     const query = `
   {
     switchEntities(orderBy: timestamp,where: {sid: "${sid}"}) {
@@ -375,8 +376,8 @@ export async function riskManagement(sid) {
         let unbalanced1 = switchEntities.length > 0 ? switchEntities[switchEntities.length - 1].accInvest1 : 0;
         return {
             data: {
-                unbalanced0: unbalanced0,
-                unbalanced1: unbalanced1,
+                unbalanced0: +result.data.fee0 - unbalanced0,
+                unbalanced1: +result.data.fee1 - unbalanced1,
                 hedgingPrice: 1,
                 switchEntities,
             }
