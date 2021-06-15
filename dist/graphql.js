@@ -346,7 +346,6 @@ export async function getDayTvl() {
  * @returns
  */
 export async function riskManagement(sid) {
-    let result = await collect(sid);
     const query = `
   {
     strategyEntities(where: {sid: "${sid}"}) {
@@ -379,8 +378,8 @@ export async function riskManagement(sid) {
         });
         return {
             data: {
-                unbalanced0: +result.data.fee0 - +strategyEntitie.accInvest0,
-                unbalanced1: +result.data.fee1 - +strategyEntitie.accInvest1,
+                unbalanced0: strategyEntitie.accInvest0,
+                unbalanced1: strategyEntitie.accInvest1,
                 hedgingPrice: 1,
                 switchEntities,
             }
