@@ -89,6 +89,7 @@ export declare function riskManagement(sid: string): Promise<{
  */
 export declare function performance(sid: string): Promise<{
     data: {
+        creattimestamp: any;
         accumulativefees0: any;
         accumulativefees1: any;
         annualfee: number;

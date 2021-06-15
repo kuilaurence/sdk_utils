@@ -415,6 +415,9 @@ export async function riskManagement(sid: string) {
 export async function performance(sid: string) {
   const query = `
   {
+    position2Strategy(id: "${sid}") {
+      timestamp
+    }
     collectEntities(orderBy: timestamp, where: {sid: "${sid}"}) {
       timestamp
       accFee0
@@ -435,6 +438,7 @@ export async function performance(sid: string) {
       let accumulativefees1 = collectEntities.length > 0 ? collectEntities[collectEntities.length - 1].accFee1 : 0;
       return {
         data: {
+          creattimestamp: data.data.position2Strategy.timestamp,
           accumulativefees0: accumulativefees0,
           accumulativefees1: accumulativefees1,
           annualfee: 0.0,
