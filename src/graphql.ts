@@ -156,7 +156,7 @@ export async function strategyEntities() {
   let res = await getPoolPrice();
   const query = `
   {
-    strategyEntities(where: {user: "${userInfo.account}"}) {
+    strategyEntities(where: {user: "${userInfo.account}",end:false}) {
       sid
       end
       pool
