@@ -372,12 +372,10 @@ export async function riskManagement(sid) {
         let switchEntities = data.data.switchEntities.map((item) => {
             return Object.assign(Object.assign({}, item), { price: (1 / Math.pow(+item.position.tick.sqrtPriceX96 / (Math.pow(2, 96)), 2) * 1e12).toFixed(6) });
         });
-        let unbalanced0 = switchEntities.length > 0 ? switchEntities[switchEntities.length - 1].accInvest0 : 0;
-        let unbalanced1 = switchEntities.length > 0 ? switchEntities[switchEntities.length - 1].accInvest1 : 0;
         return {
             data: {
-                unbalanced0: +result.data.fee0 - unbalanced0,
-                unbalanced1: +result.data.fee1 - unbalanced1,
+                unbalanced0: +result.data.fee0 - +switchEntities.accInvest0,
+                unbalanced1: +result.data.fee1 - +switchEntities.accInvest1,
                 hedgingPrice: 1,
                 switchEntities,
             }
