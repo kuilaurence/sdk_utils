@@ -124,7 +124,7 @@ export async function collect(sid: string) {
  * @param ratio 价格
  * @returns 
  */
-async function getTick(token0_address: string, token1_address: string, price: number) {
+function getTick(token0_address: string, token1_address: string, price: number) {
   if (Number(token0_address) > Number(token1_address)) {
     let temp = token0_address;
     token0_address = token1_address;
@@ -155,7 +155,6 @@ export async function getSqrtPrice(token0_address: string, token1_address: strin
   let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
   let res = await v3poolContract.methods.slot0().call({ from: userInfo.account });
   let tick = res.tick;//参考
-  console.log("-----tick-------", tick);
   let temp = Math.pow(res.sqrtPriceX96 / (Math.pow(2, 96)), 2);
   return 1 / temp * 1e12;
 }
@@ -195,9 +194,9 @@ export async function getTokenValue(type: "token0" | "token1", token0_address: s
   let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
   let res = await v3poolContract.methods.slot0().call({ from: userInfo.account });
   let resultAmount = 0;
-  let tickLower = await getTick(token0_address, token1_address, priceUpper);
-  let tickCurrent = await getTick(token0_address, token1_address, priceCurrent);
-  let tickUpper = await getTick(token0_address, token1_address, priceLower);
+  let tickLower = getTick(token0_address, token1_address, priceUpper);
+  let tickCurrent = getTick(token0_address, token1_address, priceCurrent);
+  let tickUpper = getTick(token0_address, token1_address, priceLower);
   let sqrtPricelower = Math.sqrt(Math.pow(1.0001, +tickLower))
   let sqrtPriceCurrent = Math.sqrt(Math.pow(1.0001, +tickCurrent))    //slot0    sqrpicex96/2**96
   let sqrtPriceupper = Math.sqrt(Math.pow(1.0001, +tickUpper))
@@ -222,9 +221,9 @@ export async function getTokenValue(type: "token0" | "token1", token0_address: s
  * @param price 
  * @returns 
  */
-export async function getCloseToTickPrice(token0_address: string, token1_address: string, price: number) {
+export function getCloseToTickPrice(token0_address: string, token1_address: string, price: number) {
   price = 1 / price * 1e12;
-  let tick = await getTick(token0_address, token1_address, price);
+  let tick = getTick(token0_address, token1_address, price);
   return Math.pow(1.0001, +tick);
 }
 //---------------------------------------------------上查下操作------------------------------------------------------
@@ -278,8 +277,8 @@ export async function withdraw(token_address: string, amount: string, callback: 
  */
 export async function invest(token0_address: string, token1_address: string, fee: string, amount0: string, amount1: string, leftPrice: string, rightPrice: string, callback: (code: number, hash: string) => void) {
   let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
-  let tickLower = await getTick(token0_address, token1_address, +leftPrice);
-  let tickUpper = await getTick(token0_address, token1_address, +rightPrice);
+  let tickLower = getTick(token0_address, token1_address, +leftPrice);
+  let tickUpper = getTick(token0_address, token1_address, +rightPrice);
   if (+tickLower > +tickUpper) {
     [tickLower, tickUpper] = [tickUpper, tickLower];
   }
@@ -329,8 +328,8 @@ export async function addInvest(token0_address: string, token1_address: string, 
  */
 export async function switching(token0_address: string, token1_address: string, id: string, amount0: string, amount1: string, leftPrice: string, rightPrice: string, hedge: boolean, callback: (code: number, hash: string) => void) {
   let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
-  let tickLower = await getTick(token0_address, token1_address, +leftPrice);
-  let tickUpper = await getTick(token0_address, token1_address, +rightPrice);
+  let tickLower = getTick(token0_address, token1_address, +leftPrice);
+  let tickUpper = getTick(token0_address, token1_address, +rightPrice);
   if (+tickLower > +tickUpper) {
     [tickLower, tickUpper] = [tickUpper, tickLower];
   }
