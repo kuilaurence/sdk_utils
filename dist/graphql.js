@@ -229,8 +229,8 @@ export function calculatetoken0token1(tickLower, tickCurrent, tickUpper, lp, sqr
         token1amount = lp * (c - a) / 1e18;
     }
     else {
-        token0amount = lp * (b - a) / (b * a) / 1e6;
-        token1amount = lp * (c - b) / 1e18;
+        token0amount = lp * (c - b) / (c * b) / 1e6;
+        token1amount = lp * (b - a) / 1e18;
     }
     return {
         token0amount: token0amount,
