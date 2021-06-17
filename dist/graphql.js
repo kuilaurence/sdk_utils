@@ -229,7 +229,7 @@ export async function strategyEntities() {
                     }
                 }
             }
-            data[i]["outtime"] = outrangetime;
+            data[i]["outrangetime"] = outrangetime;
             return 1;
         }, 1);
         return data;
