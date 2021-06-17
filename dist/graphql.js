@@ -18,9 +18,9 @@ export function getprice(token0_address, token1_address, tick) {
     };
 }
 var tokenList;
-let graphql = "https://api.thegraph.com/subgraphs/name/winless/multiple";
-let v3gqlurl = "http://120.92.137.203:9002/subgraphs/name/multiple/v3";
-let strategyurl = "http://120.92.137.203:9002/subgraphs/name/multiple/graph-playground";
+let graphql = "https://api.thegraph.com/subgraphs/name/winless/multiple"; // https://graph.multiple.fi/
+let v3gqlurl = "https://graph.multiple.fi/subgraphs/name/multiple/v3";
+let strategyurl = "https://graph.multiple.fi/subgraphs/name/multiple/graph-playground";
 /**
  * 拿投资列表
  * @returns
