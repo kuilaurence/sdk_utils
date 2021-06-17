@@ -5,7 +5,8 @@
   "types": "dist/index.d.ts",
   "description": "Provide Ethereum SDK initialization",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "publish": "npm publish"
   },
   "keywords": [
     "eth",
