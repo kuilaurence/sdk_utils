@@ -174,6 +174,7 @@ export async function strategyEntities() {
       accFee1
       accInvest0
       accInvest1
+      createdAtTimestamp
       currTickLower
       currTickUpper
       currLiquidity
@@ -229,6 +230,27 @@ export async function strategyEntities() {
         data[i]["fee1"] = data[i]["fee1"].toFixed(8)
         data[i]["accumulativedee"] = +  data[i]["fee0"] + + data[i]["fee1"] * +data[i].token0Price;
         data[i]["accumulativedee"] = data[i]["accumulativedee"].toFixed(8);
+
+        let poolHourPriceres = await getPoolHourPrices(data[i].pool, data[i].createdAtTimestamp);
+        let outrangetime = Math.floor(Date.now() / 1000).toFixed();
+        if (data[i].tick < data[i].currTickLower) {
+          for (let j = poolHourPriceres.poolHourDatas.length - 1; j >= 0; j--) {
+            if (poolHourPriceres.poolHourDatas[j].tick < data[i].currTickLower) {
+              outrangetime = poolHourPriceres.poolHourDatas[j].timestamp;
+            } else {
+              break;
+            }
+          }
+        } else if (data[i].tick > data[i].currTickUpper) {
+          for (let j = poolHourPriceres.poolHourDatas.length - 1; j >= 0; j--) {
+            if (poolHourPriceres.poolHourDatas[j].tick > data[i].currPriceUpper) {
+              outrangetime = poolHourPriceres.poolHourDatas[j].timestamp;
+            } else {
+              break;
+            }
+          }
+        }
+        data[i]["outtime"] = outrangetime;
         return 1
       }, 1)
       return data
@@ -460,6 +482,7 @@ export async function getPoolHourPrices(poolAddress: string, timestame: string) 
     poolHourDatas(orderBy: timestamp, first: 1000, where: {timestamp_gt: "${timestame}", pool: "${poolAddress}"}) {
       timestamp
       token0Price
+      tick
     }
   }
     `;
