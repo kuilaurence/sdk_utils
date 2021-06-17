@@ -209,7 +209,7 @@ export async function strategyEntities() {
           accumulativedee: +item.accFee0 + +item.accFee1 * +res.token0Price,
         }
       })
-    }).then(data => {
+    }).then(async data => {
       data.sort((a: any, b: any) => { return a.sid - b.sid });
       for (var i = 0; i < data.length; i++) {
         if (data[i].end) {
@@ -219,7 +219,8 @@ export async function strategyEntities() {
       }
       const sids = data.map((item: any) => item.sid)
       //@ts-ignore
-      sids.reduce(async (pre, sid, i) => {
+      await sids.reduce(async (pre, sid, i) => {
+        await pre
         let result = await collect(sid);
         data[i]["fee0"] = result.data.fee0;
         data[i]["fee1"] = result.data.fee1;
@@ -230,10 +231,9 @@ export async function strategyEntities() {
         data[i]["fee1"] = data[i]["fee1"].toFixed(8)
         data[i]["accumulativedee"] = +  data[i]["fee0"] + + data[i]["fee1"] * +data[i].token0Price;
         data[i]["accumulativedee"] = data[i]["accumulativedee"].toFixed(8);
-
         let poolHourPriceres = await getPoolHourPrices(data[i].pool, data[i].createdAtTimestamp);
         let outrangetime = Math.floor(Date.now() / 1000).toFixed();
-        if (data[i].tick < data[i].currTickLower) {
+        if (data[i].tick < data[i].currTickLower) {//下超出
           for (let j = poolHourPriceres.poolHourDatas.length - 1; j >= 0; j--) {
             if (poolHourPriceres.poolHourDatas[j].tick < data[i].currTickLower) {
               outrangetime = poolHourPriceres.poolHourDatas[j].timestamp;
@@ -241,9 +241,9 @@ export async function strategyEntities() {
               break;
             }
           }
-        } else if (data[i].tick > data[i].currTickUpper) {
+        } else if (data[i].tick > data[i].currTickUpper) {//上超出
           for (let j = poolHourPriceres.poolHourDatas.length - 1; j >= 0; j--) {
-            if (poolHourPriceres.poolHourDatas[j].tick > data[i].currPriceUpper) {
+            if (poolHourPriceres.poolHourDatas[j].tick > data[i].currTickUpper) {
               outrangetime = poolHourPriceres.poolHourDatas[j].timestamp;
             } else {
               break;
@@ -251,8 +251,7 @@ export async function strategyEntities() {
           }
         }
         data[i]["outrangetime"] = outrangetime;
-        return 1
-      }, 1)
+      }, Promise.resolve())
       return data
     })
 }

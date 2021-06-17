@@ -187,7 +187,7 @@ export async function strategyEntities() {
             let token0token1Info = calculatetoken0token1(item.currTickLower, res.tick, item.currTickUpper, item.currLiquidity, res.sqrtPrice, res.token0Price);
             return Object.assign(Object.assign(Object.assign({}, item), token0token1Info), { currPriceLower: currPriceLower, currPriceUpper: currPriceUpper, token0Price: res.token0Price, token1Price: res.token1Price, sqrtPrice: res.sqrtPrice, tick: res.tick, accumulativedee: +item.accFee0 + +item.accFee1 * +res.token0Price });
         });
-    }).then(data => {
+    }).then(async (data) => {
         data.sort((a, b) => { return a.sid - b.sid; });
         for (var i = 0; i < data.length; i++) {
             if (data[i].end) {
@@ -197,7 +197,8 @@ export async function strategyEntities() {
         }
         const sids = data.map((item) => item.sid);
         //@ts-ignore
-        sids.reduce(async (pre, sid, i) => {
+        await sids.reduce(async (pre, sid, i) => {
+            await pre;
             let result = await collect(sid);
             data[i]["fee0"] = result.data.fee0;
             data[i]["fee1"] = result.data.fee1;
@@ -209,7 +210,7 @@ export async function strategyEntities() {
             data[i]["accumulativedee"] = data[i]["accumulativedee"].toFixed(8);
             let poolHourPriceres = await getPoolHourPrices(data[i].pool, data[i].createdAtTimestamp);
             let outrangetime = Math.floor(Date.now() / 1000).toFixed();
-            if (data[i].tick < data[i].currTickLower) {
+            if (data[i].tick < data[i].currTickLower) { //下超出
                 for (let j = poolHourPriceres.poolHourDatas.length - 1; j >= 0; j--) {
                     if (poolHourPriceres.poolHourDatas[j].tick < data[i].currTickLower) {
                         outrangetime = poolHourPriceres.poolHourDatas[j].timestamp;
@@ -219,9 +220,9 @@ export async function strategyEntities() {
                     }
                 }
             }
-            else if (data[i].tick > data[i].currTickUpper) {
+            else if (data[i].tick > data[i].currTickUpper) { //上超出
                 for (let j = poolHourPriceres.poolHourDatas.length - 1; j >= 0; j--) {
-                    if (poolHourPriceres.poolHourDatas[j].tick > data[i].currPriceUpper) {
+                    if (poolHourPriceres.poolHourDatas[j].tick > data[i].currTickUpper) {
                         outrangetime = poolHourPriceres.poolHourDatas[j].timestamp;
                     }
                     else {
@@ -230,8 +231,7 @@ export async function strategyEntities() {
                 }
             }
             data[i]["outrangetime"] = outrangetime;
-            return 1;
-        }, 1);
+        }, Promise.resolve());
         return data;
     });
 }
