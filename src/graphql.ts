@@ -392,8 +392,8 @@ export async function riskManagement(sid: string) {
   const query = `
   {
     strategyEntities(where: {sid: "${sid}"}) {
-      accInvest0
-      accInvest1
+      preInvest0
+      preInvest1
     }
     switchEntities(orderBy: timestamp,where: {sid: "${sid}"}) {
       position {
@@ -424,8 +424,8 @@ export async function riskManagement(sid: string) {
       });
       return {
         data: {
-          unbalanced0: strategyEntitie.accInvest0,
-          unbalanced1: strategyEntitie.accInvest1,
+          unbalanced0: strategyEntitie.preInvest0,
+          unbalanced1: strategyEntitie.preInvest1,
           hedgingPrice: 1,
           switchEntities,
         }
