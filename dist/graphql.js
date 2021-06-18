@@ -160,6 +160,8 @@ export async function strategyEntities() {
       accFee1
       accInvest0
       accInvest1
+      preInvest0
+      preInvest1
       createdAtTimestamp
       currTickLower
       currTickUpper
