@@ -527,8 +527,13 @@ export async function riskManagement(sid: string) {
  * @returns 
  */
 export async function performance(sid: string) {
+  let result = await collect(sid);
   const query = `
   {
+    strategyEntities(where: {sid: "${sid}"}) {
+      accFee0
+      accFee1
+    }
     position2Strategy(id: "${sid}") {
       timestamp
     }
@@ -548,8 +553,8 @@ export async function performance(sid: string) {
   }).then((response) => response.json())
     .then((data) => {
       let collectEntities = data.data.collectEntities;
-      let accumulativefees0 = collectEntities.length > 0 ? collectEntities[collectEntities.length - 1].accFee0 : 0;
-      let accumulativefees1 = collectEntities.length > 0 ? collectEntities[collectEntities.length - 1].accFee1 : 0;
+      let accumulativefees0 = +result.data.fee0 + +data.data.strategyEntities.accFee0;
+      let accumulativefees1 = +result.data.fee1 + +data.data.strategyEntities.accFee0;
       return {
         data: {
           creattimestamp: data.data.position2Strategy.timestamp,
