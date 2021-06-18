@@ -125,3 +125,13 @@ export declare function report(poolAddress: string, sid: string): Promise<{
         result: any;
     };
 }>;
+/**
+ * 获取排行榜
+ * @returns
+ */
+export declare function getGPRankList(): Promise<{
+    data: {
+        selfIndex: any;
+        ranklist: any;
+    };
+}>;

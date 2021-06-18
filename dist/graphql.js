@@ -671,4 +671,36 @@ export async function report(poolAddress, sid) {
         }
     };
 }
+/**
+ * 获取排行榜
+ * @returns
+ */
+export async function getGPRankList() {
+    const query = `
+  {
+    profitRankEntities(first: 1000, orderBy: accFee0, orderDirection: desc) {
+      id
+      accProfit
+      accFee
+    }
+  }
+    `;
+    return fetch(ContractAddress[userInfo.chainID].strateggql, {
+        method: "post",
+        headers: {
+            "Content-type": "application/json",
+        },
+        body: JSON.stringify({ query }),
+    }).then((response) => response.json())
+        .then((data) => {
+        let ranklist = data.data.profitRankEntities;
+        let selfIndex = ranklist.indexOf(ranklist.filter((item) => item.id == userInfo.account)[0]);
+        return {
+            data: {
+                selfIndex: selfIndex,
+                ranklist
+            }
+        };
+    });
+}
 //# sourceMappingURL=graphql.js.map
