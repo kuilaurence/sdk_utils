@@ -453,10 +453,6 @@ export async function getDayTvl() {
 export async function riskManagement(sid) {
     const query = `
   {
-    strategyEntities(where: {sid: "${sid}"}) {
-      preInvest0
-      preInvest1
-    }
     switchEntities(orderBy: timestamp,where: {sid: "${sid}"}) {
       position {
         tick {
@@ -477,15 +473,11 @@ export async function riskManagement(sid) {
         body: JSON.stringify({ query }),
     }).then((response) => response.json())
         .then((data) => {
-        let strategyEntitie = data.data.strategyEntities[0];
         let switchEntities = data.data.switchEntities.map((item) => {
             return Object.assign(Object.assign({}, item), { price: (1 / Math.pow(+item.position.tick.sqrtPriceX96 / (Math.pow(2, 96)), 2) * 1e12).toFixed(6) });
         });
         return {
             data: {
-                unbalanced0: strategyEntitie.preInvest0,
-                unbalanced1: strategyEntitie.preInvest1,
-                hedgingPrice: 1,
                 switchEntities,
             }
         };
@@ -497,7 +489,6 @@ export async function riskManagement(sid) {
  * @returns
  */
 export async function performance(sid) {
-    let result = await collect(sid);
     const query = `
   {
     strategyEntities(where: {sid: "${sid}"}) {
@@ -523,14 +514,9 @@ export async function performance(sid) {
     }).then((response) => response.json())
         .then((data) => {
         let collectEntities = data.data.collectEntities;
-        let accumulativefees0 = +result.data.fee0 + +data.data.strategyEntities.accFee0;
-        let accumulativefees1 = +result.data.fee1 + +data.data.strategyEntities.accFee0;
         return {
             data: {
                 creattimestamp: data.data.position2Strategy.timestamp,
-                accumulativefees0: accumulativefees0,
-                accumulativefees1: accumulativefees1,
-                annualfee: 0.0,
                 collectEntities
             }
         };
