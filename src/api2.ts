@@ -1,9 +1,10 @@
 import JSBI from "jsbi";
 import keyBy from "lodash.keyby";
-import { TickMath, tickToPrice, Pool } from "@uniswap/v3-sdk";
 import { Token } from "@uniswap/sdk-core";
-import { Price, CurrencyAmount } from "@uniswap/sdk-core";
 import { BigNumber } from "@ethersproject/bignumber";
+import { userInfo, ContractAddress } from "./lib_const";
+import { Price, CurrencyAmount } from "@uniswap/sdk-core";
+import { TickMath, tickToPrice, Pool } from "@uniswap/v3-sdk";
 const PRICE_FIXED_DIGITS = 4;
 const DEFAULT_SURROUNDING_TICKS = 300;
 const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1);
@@ -20,10 +21,8 @@ const FEE_TIER_TO_TICK_SPACING = (feeTier: string): number => {
   }
 };
 
-let playground = "http://120.92.137.203:9002/subgraphs/name/multiple/v3";
-
 const fetchData = (query: string) => {
-  return fetch(playground, {
+  return fetch(ContractAddress[userInfo.chainID].v3gql, {
     method: "post",
     headers: {
       "Content-type": "application/json",

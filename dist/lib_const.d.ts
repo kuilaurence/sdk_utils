@@ -20,30 +20,40 @@ export declare const ContractAddress: {
         mulWork: string;
         v3strategy: string;
         v3pool: string;
+        v3gql: string;
+        strateggql: string;
     };
     4: {
         mulBank: string;
         mulWork: string;
         v3strategy: string;
         v3pool: string;
+        v3gql: string;
+        strateggql: string;
     };
     97: {
         mulBank: string;
         mulWork: string;
         v3strategy: string;
         v3pool: string;
+        v3gql: string;
+        strateggql: string;
     };
     128: {
         mulBank: string;
         mulWork: string;
         v3strategy: string;
         v3pool: string;
+        v3gql: string;
+        strateggql: string;
     };
     336: {
         mulBank: string;
         mulWork: string;
         v3strategy: string;
         v3pool: string;
+        v3gql: string;
+        strateggql: string;
     };
 };
 export declare const tokenAddres: {

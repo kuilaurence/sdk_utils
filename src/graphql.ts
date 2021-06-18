@@ -1,10 +1,10 @@
 import { getTokenSymbol, collect } from "./index";
-import { userInfo } from "./lib_const";
+import { userInfo, ContractAddress } from "./lib_const";
 import { convertBigNumberToNormal } from "./lib.utils";
 
-import { tickToPrice, priceToClosestTick } from "@uniswap/v3-sdk";
-import { Price, Token } from "@uniswap/sdk-core";
 import { getV3LP } from "./api2";
+import { Price, Token } from "@uniswap/sdk-core";
+import { tickToPrice, priceToClosestTick } from "@uniswap/v3-sdk";
 
 export function getprice(token0_address: string, token1_address: string, tick: number) {
   let token0 = new Token(1, token0_address, 6);//usdt
@@ -22,8 +22,6 @@ export function getprice(token0_address: string, token1_address: string, tick: n
 var tokenList: [];
 
 let graphql = "https://api.thegraph.com/subgraphs/name/winless/multiple";// https://graph.multiple.fi/
-let v3gqlurl = "https://graph.multiple.fi/subgraphs/name/multiple/v3";
-let strategyurl = "https://graph.multiple.fi/subgraphs/name/multiple/graph-playground";
 
 /**
  * 拿投资列表
@@ -132,7 +130,7 @@ export async function getPositionInfo2(poolAddress: string) {
         }
       }
       `;
-  return fetch(v3gqlurl, {
+  return fetch(ContractAddress[userInfo.chainID].v3gql, {
     method: "post",
     headers: {
       "Content-type": "application/json",
@@ -181,7 +179,7 @@ export async function strategyEntities() {
     }
   }
     `;
-  return fetch(strategyurl, {
+  return fetch(ContractAddress[userInfo.chainID].strateggql, {
     method: "post",
     headers: {
       "Content-type": "application/json",
@@ -297,7 +295,7 @@ export async function getTokenList() {
         }
     }
     `;
-  return fetch(v3gqlurl, {
+  return fetch(ContractAddress[userInfo.chainID].v3gql, {
     method: "post",
     headers: {
       "Content-type": "application/json",
@@ -327,7 +325,7 @@ export async function getPoolPrice() {
     }
   }
     `;
-  return fetch(v3gqlurl, {
+  return fetch(ContractAddress[userInfo.chainID].v3gql, {
     method: "post",
     headers: {
       "Content-type": "application/json",
@@ -364,7 +362,7 @@ export async function getDayTvl() {
     }
   }
     `;
-  return fetch(v3gqlurl, {
+  return fetch(ContractAddress[userInfo.chainID].v3gql, {
     method: "post",
     headers: {
       "Content-type": "application/json",
@@ -406,7 +404,7 @@ export async function riskManagement(sid: string) {
     }
   }
     `;
-  return fetch(strategyurl, {
+  return fetch(ContractAddress[userInfo.chainID].strateggql, {
     method: "post",
     headers: {
       "Content-type": "application/json",
@@ -449,7 +447,7 @@ export async function performance(sid: string) {
     }
   }
     `;
-  return fetch(strategyurl, {
+  return fetch(ContractAddress[userInfo.chainID].strateggql, {
     method: "post",
     headers: {
       "Content-type": "application/json",
@@ -485,7 +483,7 @@ export async function getPoolHourPrices(poolAddress: string, timestame: string) 
     }
   }
     `;
-  return fetch(v3gqlurl, {
+  return fetch(ContractAddress[userInfo.chainID].v3gql, {
     method: "post",
     headers: {
       "Content-type": "application/json",
@@ -527,7 +525,7 @@ export async function getCreatStrategyinfo(sid: string) {
     }
   }
     `;
-  return fetch(strategyurl, {
+  return fetch(ContractAddress[userInfo.chainID].strateggql, {
     method: "post",
     headers: {
       "Content-type": "application/json",
