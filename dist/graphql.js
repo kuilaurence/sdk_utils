@@ -441,7 +441,7 @@ export async function getDayTvl() {
         let day1 = data.data.poolDayDatas[1];
         return {
             data: {
-                tvlUSD: +day1.tvlUSD - +day0.tvlUSD,
+                tvlUSD: +day0.tvlUSD,
                 volumeUSD: +day1.volumeUSD - +day0.volumeUSD,
             }
         };
