@@ -228,6 +228,8 @@ export async function getSingleStrategy(sid: string) {
             outrangetime: outrangetime,
             fee0: fee0,
             fee1: fee1,
+            collectFee0: result.data.fee0,
+            collectFee1: result.data.fee1,
             accumulativedee: (+fee0 + +fee1 * +res.token0Price).toFixed(8),
           }
         }
@@ -314,6 +316,8 @@ export async function strategyEntities() {
         let result = await collect(sid);
         data[i]["fee0"] = result.data.fee0;
         data[i]["fee1"] = result.data.fee1;
+        data[i]["collectFee0"] = result.data.fee0;
+        data[i]["collectFee1"] = result.data.fee1;
 
         data[i]["fee0"] = +data[i]["accFee0"] + +data[i]["fee0"]
         data[i]["fee1"] = +data[i]["accFee1"] + +data[i]["fee1"]
