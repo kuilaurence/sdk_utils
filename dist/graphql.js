@@ -134,6 +134,87 @@ export async function getPositionInfo2(poolAddress) {
         };
     });
 }
+export async function getSingleStrategy(sid) {
+    let res = await getPoolPrice();
+    const query = `
+  {
+    strategyEntities(where: {sid:"${sid}",user: "${userInfo.account}",end:false}) {
+      sid
+      end
+      pool
+      token0 {
+        symbol
+        id
+        decimals
+      }
+      token1 {
+        symbol
+        id
+        decimals
+      }
+      accFee0
+      accFee1
+      accInvest0
+      accInvest1
+      preInvest0
+      preInvest1
+      createdAtTimestamp
+      currTickLower
+      currTickUpper
+      currLiquidity
+    }
+  }
+    `;
+    return fetch(ContractAddress[userInfo.chainID].strateggql, {
+        method: "post",
+        headers: {
+            "Content-type": "application/json",
+        },
+        body: JSON.stringify({ query }),
+    }).then((response) => response.json())
+        .then(async (data) => {
+        if (data.data.strategyEntities.length > 0) {
+            let strategyEntitie = data.data.strategyEntities[0];
+            let currPriceLower = calculatePrice(strategyEntitie.currTickLower);
+            let currPriceUpper = calculatePrice(strategyEntitie.currTickUpper);
+            if (currPriceLower > currPriceUpper) {
+                [currPriceLower, currPriceUpper] = [currPriceUpper, currPriceLower];
+            }
+            let token0token1Info = calculatetoken0token1(strategyEntitie.currTickLower, res.tick, strategyEntitie.currTickUpper, strategyEntitie.currLiquidity, res.sqrtPrice, res.token0Price);
+            let result = await collect(strategyEntitie.sid);
+            let fee0 = (+result.data.fee0 + +strategyEntitie.accFee0).toFixed(8);
+            let fee1 = (+result.data.fee1 + +strategyEntitie.accFee1).toFixed(8);
+            let poolHourPriceres = await getPoolHourPrices(strategyEntitie.pool, strategyEntitie.createdAtTimestamp);
+            let outrangetime = Math.floor(Date.now() / 1000).toFixed();
+            if (res.tick < strategyEntitie.currTickLower) { //下超出
+                for (let j = poolHourPriceres.poolHourDatas.length - 1; j >= 0; j--) {
+                    if (poolHourPriceres.poolHourDatas[j].tick < strategyEntitie.currTickLower) {
+                        outrangetime = poolHourPriceres.poolHourDatas[j].timestamp;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            else if (res.tick > strategyEntitie.currTickUpper) { //上超出
+                for (let j = poolHourPriceres.poolHourDatas.length - 1; j >= 0; j--) {
+                    if (poolHourPriceres.poolHourDatas[j].tick > strategyEntitie.currTickUpper) {
+                        outrangetime = poolHourPriceres.poolHourDatas[j].timestamp;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            return {
+                data: Object.assign(Object.assign(Object.assign({}, strategyEntitie), token0token1Info), { currPriceLower: currPriceLower, currPriceUpper: currPriceUpper, token0Price: res.token0Price, token1Price: res.token1Price, sqrtPrice: res.sqrtPrice, tick: res.tick, outrangetime: outrangetime, fee0: fee0, fee1: fee1, accumulativedee: (+fee0 + +fee1 * +res.token0Price).toFixed(8) })
+            };
+        }
+        else {
+            return { data: {} };
+        }
+    });
+}
 /**
  * 获取strategy
  * @returns

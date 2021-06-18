@@ -36,6 +36,9 @@ export declare function getPositionInfo2(poolAddress: string): Promise<{
     poolInfo: any;
     ethPriceUSD: any;
 }>;
+export declare function getSingleStrategy(sid: string): Promise<{
+    data: any;
+}>;
 /**
  * 获取strategy
  * @returns
