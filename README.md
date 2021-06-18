@@ -6,6 +6,11 @@ Provide Ethereum SDK initialization
 npm i bignumber.js
 npm i walletconnect
 npm i web3
+npm i @types/lodash.keyby
+npm i @uniswap/sdk-core
+npm i @uniswap/v3-sdk
+npm i lodash.keyby
+npm i walletlink
 npm i sdk-utils
 ```
 # connect
