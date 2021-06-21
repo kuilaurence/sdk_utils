@@ -145,9 +145,7 @@ function getTick(token0_address: string, token1_address: string, price: number) 
  */
 export async function getSqrtPrice(token0_address: string, token1_address: string) {
   if (Number(token0_address) > Number(token1_address)) {
-    let temp = token0_address;
-    token0_address = token1_address;
-    token1_address = temp;
+    [token0_address, token1_address] = [token1_address, token0_address];
   }
   let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
   let res = await v3poolContract.methods.slot0().call({ from: userInfo.account });
