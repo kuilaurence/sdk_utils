@@ -411,7 +411,7 @@ export async function getPoolPrice() {
 export async function getDayTvl() {
     const query = `
   {
-    poolDayDatas(orderBy: date, orderDirection: desc, first: 2) {
+    poolDayDatas(orderBy: date, orderDirection: desc, first: 1) {
       pool {
         id
         token0 {
@@ -438,11 +438,10 @@ export async function getDayTvl() {
     }).then((response) => response.json())
         .then((data) => {
         let day0 = data.data.poolDayDatas[0];
-        let day1 = data.data.poolDayDatas[1];
         return {
             data: {
-                tvlUSD: +day1.tvlUSD,
-                volumeUSD: +day1.volumeUSD - +day0.volumeUSD,
+                tvlUSD: +day0.tvlUSD,
+                volumeUSD: +day0.volumeUSD,
             }
         };
     });
