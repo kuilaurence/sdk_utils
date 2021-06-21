@@ -127,5 +127,6 @@ export declare function getGPRankList(): Promise<{
     data: {
         selfIndex: any;
         ranklist: any;
+        selfinfo: any;
     };
 }>;

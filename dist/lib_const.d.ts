@@ -22,6 +22,7 @@ export declare const ContractAddress: {
         v3pool: string;
         v3gql: string;
         strateggql: string;
+        rankgql: string;
     };
     4: {
         mulBank: string;
@@ -30,6 +31,7 @@ export declare const ContractAddress: {
         v3pool: string;
         v3gql: string;
         strateggql: string;
+        rankgql: string;
     };
     97: {
         mulBank: string;
@@ -38,6 +40,7 @@ export declare const ContractAddress: {
         v3pool: string;
         v3gql: string;
         strateggql: string;
+        rankgql: string;
     };
     128: {
         mulBank: string;
@@ -46,6 +49,7 @@ export declare const ContractAddress: {
         v3pool: string;
         v3gql: string;
         strateggql: string;
+        rankgql: string;
     };
     336: {
         mulBank: string;
@@ -54,6 +58,7 @@ export declare const ContractAddress: {
         v3pool: string;
         v3gql: string;
         strateggql: string;
+        rankgql: string;
     };
 };
 export declare const tokenAddres: {

@@ -671,14 +671,23 @@ export async function report(poolAddress, sid) {
 export async function getGPRankList() {
     const query = `
   {
-    profitRankEntities(first: 1000, orderBy: accFee0, orderDirection: desc) {
-      id
-      accProfit
-      accFee
+    ranks(filter:{orderBy:"feeValue",order:desc}){
+      user
+      value
+      feeValue
+      profit
+      updateTime
+    }
+    rank(user:"${userInfo.account}"){
+      user
+      value
+      feeValue
+      profit
+      updateTime
     }
   }
     `;
-    return fetch(ContractAddress[userInfo.chainID].strateggql, {
+    return fetch(ContractAddress[userInfo.chainID].rankgql, {
         method: "post",
         headers: {
             "Content-type": "application/json",
@@ -686,12 +695,14 @@ export async function getGPRankList() {
         body: JSON.stringify({ query }),
     }).then((response) => response.json())
         .then((data) => {
-        let ranklist = data.data.profitRankEntities;
-        let selfIndex = ranklist.indexOf(ranklist.filter((item) => item.id == userInfo.account)[0]);
+        let ranklist = data.data.ranks;
+        let selfinfo = data.data.rank;
+        let selfIndex = ranklist.indexOf(ranklist.filter((item) => item.user == userInfo.account)[0]);
         return {
             data: {
                 selfIndex: selfIndex,
-                ranklist
+                ranklist: ranklist,
+                selfinfo: selfinfo,
             }
         };
     });
