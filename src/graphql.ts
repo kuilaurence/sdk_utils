@@ -732,7 +732,7 @@ export async function getGPRankList() {
       let selfIndex = ranklist.indexOf(ranklist.filter((item: any) => item.user == userInfo.account)[0]);
       return {
         data: {
-          selfIndex: selfIndex,
+          selfIndex: 1 + +selfIndex,
           ranklist: ranklist,
           selfinfo: selfinfo,
         }

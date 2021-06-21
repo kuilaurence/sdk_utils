@@ -125,7 +125,7 @@ export declare function report(poolAddress: string, sid: string): Promise<{
  */
 export declare function getGPRankList(): Promise<{
     data: {
-        selfIndex: any;
+        selfIndex: number;
         ranklist: any;
         selfinfo: any;
     };
