@@ -703,7 +703,7 @@ export async function report(poolAddress: string, sid: string) {
 export async function getGPRankList() {
   const query = `
   {
-    ranks(filter:{orderBy:"feeValue",order:desc}){
+    ranks(paging:{orderBy:"feeValue",order:desc}){
       user
       value
       feeValue
