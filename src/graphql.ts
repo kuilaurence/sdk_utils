@@ -1,6 +1,6 @@
 import { getTokenSymbol, collect } from "./index";
-import { userInfo, ContractAddress } from "./lib_const";
-import { convertBigNumberToNormal } from "./lib.utils";
+import { userInfo, ContractAddress } from "./lib_config";
+import { add, convertBigNumberToNormal } from "./lib.utils";
 
 import { getV3LP } from "./api2";
 import { Price, Token } from "@uniswap/sdk-core";
@@ -734,6 +734,37 @@ export async function getGPRankList() {
           selfIndex: 1 + +selfIndex,
           ranklist: ranklist,
           selfinfo: selfinfo,
+        }
+      }
+    })
+}
+/**
+ * 水龙头
+ * @returns 
+ */
+export async function faucet(address: string) {
+  const query = `
+  mutation{
+    faucet(user: "${address}") {
+      tx
+      amount
+      sendTime
+      user
+    }
+  }
+    `;
+  return fetch(ContractAddress[userInfo.chainID].rankgql, {
+    method: "post",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ query }),
+  }).then((response) => response.json())
+    .then((data) => {
+      let faucet = data.data.faucet;
+      return {
+        data: {
+          faucet
         }
       }
     })

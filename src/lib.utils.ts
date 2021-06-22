@@ -4,7 +4,7 @@ import { ERC20 } from "./lib_abi";
 import walletlink from 'walletlink';
 import { BigNumber } from "bignumber.js";
 import { Contract } from "web3-eth-contract";
-import { chainIdDict, userInfo } from "./lib_const";
+import { chainIdDict, userInfo } from "./lib_config";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 BigNumber.config({ ROUNDING_MODE: 1 });

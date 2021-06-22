@@ -2,7 +2,7 @@ import JSBI from "jsbi";
 import keyBy from "lodash.keyby";
 import { Token } from "@uniswap/sdk-core";
 import { BigNumber } from "@ethersproject/bignumber";
-import { userInfo, ContractAddress } from "./lib_const";
+import { userInfo, ContractAddress } from "./lib_config";
 import { Price, CurrencyAmount } from "@uniswap/sdk-core";
 import { TickMath, tickToPrice, Pool } from "@uniswap/v3-sdk";
 const PRICE_FIXED_DIGITS = 4;

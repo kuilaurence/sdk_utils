@@ -1,5 +1,5 @@
 export { add, sub, mul, div, sleep, logout, Trace, connect, toPrecision, getBalance, isETHAddress, addMetamaskChain } from "./lib.utils"
-import { userInfo, tokenAddres, ContractAddress } from "./lib_const";
+import { userInfo, tokenAddres, ContractAddress } from "./lib_config";
 import { ERC20, MULBANK, MULWORK, UNISWAPV3POOL, UNISWAPV3STRATEGY } from "./lib_abi";
 import { web3, Trace, getBalance, findToken, getDecimal, convertBigNumberToNormal, convertNormalToBigNumber, executeContract, getAllowance as _getAllowance, approveToken as _approveToken } from "./lib.utils";
 
