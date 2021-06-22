@@ -1,12 +1,6 @@
-import { Trace, addMetamaskChain as _addMetamaskChain, toPrecision as _toPrecision, logout as _logout, connect as _connect, getBalance as _getBalance, isETHAddress as _isETHAddress } from "./lib.utils";
+export { add, sub, mul, div, sleep, logout, Trace, connect, toPrecision, getBalance, isETHAddress, addMetamaskChain } from "./lib.utils";
+import { Trace } from "./lib.utils";
 export declare const T: typeof Trace;
-export declare const sleep: (ms: number) => Promise<unknown>;
-export declare const logout: typeof _logout;
-export declare const connect: typeof _connect;
-export declare const getBalance: typeof _getBalance;
-export declare const toPrecision: typeof _toPrecision;
-export declare const isETHAddress: typeof _isETHAddress;
-export declare const addMetamaskChain: typeof _addMetamaskChain;
 /**
  * 根据token symbol获取address
  * @param token_symbol
@@ -175,14 +169,8 @@ export declare function switching(token0_address: string, token1_address: string
  * @param callback
  */
 export declare function divest(id: string, isclose: boolean, callback: (code: number, hash: string) => void): void;
-export declare function divest1(id: string, callback: (code: number, hash: string) => void): void;
 /**
  * 创建账号（投资前先创建）
  * @param callback
  */
 export declare function createAccount(callback: (code: number, hash: string) => void): void;
-/**
- * test
- * @param callback
- */
-export declare function test(callback: (code: number, hash: string) => void): Promise<void>;

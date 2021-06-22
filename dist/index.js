@@ -1,14 +1,8 @@
+export { add, sub, mul, div, sleep, logout, Trace, connect, toPrecision, getBalance, isETHAddress, addMetamaskChain } from "./lib.utils";
 import { userInfo, tokenAddres, ContractAddress } from "./lib_const";
 import { ERC20, MULBANK, MULWORK, UNISWAPV3POOL, UNISWAPV3STRATEGY } from "./lib_abi";
-import { web3, Trace, findToken, getDecimal, convertBigNumberToNormal, convertNormalToBigNumber, executeContract, addMetamaskChain as _addMetamaskChain, toPrecision as _toPrecision, logout as _logout, sleep as _sleep, connect as _connect, getBalance as _getBalance, getAllowance as _getAllowance, approveToken as _approveToken, isETHAddress as _isETHAddress } from "./lib.utils";
+import { web3, Trace, getBalance, findToken, getDecimal, convertBigNumberToNormal, convertNormalToBigNumber, executeContract, getAllowance as _getAllowance, approveToken as _approveToken } from "./lib.utils";
 export const T = Trace;
-export const sleep = _sleep;
-export const logout = _logout;
-export const connect = _connect;
-export const getBalance = _getBalance;
-export const toPrecision = _toPrecision;
-export const isETHAddress = _isETHAddress;
-export const addMetamaskChain = _addMetamaskChain;
 /**
  * 根据token symbol获取address
  * @param token_symbol
@@ -270,9 +264,6 @@ export async function invest(token0_address, token1_address, fee, amount0, amoun
     }
     let bigAmount0 = convertNormalToBigNumber(amount0, await getDecimal(token0_address));
     let bigAmount1 = convertNormalToBigNumber(amount1, await getDecimal(token1_address));
-    console.log("-----v3strategyContract---------", v3strategyContract);
-    console.log("---tickLower--", tickLower);
-    console.log("---tickUpper---", tickUpper);
     executeContract(v3strategyContract, "invest", 0, [
         {
             "token0": token0_address,
@@ -338,70 +329,6 @@ export function divest(id, isclose, callback) {
     let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
     executeContract(v3strategyContract, "divest", 0, [id, isclose], callback);
 }
-export function divest1(id, callback) {
-    let api = [
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "newOwner",
-                    "type": "address"
-                }
-            ],
-            "name": "changeOwner",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "stateMutability": "nonpayable",
-            "type": "constructor"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "oldOwner",
-                    "type": "address"
-                },
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "newOwner",
-                    "type": "address"
-                }
-            ],
-            "name": "OwnerSet",
-            "type": "event"
-        },
-        {
-            "inputs": [],
-            "name": "throwError",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "getOwner",
-            "outputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ];
-    //@ts-ignore
-    let v3strategyContract = new web3.eth.Contract(api, "0xA2427ccE613052493AFff8cf19E50FD065C10466");
-    executeContract(v3strategyContract, "divest", 0, [id], callback);
-}
 /**
  * 创建账号（投资前先创建）
  * @param callback
@@ -409,14 +336,5 @@ export function divest1(id, callback) {
 export function createAccount(callback) {
     let mulWorkContract = new web3.eth.Contract(MULWORK, ContractAddress[userInfo.chainID].mulWork);
     executeContract(mulWorkContract, "createAccount", 0, [], callback);
-}
-/**
- * test
- * @param callback
- */
-export async function test(callback) {
-    let tokenContract = new web3.eth.Contract(ERC20, "0xae9269f27437f0fcbc232d39ec814844a51d6b8f");
-    let bigAmount = convertNormalToBigNumber("500000000000", await getDecimal("0xae9269f27437f0fcbc232d39ec814844a51d6b8f"));
-    executeContract(tokenContract, "approve", 0, ["0xA94507E3bd5e3Cd414b37456ba716A92F4877d6e", bigAmount], callback);
 }
 //# sourceMappingURL=index.js.map
