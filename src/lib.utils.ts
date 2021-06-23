@@ -265,13 +265,13 @@ export async function connect(walletName: "walletconnect" | "metamask" | "huobiw
       await provider.enable();
       //@ts-ignore
       web3 = new Web3(provider);
-      userInfo.account = provider.accounts[0];
+      userInfo.account = provider.accounts[0].toLowerCase();
       userInfo.chainID = await web3.eth.getChainId() as typeof userInfo.chainID;
       resMsg.account = userInfo.account;
       resMsg.chain = chainIdDict[userInfo.chainID];
       resMsg.message = "success";
       provider.on("accountsChanged", (accounts: string[]) => {
-        userInfo.account = accounts[0];
+        userInfo.account = accounts[0].toLowerCase();
         callback({
           account: userInfo.account,
           chainID: userInfo.chainID,
@@ -309,7 +309,7 @@ export async function connect(walletName: "walletconnect" | "metamask" | "huobiw
       let _ethereum = walletLink.makeWeb3Provider(coinbaseRpc, 1);
       let accounts = await _ethereum.enable();
       web3 = new Web3(_ethereum);
-      userInfo.account = accounts[0];
+      userInfo.account = accounts[0].toLocaleLowerCase();
       userInfo.chainID = 1;
       userInfo.chain = "Ethereum";
       resMsg.account = userInfo.account;
@@ -337,14 +337,14 @@ export async function connect(walletName: "walletconnect" | "metamask" | "huobiw
       }
       let accounts = await _ethereum.enable();
       web3 = new Web3(_ethereum);
-      userInfo.account = accounts[0];
+      userInfo.account = accounts[0].toLocaleLowerCase();
       userInfo.chainID = await web3.eth.getChainId() as typeof userInfo.chainID;
       userInfo.chain = chainIdDict[userInfo.chainID] as typeof userInfo.chain;
       resMsg.account = userInfo.account;
       resMsg.chainID = userInfo.chainID;
       resMsg.chain = userInfo.chain;
       _ethereum.on("accountsChanged", (accounts: string[]) => {
-        userInfo.account = accounts[0];
+        userInfo.account = accounts[0].toLowerCase();
         callback({
           account: userInfo.account,
           chainID: userInfo.chainID,
