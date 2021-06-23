@@ -769,3 +769,34 @@ export async function faucet(address: string) {
       }
     })
 }
+/**
+ * 检查水龙头
+ * @returns 
+ */
+export async function checkFaucet(address: string) {
+  const query = `
+  {
+    faucet(user: "${address}") {
+      tx
+      amount
+      sendTime
+      user
+    }
+  }
+    `;
+  return fetch(ContractAddress[userInfo.chainID].rankgql, {
+    method: "post",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ query }),
+  }).then((response) => response.json())
+    .then((data) => {
+      let faucet = data.data.faucet;
+      return {
+        data: {
+          faucet
+        }
+      }
+    })
+}
