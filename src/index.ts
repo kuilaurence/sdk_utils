@@ -1,4 +1,4 @@
-export { add, sub, mul, div, sleep, logout, Trace, connect, toPrecision, getBalance, isETHAddress, addMetamaskChain } from "./lib.utils"
+export { add, sub, mul, div, sleep, logout, Trace, connect, toPrecision, getBalance, isETHAddress, changeMetamaskChain } from "./lib.utils"
 export { getinvestList, getCreatStrategyinfo, getDayTvl, getGPRankList, getPoolHourPrices, getPoolPrice, getPositionInfo, getSingleStrategy, getTokenList, getprice, strategyEntities, riskManagement, performance, report, faucet, checkFaucet } from "./graphql";
 import { userInfo, tokenAddres, ContractAddress } from "./lib_config";
 import { ERC20, MULBANK, MULWORK, UNISWAPV3POOL, UNISWAPV3STRATEGY } from "./lib_abi";

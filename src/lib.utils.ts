@@ -372,25 +372,25 @@ export async function connect(walletName: "walletconnect" | "metamask" | "huobiw
  * @param chainName "BSC" | "HECO"
  * @returns "" 无返回
  */
-export async function addMetamaskChain(chainName: "BSC" | "HECO") {
+export async function changeMetamaskChain(chainName: "PLAYGROUND" | "HECO") {
   //@ts-ignore
   let _ethereum = window['ethereum'];
   if (!_ethereum || !_ethereum.isMetaMask) {
     return;
   }
-  const dataBSC = [{
-    chainId: '0x38',
-    chainName: 'Binance Smart Chain',
+  const PLAYGROUNDinfo = [{
+    chainId: '0x150',
+    chainName: 'Multiple Playground',
     nativeCurrency:
     {
-      name: 'BNB',
-      symbol: 'BNB',
+      name: 'ETH',
+      symbol: 'ETH',
       decimals: 18
     },
-    rpcUrls: ['https://bsc-dataseed.binance.org/'],
-    blockExplorerUrls: ['https://bscscan.com/'],
+    rpcUrls: ['http://120.92.137.203:9009'],
+    blockExplorerUrls: [''],
   }];
-  const dataHECO = [{
+  const HECOinfo = [{
     chainId: '0x80',
     chainName: 'HECO Mainnet',
     nativeCurrency:
@@ -402,7 +402,7 @@ export async function addMetamaskChain(chainName: "BSC" | "HECO") {
     rpcUrls: ['https://http-mainnet.hecochain.com/'],
     blockExplorerUrls: ['https://hecoinfo.com/'],
   }];
-  let data = chainName == "BSC" ? dataBSC : dataHECO;
+  let data = chainName == "PLAYGROUND" ? PLAYGROUNDinfo : HECOinfo;
   await _ethereum.request({ method: 'wallet_addEthereumChain', params: data }).catch()
 }
 /**
