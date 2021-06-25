@@ -800,3 +800,34 @@ export async function checkFaucet(address: string) {
       }
     })
 }
+/**
+ * 波动率
+ * @param end_date 截止时间
+ * @param type 
+ * @returns 
+ */
+export async function getVolatility(end_date: number, type: "daily_1" | "weekly_2") {
+  const query = `
+  {
+    volatility(start_date: 1623110400, end_date: ${end_date}, tp:${type}) {
+      date
+      value
+    }
+  }
+    `;
+  return fetch(ContractAddress[userInfo.chainID].rankgql, {
+    method: "post",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ query }),
+  }).then((response) => response.json())
+    .then((data) => {
+      let volatility = data.data.volatility;
+      return {
+        data: {
+          volatility
+        }
+      }
+    })
+}
