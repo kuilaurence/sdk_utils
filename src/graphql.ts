@@ -802,14 +802,16 @@ export async function checkFaucet(address: string) {
 }
 /**
  * 波动率
+ * @param start_date 开始时间
  * @param end_date 截止时间
  * @param type 
  * @returns 
  */
-export async function getVolatility(end_date: number, type: "daily_1" | "weekly_2") {
+export async function getVolatility(start_date: number, end_date: number, type: "daily_1" | "weekly_2") {
+  start_date = start_date <= 1623110400 ? 1623110400 : start_date;
   const query = `
   {
-    volatility(start_date: 1623110400, end_date: ${end_date}, tp:${type}) {
+    volatility(start_date: ${start_date}, end_date: ${end_date}, tp:${type}) {
       date
       value
     }
