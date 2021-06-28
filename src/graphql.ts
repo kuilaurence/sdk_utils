@@ -242,11 +242,12 @@ export async function getSingleStrategy(sid: string) {
  * 获取strategy
  * @returns 
  */
-export async function strategyEntities() {
+export async function strategyEntities(account: string) {
+  account = account.toLowerCase();
   let res = await getPoolPrice();
   const query = `
   {
-    strategyEntities(where: {user: "${userInfo.account}",end:false}) {
+    strategyEntities(where: {user: "${account}",end:false}) {
       sid
       end
       pool
@@ -313,7 +314,18 @@ export async function strategyEntities() {
       //@ts-ignore
       await sids.reduce(async (pre, sid, i) => {
         await pre
-        let result = await collect(sid);
+        let result = {
+          data: {
+            fee0: "0",
+            fee1: "0",
+          }
+        };
+        if (account === userInfo.account) {
+          result = await collect(sid);
+        } else {
+          result.data.fee0 = "0";
+          result.data.fee1 = "0";
+        }
         data[i]["fee0"] = result.data.fee0;
         data[i]["fee1"] = result.data.fee1;
         data[i]["collectFee0"] = result.data.fee0;
