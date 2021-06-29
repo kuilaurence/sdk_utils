@@ -821,7 +821,7 @@ export async function checkFaucet(address: string) {
  */
 export async function getVolatility(start_date: number, end_date: number, type: "daily_1" | "weekly_2") {
   start_date = start_date <= 1623110400 ? 1623110400 : start_date;
-  let poolDayDatas: {};
+  let poolDayDatas = {};
   if (type === "daily_1") {
     poolDayDatas = await getdateDayDates(start_date);
   }
@@ -866,7 +866,7 @@ export async function getdateDayDates(startTime: number) {
     }
   }
   `
-  return fetch(ContractAddress[userInfo.chainID].rankgql, {
+  return fetch(ContractAddress[userInfo.chainID].v3gql, {
     method: "post",
     headers: {
       "Content-type": "application/json",
@@ -874,7 +874,7 @@ export async function getdateDayDates(startTime: number) {
     body: JSON.stringify({ query }),
   }).then((response) => response.json())
     .then((data) => {
-      let ethDayPrice = data.data.poolDayDatas[0];
+      let ethDayPrice = data.data.poolDayDatas;
       return {
         poolDayDatas: ethDayPrice
       }
