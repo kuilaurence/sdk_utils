@@ -820,7 +820,7 @@ export async function checkFaucet(address: string) {
  * @returns 
  */
 export async function getVolatility(start_date: number, end_date: number, type: "daily_1" | "weekly_2") {
-  start_date = start_date <= 1623110400 ? 1623110400 : start_date;
+  start_date = start_date <= 1623974400 ? 1623974400 : start_date;
   let poolDayDatas = {};
   if (type === "daily_1") {
     poolDayDatas = await getdateDayDates(start_date);
