@@ -180,9 +180,12 @@ export async function getTokenValue(type: "token0" | "token1", token0_address: s
   let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
   let res = await v3poolContract.methods.slot0().call({ from: userInfo.account });
   let resultAmount = 0;
-  let tickLower = getTick(token0_address, token1_address, priceUpper);
+  let tickLower = getTick(token0_address, token1_address, priceLower);
   let tickCurrent = getTick(token0_address, token1_address, priceCurrent);
-  let tickUpper = getTick(token0_address, token1_address, priceLower);
+  let tickUpper = getTick(token0_address, token1_address, priceUpper);
+  if (+tickLower > +tickUpper) {
+    [tickLower, tickUpper] = [tickUpper, tickLower];
+  }
   let sqrtPricelower = Math.sqrt(Math.pow(1.0001, +tickLower))
   let sqrtPriceCurrent = Math.sqrt(Math.pow(1.0001, +tickCurrent))    //slot0    sqrpicex96/2**96
   let sqrtPriceupper = Math.sqrt(Math.pow(1.0001, +tickUpper))
