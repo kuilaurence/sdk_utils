@@ -116,6 +116,7 @@ export async function collect(sid: string) {
  * @returns 
  */
 function getTick(token0_address: string, token1_address: string, price: number) {
+  let space = 60;
   if (Number(token0_address) > Number(token1_address)) {
     let temp = token0_address;
     token0_address = token1_address;
@@ -123,9 +124,15 @@ function getTick(token0_address: string, token1_address: string, price: number) 
   }
   let ans = Math.floor(Math.log2(1 / price * 1e12) / Math.log2(1.0001));
   if (Math.log2(1 / price * 1e12) > 0) {
-    return (ans - ans % 60).toString();
-  } else {
-    return (ans - (200 - Math.abs(ans) % 60)).toString();
+    if (ans % space >= space / 2) {
+      ans = ans + space - ans % space;
+    } else {
+      ans = ans - ans % space;
+    }
+    return ans.toString();
+  }
+  else {
+    return (ans - (200 - Math.abs(ans) % space)).toString();
   }
 }
 /**
@@ -140,7 +147,6 @@ export async function getSqrtPrice(token0_address: string, token1_address: strin
   }
   let v3poolContract = new web3.eth.Contract(UNISWAPV3POOL, ContractAddress[userInfo.chainID].v3pool);
   let res = await v3poolContract.methods.slot0().call({ from: userInfo.account });
-  let tick = res.tick;//参考
   let temp = Math.pow(res.sqrtPriceX96 / (Math.pow(2, 96)), 2);
   return 1 / temp * 1e12;
 }
@@ -181,16 +187,13 @@ export async function getTokenValue(type: "token0" | "token1", token0_address: s
   let res = await v3poolContract.methods.slot0().call({ from: userInfo.account });
   let resultAmount = 0;
   let tickLower = getTick(token0_address, token1_address, priceLower);
-  let tickCurrent = getTick(token0_address, token1_address, priceCurrent);
   let tickUpper = getTick(token0_address, token1_address, priceUpper);
   if (+tickLower > +tickUpper) {
     [tickLower, tickUpper] = [tickUpper, tickLower];
   }
   let sqrtPricelower = Math.sqrt(Math.pow(1.0001, +tickLower))
-  let sqrtPriceCurrent = Math.sqrt(Math.pow(1.0001, +tickCurrent))    //slot0    sqrpicex96/2**96
   let sqrtPriceupper = Math.sqrt(Math.pow(1.0001, +tickUpper))
   let a = sqrtPricelower;
-  // let b=sqrtPriceCurrent;
   let b = res.sqrtPriceX96 / (Math.pow(2, 96));
   let c = sqrtPriceupper;
 
