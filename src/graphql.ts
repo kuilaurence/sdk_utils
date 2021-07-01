@@ -718,12 +718,14 @@ export async function getGPRankList() {
       user
       value
       feeValue
+      yearProfit
       profit
       updateTime
     }
     rank(user:"${userInfo.account}"){
       user
       value
+      yearProfit
       feeValue
       profit
       updateTime
