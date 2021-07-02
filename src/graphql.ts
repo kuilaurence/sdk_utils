@@ -719,6 +719,7 @@ export async function getGPRankList() {
       value
       feeValue
       yearProfit
+      yearProfit2
       profit
       updateTime
     }
@@ -726,6 +727,7 @@ export async function getGPRankList() {
       user
       value
       yearProfit
+      yearProfit2
       feeValue
       profit
       updateTime
