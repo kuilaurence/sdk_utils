@@ -387,7 +387,7 @@ export async function changeMetamaskChain(chainName: "PLAYGROUND" | "HECO") {
       symbol: 'ETH',
       decimals: 18
     },
-    rpcUrls: ['http://120.92.137.203:9009'],
+    rpcUrls: ['http://120.92.137.203:9008'],
     blockExplorerUrls: [''],
   }];
   const HECOinfo = [{
