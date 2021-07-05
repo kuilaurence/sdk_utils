@@ -501,6 +501,11 @@ export async function riskManagement(sid: string) {
           sqrtPriceX96
         }
       }
+      amount0
+      amount1
+      exit0
+      exit1
+      hedge
       accInvest0
       accInvest1
       timestamp
@@ -515,14 +520,26 @@ export async function riskManagement(sid: string) {
     body: JSON.stringify({ query }),
   }).then((response) => response.json())
     .then((data) => {
+      let hedgeAmount0 = 0;
+      let hedgeAmount1 = 0;
       let switchEntities = data.data.switchEntities.map((item: any) => {
+        if (item.hedge) {
+          hedgeAmount0 = hedgeAmount0 + (item.amount0 - item.exit0);
+          hedgeAmount1 = hedgeAmount1 + (item.amount1 - item.exit1);
+        }
         return {
           ...item,
-          price: (1 / Math.pow(+item.position.tick.sqrtPriceX96 / (Math.pow(2, 96)), 2) * 1e12).toFixed(6)
+          price: (1 / Math.pow(+item.position.tick.sqrtPriceX96 / (Math.pow(2, 96)), 2) * 1e12).toFixed(6),
+          hedgeAmount0: hedgeAmount0,
+          hedgeAmount1: hedgeAmount1,
         }
       });
+      let lastHedgeAmount0 = switchEntities.length > 0 ? switchEntities[switchEntities.length - 1].hedgeAmount0 : 0;
+      let lastHedgeAmount1 = switchEntities.length > 0 ? switchEntities[switchEntities.length - 1].hedgeAmount1 : 0;
       return {
         data: {
+          lastHedgeAmount0: lastHedgeAmount0,
+          lastHedgeAmount1: lastHedgeAmount1,
           switchEntities,
         }
       }
