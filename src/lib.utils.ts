@@ -388,7 +388,7 @@ export async function changeMetamaskChain(chainName: "PLAYGROUND" | "HECO") {
       decimals: 18
     },
     rpcUrls: ['https://testnet.multiple.fi'],
-    blockExplorerUrls: [''],
+    blockExplorerUrls: ['https://testnet.multiple.fi'],
   }];
   const HECOinfo = [{
     chainId: '0x80',
