@@ -380,7 +380,7 @@ export async function changeMetamaskChain(chainName: "PLAYGROUND" | "HECO") {
   }
   const PLAYGROUNDinfo = [{
     chainId: '0x150',
-    chainName: 'Multiple testnet',
+    chainName: 'Multiple Testnet',
     nativeCurrency:
     {
       name: 'ETH',
