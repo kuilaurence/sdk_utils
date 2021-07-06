@@ -380,14 +380,14 @@ export async function changeMetamaskChain(chainName: "PLAYGROUND" | "HECO") {
   }
   const PLAYGROUNDinfo = [{
     chainId: '0x150',
-    chainName: 'Multiple Playground',
+    chainName: 'Multiple testnet',
     nativeCurrency:
     {
       name: 'ETH',
       symbol: 'ETH',
       decimals: 18
     },
-    rpcUrls: ['http://120.92.137.203:9008'],
+    rpcUrls: ['https://testnet.multiple.fi'],
     blockExplorerUrls: [''],
   }];
   const HECOinfo = [{
