@@ -1,24 +1,7 @@
 import { getTokenSymbol, collect } from "./index";
 import { userInfo, ContractAddress } from "./lib_config";
-import { add, convertBigNumberToNormal } from "./lib.utils";
+import { convertBigNumberToNormal } from "./lib.utils";
 
-import { getV3LP } from "./api2";
-import { Price, Token } from "@uniswap/sdk-core";
-import { tickToPrice, priceToClosestTick } from "@uniswap/v3-sdk";
-
-export function getprice(token0_address: string, token1_address: string, tick: number) {
-  let token0 = new Token(1, token0_address, 6);//usdt
-  let token1 = new Token(1, token1_address, 18);//eth
-  let price0 = tickToPrice(token0, token1, tick).toFixed(4);
-  let price1 = tickToPrice(token1, token0, tick).toFixed(4);
-  // console.log("--------", priceToClosestTick(new Price(token0, token1, 2643.5847 * 1e6, 1e18)));
-  return {
-    data: {
-      price0: price0,
-      price1: price1,
-    }
-  }
-}
 var tokenList: [];
 
 let graphql = "https://api.thegraph.com/subgraphs/name/winless/multiple";// https://graph.multiple.fi/
@@ -102,13 +85,13 @@ export async function getinvestList() {
  * @returns 
  */
 export async function getPositionInfo(poolAddress: string) {
-  let res = await getV3LP();
-  let res2 = await getPositionInfo2(poolAddress)
+  let res = await getPositionInfo2(poolAddress)
+  let LpRange = await getLpRange(poolAddress);
   return {
     data: {
-      ticks: res,
-      poolInfo: res2.poolInfo,
-      ethPriceUSD: res2.ethPriceUSD,
+      poolInfo: res.poolInfo,
+      ethPriceUSD: res.ethPriceUSD,
+      ticks: JSON.parse(LpRange.LpRange.data)
     }
   }
 }
