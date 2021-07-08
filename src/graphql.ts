@@ -23,6 +23,29 @@ var tokenList: [];
 
 let graphql = "https://api.thegraph.com/subgraphs/name/winless/multiple";// https://graph.multiple.fi/
 
+let strategs: any[] = [];
+
+let poolPrices = {
+  "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e": {
+    minstartTime: 33182640270,
+    poolHourDatas: [] as any,
+  },
+}
+//初始化池子价格
+function initPoolPrices() {
+  for (let key of Object.keys(poolPrices)) {
+    poolPrices[key as keyof typeof poolPrices].minstartTime = 33182640270;
+    poolPrices[key as keyof typeof poolPrices].poolHourDatas = [];
+  }
+}
+//缓存池子价格
+async function getPoolPricesCache(address: keyof typeof poolPrices, starttime: string) {
+  if (poolPrices[address].poolHourDatas.length < 1) {
+    let res = await getPoolHourPrices(address, starttime);
+    poolPrices[address].poolHourDatas = res.poolHourDatas;
+  }
+  return poolPrices[address].poolHourDatas;
+}
 /**
  * 拿投资列表
  * @returns
@@ -359,6 +382,159 @@ export async function strategyEntities(account: string) {
         data[i]["outrangetime"] = outrangetime;
       }, Promise.resolve())
       return data
+    })
+}
+/**
+ * 快速版
+ * @param account 
+ * @returns 
+ */
+export async function strategyEntities2(account: string) {
+  initPoolPrices();
+  account = account.toLowerCase();
+  let res = await getPoolPrice();
+  const query = `
+  {
+    strategyEntities(where: {user: "${account}",end:false}) {
+      sid
+      end
+      pool
+      token0 {
+        symbol
+        id
+        decimals
+      }
+      token1 {
+        symbol
+        id
+        decimals
+      }
+      accFee0
+      accFee1
+      accInvest0
+      accInvest1
+      preInvest0
+      preInvest1
+      createdAtTimestamp
+      currTickLower
+      currTickUpper
+      currLiquidity
+    }
+  }
+    `;
+  return fetch(ContractAddress[userInfo.chainID].strateggql, {
+    method: "post",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ query }),
+  }).then((response) => response.json())
+    .then((data) => {
+      let strategyEntities = data.data.strategyEntities;
+      return strategyEntities.map((item: any) => {
+        if (item.createdAtTimestamp < poolPrices[item.pool as keyof typeof poolPrices].minstartTime) {
+          poolPrices[item.pool as keyof typeof poolPrices].minstartTime = item.createdAtTimestamp;
+        }
+        let currPriceLower = calculatePrice(item.currTickLower);
+        let currPriceUpper = calculatePrice(item.currTickUpper);
+        if (currPriceLower > currPriceUpper) {
+          [currPriceLower, currPriceUpper] = [currPriceUpper, currPriceLower]
+        }
+        let token0token1Info = calculatetoken0token1(item.currTickLower, res.tick, item.currTickUpper, item.currLiquidity, res.sqrtPrice, res.token0Price);
+        return {
+          ...item,
+          ...token0token1Info,
+          currPriceLower: currPriceLower,
+          currPriceUpper: currPriceUpper,
+          token0Price: res.token0Price,
+          token1Price: res.token1Price,
+          sqrtPrice: res.sqrtPrice,
+          tick: res.tick,
+          accumulativedee: 0,
+          fee0: 0,
+          fee1: 0,
+          collectFee0: 0,
+          collectFee1: 0,
+          outrangetime: 0,
+        }
+      })
+    }).then(async data => {
+      data.sort((a: any, b: any) => { return a.sid - b.sid });
+      strategs = data;
+      const sids = data.map((item: any) => item.sid)
+      //@ts-ignore
+      await sids.reduce(async (pre, sid, i) => {
+        await pre
+        let poolHourDatas = await getPoolPricesCache(data[i].pool, data[i].createdAtTimestamp);
+        let outrangetime = Math.floor(Date.now() / 1000).toFixed();
+        if (data[i].tick < data[i].currTickLower) {//下超出
+          for (let j = poolHourDatas.length - 1; j >= 0; j--) {
+            if (poolHourDatas[j].tick < data[i].currTickLower) {
+              outrangetime = poolHourDatas[j].timestamp;
+            } else {
+              break;
+            }
+          }
+        } else if (data[i].tick > data[i].currTickUpper) {//上超出
+          for (let j = poolHourDatas.length - 1; j >= 0; j--) {
+            if (poolHourDatas[j].tick > data[i].currTickUpper) {
+              outrangetime = poolHourDatas[j].timestamp;
+            } else {
+              break;
+            }
+          }
+        }
+        data[i]["outrangetime"] = outrangetime;
+      }, Promise.resolve())
+      return data
+    })
+}
+/**
+ * 拿fee列表
+ * @param userAddress 
+ * @returns 
+ */
+export async function getFeeList(userAddress: string) {
+  let args = "[";
+  for (let i = 0; i < strategs.length; i++) {
+    //@ts-ignore
+    args = args + `{sid:${strategs[i].sid},address:"${userAddress}"},`
+  }
+  args = args + "]";
+  const query = `
+  {
+    collects(args: ${args}) {
+      sid
+      fee0
+      fee1
+    }
+  }
+    `;
+  return fetch(ContractAddress[userInfo.chainID].rankgql, {
+    method: "post",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ query }),
+  }).then((response) => response.json())
+    .then((_data) => {
+      let data = _data.data.collects;
+      let feeList: any[] = [];
+      for (let i = 0; i < data.length; i++) {
+        let toekn0decimal = strategs[i].token0.decimals;
+        let toekn1decimal = strategs[i].token1.decimals;
+        let _fee0 = convertBigNumberToNormal(data[i].fee0, toekn0decimal);
+        let _fee1 = convertBigNumberToNormal(data[i].fee1, toekn1decimal);
+        let fee0 = +_fee0 + +strategs[i].accFee0;
+        let fee1 = +_fee1 + +strategs[i].accFee1;
+        feeList.push({
+          sid: data[i].sid,
+          fee0: fee0.toFixed(8),
+          fee1: fee1.toFixed(8),
+          accumulativedee: (fee0 + fee1 * +strategs[i].token0Price).toFixed(8),
+        })
+      }
+      return { feeList };
     })
 }
 function calculatePrice(tick: number) {
@@ -898,6 +1074,35 @@ export async function getdateDayDates(startTime: number) {
       let ethDayPrice = data.data.poolDayDatas;
       return {
         poolDayDatas: ethDayPrice
+      }
+    })
+}
+/**
+ * position图表
+ * @param poolAddress 
+ * @returns 
+ */
+export async function getLpRange(poolAddress: string) {
+  const query = `
+  {
+    LpRange(pool: "${poolAddress}") {
+      data
+      ts
+      pool
+    }
+  }
+    `;
+  return fetch(ContractAddress[userInfo.chainID].rankgql, {
+    method: "post",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ query }),
+  }).then((response) => response.json())
+    .then((data) => {
+      let LpRange = data.data.LpRange;
+      return {
+        LpRange
       }
     })
 }
