@@ -233,18 +233,9 @@ export function executeContract(contract: Contract, methodName: string, value: n
 
 let walletDisconnectTimer: any;
 
-const provider = new WalletConnectProvider({
-  rpc: {
-    1: "https://jsonrpc.maiziqianbao.net/",
-    56: 'https://bsc-dataseed.binance.org/',
-  },
-});
+var provider: WalletConnectProvider;
 
-const walletLink = new walletlink({
-  appName: "Multiple",
-  appLogoUrl: "https://avatars.githubusercontent.com/u/23645629?s=48&v=4",
-  darkMode: false
-})
+var walletLink: walletlink;
 
 const coinbaseRpc = "https://jsonrpc.maiziqianbao.net/";
 /**
@@ -262,6 +253,12 @@ export async function connect(walletName: "walletconnect" | "metamask" | "huobiw
   };
   try {
     if (walletName === "walletconnect") {
+      provider = new WalletConnectProvider({
+        rpc: {
+          1: "https://jsonrpc.maiziqianbao.net/",
+          56: 'https://bsc-dataseed.binance.org/',
+        },
+      });
       await provider.enable();
       //@ts-ignore
       web3 = new Web3(provider);
@@ -306,6 +303,11 @@ export async function connect(walletName: "walletconnect" | "metamask" | "huobiw
         }, 300);
       })
     } else if (walletName === "coinbasewallet") {
+      walletLink = new walletlink({
+        appName: "Multiple",
+        appLogoUrl: "https://avatars.githubusercontent.com/u/23645629?s=48&v=4",
+        darkMode: false
+      })
       let _ethereum = walletLink.makeWeb3Provider(coinbaseRpc, 1);
       let accounts = await _ethereum.enable();
       web3 = new Web3(_ethereum);
