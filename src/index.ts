@@ -1,9 +1,9 @@
-export { add, sub, mul, div, sleep, logout, Trace, connect, toPrecision, getBalance, isETHAddress, changeMetamaskChain } from "./lib.utils"
-export { getinvestList, getCreatStrategyinfo, getDayTvl, getGPRankList, getPoolHourPrices, getPoolPrice, getPositionInfo, getSingleStrategy, getTokenList, strategyEntities, riskManagement, performance, report, faucet, checkFaucet } from "./graphql";
 import { userInfo, tokenAddres, ContractAddress } from "./lib_config";
 import { ERC20, MULBANK, MULWORK, UNISWAPV3POOL, UNISWAPV3STRATEGY } from "./lib_abi";
-import { web3, Trace, getBalance, findToken, getDecimal, convertBigNumberToNormal, convertNormalToBigNumber, executeContract, getAllowance as _getAllowance, approveToken as _approveToken } from "./lib.utils";
-
+import { web3, Trace, getBalance, findToken, getDecimal, convertBigNumberToNormal, getAllowance as _getAllowance } from "./lib.utils";
+export { approveToken, deposit, withdraw, invest, addInvest, switching, divest, createAccount } from "./execute";
+export { add, sub, mul, div, sleep, logout, Trace, connect, toPrecision, getBalance, isETHAddress, changeMetamaskChain } from "./lib.utils";
+export { getinvestList, getCreatStrategyinfo, getDayTvl, getGPRankList, getPoolHourPrices, getPoolPrice, getPositionInfo, getSingleStrategy, getTokenList, strategyEntities, riskManagement, performance, report, faucet, checkFaucet } from "./graphql";
 export const T = Trace;
 
 /**
@@ -29,11 +29,11 @@ export function getTokenSymbol(token_address: string) {
  * @param type 
  * @returns 
  */
-export async function getAllowance(token_address: string, type: "deposit" | "ivest") {
+export async function getAllowance(token_address: string, type: "deposit" | "invest") {
   let destina_address = ContractAddress[userInfo.chainID].mulBank;
   if (type === "deposit") {
 
-  } else if (type === "ivest") {
+  } else if (type === "invest") {
     destina_address = ContractAddress[userInfo.chainID].v3strategy;
   }
   return await _getAllowance(token_address, destina_address);
@@ -115,7 +115,7 @@ export async function collect(sid: string) {
  * @param ratio 价格
  * @returns 
  */
-function getTick(token0_address: string, token1_address: string, price: number) {
+export function getTick(token0_address: string, token1_address: string, price: number) {
   let space = 60;
   if (Number(token0_address) > Number(token1_address)) {
     let temp = token0_address;
@@ -216,135 +216,4 @@ export async function getTokenValue(type: "token0" | "token1", token0_address: s
 export function getCloseToTickPrice(token0_address: string, token1_address: string, price: number) {
   let tick = getTick(token0_address, token1_address, price);
   return 1 / Math.pow(1.0001, +tick) * 1e12;
-}
-//---------------------------------------------------上查下操作------------------------------------------------------
-/**
- * 对token授权
- * @param token_address 
- * @param type 
- * @param callback 
- */
-export async function approveToken(token_address: string, type: "deposit" | "ivest", callback: (code: number, hash: string) => void) {
-  let destina_address = ContractAddress[userInfo.chainID].mulBank;
-  if (type === "deposit") {
-
-  } else if (type === "ivest") {
-    destina_address = ContractAddress[userInfo.chainID].v3strategy;
-  }
-  _approveToken(token_address, destina_address, callback);
-}
-/**
- * deposit买入
- * @param token_address 
- * @param amount 
- * @param callback 
- */
-export async function deposit(token_address: string, amount: string, callback: (code: number, hash: string) => void) {
-  let mulBankContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);
-  let bigAmount = convertNormalToBigNumber(amount, await getDecimal(token_address));
-  executeContract(mulBankContract, "deposit", 0, [token_address, bigAmount], callback);
-}
-/**
- * withdraw 提出
- * @param token_address 
- * @param amount 
- * @param callback 
- */
-export async function withdraw(token_address: string, amount: string, callback: (code: number, hash: string) => void) {
-  let mulBankContract = new web3.eth.Contract(MULBANK, ContractAddress[userInfo.chainID].mulBank);
-  let bigAmount = convertNormalToBigNumber(amount, await getDecimal(token_address));
-  executeContract(mulBankContract, "withdraw", 0, [token_address, bigAmount], callback);
-}
-/**
- * 投资
- * @param token0_address 
- * @param token1_address 
- * @param fee 
- * @param amount0 
- * @param amount1 
- * @param leftPrice 
- * @param rightPrice 
- * @param callback 
- */
-export async function invest(token0_address: string, token1_address: string, fee: string, amount0: string, amount1: string, leftPrice: string, rightPrice: string, callback: (code: number, hash: string) => void) {
-  let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
-  let tickLower = getTick(token0_address, token1_address, +leftPrice);
-  let tickUpper = getTick(token0_address, token1_address, +rightPrice);
-  if (+tickLower > +tickUpper) {
-    [tickLower, tickUpper] = [tickUpper, tickLower];
-  }
-  let bigAmount0 = convertNormalToBigNumber(amount0, await getDecimal(token0_address));
-  let bigAmount1 = convertNormalToBigNumber(amount1, await getDecimal(token1_address));
-  executeContract(v3strategyContract, "invest", 0, [
-    {
-      "token0": token0_address,
-      "token1": token1_address,
-      "fee": fee,
-      "amount0Desired": bigAmount0,
-      "amount1Desired": bigAmount1,
-      "tickLower": tickLower,
-      "tickUpper": tickUpper
-    }
-  ], callback);
-}
-/**
- * 追加
- * @param token0_address 
- * @param token1_address 
- * @param id 
- * @param amount0 
- * @param amount1 
- * @param callback 
- */
-export async function addInvest(token0_address: string, token1_address: string, id: string, amount0: string, amount1: string, callback: (code: number, hash: string) => void) {
-  let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
-  let bigAmount0 = convertNormalToBigNumber(amount0, await getDecimal(token0_address));
-  let bigAmount1 = convertNormalToBigNumber(amount1, await getDecimal(token1_address));
-  executeContract(v3strategyContract, "add", 0, [id, bigAmount0, bigAmount1], callback);
-}
-/**
- * 切仓
- * @param token0_address 
- * @param token1_address 
- * @param id 
- * @param amount0 
- * @param amount1 
- * @param leftPrice 
- * @param rightPrice 
- * @param hedge 
- * @param callback 
- */
-export async function switching(token0_address: string, token1_address: string, id: string, amount0: string, amount1: string, leftPrice: string, rightPrice: string, hedge: boolean, callback: (code: number, hash: string) => void) {
-  let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
-  let tickLower = getTick(token0_address, token1_address, +leftPrice);
-  let tickUpper = getTick(token0_address, token1_address, +rightPrice);
-  if (+tickLower > +tickUpper) {
-    [tickLower, tickUpper] = [tickUpper, tickLower];
-  }
-  let bigAmount0 = convertNormalToBigNumber(amount0, await getDecimal(token0_address));
-  let bigAmount1 = convertNormalToBigNumber(amount1, await getDecimal(token1_address));
-  executeContract(v3strategyContract, "switching", 0, [id, {
-    tickLower: tickLower,
-    tickUpper: tickUpper,
-    amount0Desired: bigAmount0,
-    amount1Desired: bigAmount1,
-  }, hedge], callback);
-}
-/**
- * 撤资
- * @param id 
- * @param isclose 
- * @param callback 
- */
-export function divest(id: string, isclose: boolean, callback: (code: number, hash: string) => void) {
-  let v3strategyContract = new web3.eth.Contract(UNISWAPV3STRATEGY, ContractAddress[userInfo.chainID].v3strategy);
-  executeContract(v3strategyContract, "divest", 0, [id, isclose], callback);
-}
-/**
- * 创建账号（投资前先创建）
- * @param callback 
- */
-export function createAccount(callback: (code: number, hash: string) => void) {
-  let mulWorkContract = new web3.eth.Contract(MULWORK, ContractAddress[userInfo.chainID].mulWork);
-  executeContract(mulWorkContract, "createAccount", 0, [], callback);
 }

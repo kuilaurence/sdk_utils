@@ -202,7 +202,7 @@ export async function getSingleStrategy(sid: string) {
         let result = await collect(strategyEntitie.sid);
         let fee0 = (+result.data.fee0 + +strategyEntitie.accFee0).toFixed(8);
         let fee1 = (+result.data.fee1 + +strategyEntitie.accFee1).toFixed(8);
-        let poolHourPriceres = await getPoolHourPrices(strategyEntitie.pool, strategyEntitie.createdAtTimestamp);
+        let poolHourPriceres = await getPoolPricesCache(strategyEntitie.pool, strategyEntitie.createdAtTimestamp);
         let outrangetime = Math.floor(Date.now() / 1000).toFixed();
         if (res.tick < strategyEntitie.currTickLower) {//下超出
           for (let j = poolHourPriceres.poolHourDatas.length - 1; j >= 0; j--) {
