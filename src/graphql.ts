@@ -172,6 +172,8 @@ export async function getSingleStrategy(sid: string) {
       }
       accFee0
       accFee1
+      accPool0
+      accPool1
       accInvest0
       accInvest1
       preInvest0
@@ -202,6 +204,9 @@ export async function getSingleStrategy(sid: string) {
         let result = await collect(strategyEntitie.sid);
         let fee0 = (+result.data.fee0 + +strategyEntitie.accFee0).toFixed(8);
         let fee1 = (+result.data.fee1 + +strategyEntitie.accFee1).toFixed(8);
+        let earnToken0 = +fee0 - token0token1Info.token0amount + +strategyEntitie.accPool0;
+        let earnToken1 = +fee1 - token0token1Info.token1amount + +strategyEntitie.accPool1;
+        let totalEarn = earnToken0 + earnToken1 * strategyEntitie.token0Price;
         let poolHourPriceres = await getPoolPricesCache(strategyEntitie.pool, strategyEntitie.createdAtTimestamp);
         let outrangetime = Math.floor(Date.now() / 1000).toFixed();
         if (res.tick < strategyEntitie.currTickLower) {//下超出
@@ -237,6 +242,9 @@ export async function getSingleStrategy(sid: string) {
             collectFee0: result.data.fee0,
             collectFee1: result.data.fee1,
             accumulativedee: (+fee0 + +fee1 * +res.token0Price).toFixed(8),
+            earnToken0: earnToken0,
+            earnToken1: earnToken1,
+            totalEarn: totalEarn,
           }
         }
       } else {
@@ -394,6 +402,8 @@ export async function strategyEntities2(account: string) {
       }
       accFee0
       accFee1
+      accPool0
+      accPool1
       accInvest0
       accInvest1
       preInvest0
@@ -510,11 +520,17 @@ export async function getFeeList(userAddress: string) {
         let _fee1 = convertBigNumberToNormal(data[i].fee1, toekn1decimal);
         let fee0 = +_fee0 + +strategs[i].accFee0;
         let fee1 = +_fee1 + +strategs[i].accFee1;
+        let earnToken0 = fee0 - strategs[i].token0amount + +strategs[i].accPool0;
+        let earnToken1 = fee1 - strategs[i].token1amount + +strategs[i].accPool1;
+        let totalEarn = earnToken0 + earnToken1 * strategs[i].token0Price;
         feeList.push({
           sid: data[i].sid,
           fee0: fee0.toFixed(8),
           fee1: fee1.toFixed(8),
           accumulativedee: (fee0 + fee1 * +strategs[i].token0Price).toFixed(8),
+          earnToken0: earnToken0.toFixed(8),
+          earnToken1: earnToken1.toFixed(8),
+          totalEarn: totalEarn.toFixed(8),
         })
       }
       return { feeList };
@@ -748,9 +764,25 @@ export async function performance(sid: string) {
  * @returns 
  */
 export async function getPoolHourPrices(poolAddress: string, timestame: string) {
+  let skip = 0;
+  let poolHourDatas: any = [];
+  while (true) {
+    let tmp = await halfHourPrice(poolAddress, skip, timestame);
+    poolHourDatas.push(...tmp.poolHourDatas);
+    if (tmp.poolHourDatas.length >= 1000) {
+      skip = skip + 1000;
+    } else {
+      break;
+    }
+  }
+  return {
+    poolHourDatas
+  }
+}
+async function halfHourPrice(poolAddress: string, skip: number, timestame: string) {
   const query = `
   {
-    poolHourDatas(orderBy: timestamp, orderDirection: desc, first: 1000, where: {timestamp_gt: "${timestame}", pool: "${poolAddress}"}) {
+    poolHourDatas(orderBy: timestamp, orderDirection: desc, first: 1000,skip: ${skip}, where: {timestamp_gt: "${timestame}", pool: "${poolAddress}"}) {
       timestamp
       token0Price
       tick
