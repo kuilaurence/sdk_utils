@@ -750,7 +750,7 @@ export async function performance(sid: string) {
 export async function getPoolHourPrices(poolAddress: string, timestame: string) {
   const query = `
   {
-    poolHourDatas(orderBy: timestamp, first: 1000, where: {timestamp_gt: "${timestame}", pool: "${poolAddress}"}) {
+    poolHourDatas(orderBy: timestamp, orderDirection: desc, first: 1000, where: {timestamp_gt: "${timestame}", pool: "${poolAddress}"}) {
       timestamp
       token0Price
       tick
