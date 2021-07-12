@@ -892,21 +892,33 @@ export async function getGPRankList() {
   {
     ranks(paging:{orderBy:"feeValue",order:desc}){
       user
+      pool
       value
       feeValue
       yearProfit
       yearProfit2
       profit
       updateTime
+      accProfit0
+      accProfit1
+      accProfit
+      receive0
+      receive1
     }
     rank(user:"${userInfo.account}"){
       user
+      pool
       value
       yearProfit
       yearProfit2
       feeValue
       profit
       updateTime
+      accProfit0
+      accProfit1
+      accProfit
+      receive0
+      receive1
     }
   }
     `;
