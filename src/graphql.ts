@@ -1075,6 +1075,20 @@ export async function getVolatility(start_date: number, end_date: number, type: 
     })
 }
 /**
+ * 只拿最新的波动率
+ * @returns 
+ */
+export async function getSingleVolatility() {
+  let end_date = Math.floor(Date.now() / 1000);
+  let start_date = end_date - 7 * 24 * 60 * 60;
+  let dayRes = await getVolatility(start_date, end_date, "daily_1");
+  let weekRes = await getVolatility(start_date, end_date, "weekly_2");
+  return {
+    dayVolatility: dayRes.data.volatility[dayRes.data.volatility.length - 1],
+    weekVolatility: weekRes.data.volatility[dayRes.data.volatility.length - 1],
+  }
+}
+/**
  * 获取每日价格
  * @param startTime 
  * @returns 
