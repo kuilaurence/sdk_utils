@@ -23,7 +23,7 @@ export const ContractAddress = {
     v3strategy: "0x2a3f7a059fED698C30E34026F65C2ae5487c4A96",
     v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
     v3gql: "https://graph.multiple.fi/subgraphs/name/multiple/v3",
-    strateggql: "https://graph.multiple.fi/subgraphs/name/multiple/graph-playground",
+    strateggql: "https://graph.multiple.fi/subgraphs/name/multiple/playground",
     rankgql: "https://api-ground.multiple.fi/",
   },
   4: {
@@ -32,7 +32,7 @@ export const ContractAddress = {
     v3strategy: "0x2a3f7a059fED698C30E34026F65C2ae5487c4A96",
     v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
     v3gql: "https://graph.multiple.fi/subgraphs/name/multiple/v3",
-    strateggql: "https://graph.multiple.fi/subgraphs/name/multiple/graph-playground",
+    strateggql: "https://graph.multiple.fi/subgraphs/name/multiple/playground",
     rankgql: "https://api-ground.multiple.fi/",
   },
   97: {
@@ -41,7 +41,7 @@ export const ContractAddress = {
     v3strategy: "0x2a3f7a059fED698C30E34026F65C2ae5487c4A96",
     v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
     v3gql: "https://graph.multiple.fi/subgraphs/name/multiple/v3",
-    strateggql: "https://graph.multiple.fi/subgraphs/name/multiple/graph-playground",
+    strateggql: "https://graph.multiple.fi/subgraphs/name/multiple/playground",
     rankgql: "https://api-ground.multiple.fi/",
   },
   128: {
@@ -50,7 +50,7 @@ export const ContractAddress = {
     v3strategy: "0x2a3f7a059fED698C30E34026F65C2ae5487c4A96",
     v3pool: "0xe7f7eebc62f0ab73e63a308702a9d0b931a2870e",
     v3gql: "https://graph.multiple.fi/subgraphs/name/multiple/v3",
-    strateggql: "https://graph.multiple.fi/subgraphs/name/multiple/graph-playground",
+    strateggql: "https://graph.multiple.fi/subgraphs/name/multiple/playground",
     rankgql: "https://api-ground.multiple.fi/",
   },
   336: {
