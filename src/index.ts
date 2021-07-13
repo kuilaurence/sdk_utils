@@ -136,7 +136,7 @@ export function getTick(token0_address: string, token1_address: string, price: n
   }
 }
 /**
- * 获取池子的价格（暂时只有 usdt/btc）
+ * 获取池子的价格（暂时只有 usdc/eth）
  * @param token0_address 
  * @param token1_address 
  * @returns 
