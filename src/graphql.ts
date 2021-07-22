@@ -206,21 +206,21 @@ export async function getSingleStrategy(sid: string) {
         let fee1 = (+result.data.fee1 + +strategyEntitie.accFee1).toFixed(8);
         let earnToken0 = +fee0 - token0token1Info.token0amount + +strategyEntitie.accPool0;
         let earnToken1 = +fee1 - token0token1Info.token1amount + +strategyEntitie.accPool1;
-        let totalEarn = earnToken0 + earnToken1 * strategyEntitie.token0Price;
-        let poolHourPriceres = await getPoolPricesCache(strategyEntitie.pool, strategyEntitie.createdAtTimestamp);
+        let totalEarn = earnToken0 + earnToken1 * +res.token0Price;
+        let poolHourDatas = await getPoolPricesCache(strategyEntitie.pool, strategyEntitie.createdAtTimestamp);
         let outrangetime = Math.floor(Date.now() / 1000).toFixed();
         if (res.tick < strategyEntitie.currTickLower) {//下超出
-          for (let j = poolHourPriceres.poolHourDatas.length - 1; j >= 0; j--) {
-            if (poolHourPriceres.poolHourDatas[j].tick < strategyEntitie.currTickLower) {
-              outrangetime = poolHourPriceres.poolHourDatas[j].timestamp;
+          for (let j = poolHourDatas.length - 1; j >= 0; j--) {
+            if (poolHourDatas[j].tick < strategyEntitie.currTickLower) {
+              outrangetime = poolHourDatas[j].timestamp;
             } else {
               break;
             }
           }
         } else if (res.tick > strategyEntitie.currTickUpper) {//上超出
-          for (let j = poolHourPriceres.poolHourDatas.length - 1; j >= 0; j--) {
-            if (poolHourPriceres.poolHourDatas[j].tick > strategyEntitie.currTickUpper) {
-              outrangetime = poolHourPriceres.poolHourDatas[j].timestamp;
+          for (let j = poolHourDatas.length - 1; j >= 0; j--) {
+            if (poolHourDatas[j].tick > strategyEntitie.currTickUpper) {
+              outrangetime = poolHourDatas[j].timestamp;
             } else {
               break;
             }
